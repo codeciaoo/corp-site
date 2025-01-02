@@ -17,7 +17,7 @@ const caseStudies = [
 
 export default function CaseStudies() {
   return (
-    <section className="py-16 bg-background">
+    <section className="bg-white py-20">
       <div className="container">
         <h3 className="text-3xl font-bold text-center mb-12">
           支援実績

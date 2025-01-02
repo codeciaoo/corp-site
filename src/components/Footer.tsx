@@ -2,11 +2,11 @@ import { Button } from "./ui/button"
 
 export default function Footer() {
   return (
-    <footer className="bg-background border-t">
+    <footer className="bg-white py-12">
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">NextGen Solutions</h3>
+            <h3 className="text-lg font-semibold mb-4">CodeCiao</h3>
             <p className="text-muted-foreground">
               戦略と技術で、ビジネスの未来を創造する
             </p>
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-muted-foreground/20 text-center text-muted-foreground">
-          <p>&copy; 2023 NextGen Solutions. All rights reserved.</p>
+          <p>&copy; 2024 CodeCiao. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@ import { Button } from "./ui/button"
 
 export default function Hero() {
   return (
-    <div className="pt-24 pb-16 bg-background">
+    <section className="bg-[#FAFAFA] py-20">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-foreground mb-6 leading-tight">
@@ -18,6 +18,6 @@ export default function Hero() {
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   )
 } 

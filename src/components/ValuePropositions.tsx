@@ -13,7 +13,7 @@ const valuePropositions = [
 
 export default function ValuePropositions() {
   return (
-    <section className="py-16 bg-background">
+    <section className="bg-[#FAFAFA] py-20">
       <div className="container">
         <h3 className="text-3xl font-bold text-center mb-12">
           提供価値

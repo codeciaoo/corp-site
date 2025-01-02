@@ -32,7 +32,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="py-16 bg-background">
+    <section className="bg-white py-20">
       <div className="container">
         <h3 className="text-3xl font-bold text-center mb-12">
           主要サービス
