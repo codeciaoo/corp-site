@@ -2,39 +2,34 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { services } from '../data/services';
+
 ---
 
-<Layout title="会社概要 | CodeCiao">
+<Layout title="会社概要 | 企業名" description="企業理念や会社概要、経営陣の紹介など">
   <Header />
-  <main class="max-w-4xl mx-auto px-4 py-12">
+  <main class="container mx-auto px-4 py-12">
     <h1 class="text-4xl font-bold mb-8">会社概要</h1>
     
-    <div class="space-y-8">
+    <div class="grid gap-8">
       <section>
         <h2 class="text-2xl font-semibold mb-4">企業理念</h2>
-        <p class="text-gray-700">
-          私たちは、テクノロジーを通じて世界をより良い場所にすることを目指しています。
-        </p>
+        <p class="text-gray-700">テクノロジーの力で、よりよい未来を創造する</p>
       </section>
 
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h3 class="font-semibold mb-2">会社名</h3>
-          <p>CodeCiao</p>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-2">設立</h3>
-          <p>20XX年XX月</p>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-2">所在地</h3>
-          <p>〒XXX-XXXX 東京都...</p>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-2">事業内容</h3>
-          <p>ソフトウェア開発、ITコンサルティング</p>
-        </div>
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">会社情報</h2>
+        <dl class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
+          <dt class="font-medium">社名</dt>
+          <dd>株式会社〇〇</dd>
+          <dt class="font-medium">設立</dt>
+          <dd>20XX年XX月</dd>
+          <dt class="font-medium">資本金</dt>
+          <dd>〇〇円</dd>
+          <dt class="font-medium">従業員数</dt>
+          <dd>〇〇名</dd>
+          <dt class="font-medium">所在地</dt>
+          <dd>東京都〇〇区...</dd>
+        </dl>
       </section>
     </div>
   </main>
