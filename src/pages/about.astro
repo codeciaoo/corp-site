@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { services } from '../data/services';
+---
+
+<Layout title="会社概要 | CodeCiao">
+  <Header />
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold mb-8">会社概要</h1>
+    
+    <div class="space-y-8">
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">企業理念</h2>
+        <p class="text-gray-700">
+          私たちは、テクノロジーを通じて世界をより良い場所にすることを目指しています。
+        </p>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-semibold mb-2">会社名</h3>
+          <p>CodeCiao</p>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">設立</h3>
+          <p>20XX年XX月</p>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">所在地</h3>
+          <p>〒XXX-XXXX 東京都...</p>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">事業内容</h3>
+          <p>ソフトウェア開発、ITコンサルティング</p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</Layout>

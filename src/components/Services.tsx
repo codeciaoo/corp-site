@@ -5,21 +5,25 @@ import { ChevronRight } from 'lucide-react'
 
 const services = [
   {
+    id: "software-development",
     icon: <Code className="w-12 h-12 text-primary" />,
     title: "Web/モバイルアプリ開発",
     description: "顧客体験を重視した、使いやすく拡張性の高いアプリケーションの設計・開発",
   },
   {
+    id: "legacy-modernization",
     icon: <Database className="w-12 h-12 text-primary" />,
     title: "レガシーシステムの刷新",
     description: "レガシーシステムの分析から、クラウド移行を含めた最適なシステム設計・開発まで",
   },
   {
+    id: "cloud-solutions",
     icon: <Cloud className="w-12 h-12 text-primary" />,
     title: "クラウドソリューション",
     description: "AWS, Azure, GCPを使ったクラウドの構築",
   },
   {
+    id: "it-consulting",
     icon: <LineChart className="w-12 h-12 text-primary" />,
     title: "DXコンサルティング",
     description: "業務プロセスの可視化・分析から、デジタル技術を活用した業務改革の実現まで",
@@ -42,9 +46,15 @@ export default function Services() {
               </CardHeader>
               <CardContent className="flex flex-col">
                 <p className="text-muted-foreground mb-4">{service.description}</p>
-                <Button variant="link" className="ml-auto text-primary hover:text-primary/90">
-                  詳しく見る
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                <Button
+                  variant="link"
+                  className="ml-auto text-primary hover:text-primary/90"
+                  asChild
+                >
+                  <a href={`/services/${service.id}`}>
+                    詳しく見る
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </a>
                 </Button>
               </CardContent>
             </Card>
@@ -53,4 +63,4 @@ export default function Services() {
       </div>
     </section>
   )
-} 
+}
