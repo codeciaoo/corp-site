@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeCiao コーポレートサイト
 
-## Getting Started
+## 概要
+CodeCiaoのコーポレートサイトです。[Astro](https://astro.build)と[shadcn/ui](https://ui.shadcn.com/)を使用して構築されています。
 
-First, run the development server:
+## 技術スタック
+
+- [Astro](https://astro.build) - 静的サイトジェネレーター
+- [shadcn/ui](https://ui.shadcn.com/) - UIコンポーネントライブラリ
+- [Tailwind CSS](https://tailwindcss.com) - CSSフレームワーク
+- [TypeScript](https://www.typescriptlang.org/) - 型付きJavaScript
+
+## 開発環境のセットアップ
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# リポジトリのクローン
+git clone <repository-url>
+
+# 依存関係のインストール
+pnpm install
+
+# 開発サーバーの起動
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ビルド
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# 本番用ビルド
+pnpm build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# ビルドのプレビュー
+pnpm preview
+```
 
-## Learn More
+## プロジェクト構造
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── components/     # Reactコンポーネント
+├── layouts/        # ページレイアウト
+├── pages/          # Astroページ
+└── styles/         # グローバルスタイル
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+public/            # 静的アセット
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## デプロイ
 
-## Deploy on Vercel
+mainブランチへのマージが完了すると、自動的に以下のURLに反映されます：
+https://code-ciao.com/
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+本サイトはCloudflare Pagesでホストされています。デプロイの状況は以下のダッシュボードで確認できます：
+https://dash.cloudflare.com/35e2481229239d9efd5019e3243436a6/pages/view/corp-site
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ライセンス
+
+このプロジェクトは[MITライセンス](LICENSE)の下で公開されています。
