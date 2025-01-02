@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import Hero from '../components/Hero';
+import Services from '../components/Services';
+import Strengths from '../components/Strengths';
+import CaseStudies from '../components/CaseStudies';
+import ValuePropositions from '../components/ValuePropositions';
+import Footer from '../components/Footer';
+---
+
+<Layout title="NextGen Solutions">
+  <div class="min-h-screen bg-background">
+    <Header client:load />
+    <main>
+      <Hero />
+      <Services />
+      <Strengths />
+      <CaseStudies />
+      <ValuePropositions />
+    </main>
+    <Footer />
+  </div>
+</Layout> 
