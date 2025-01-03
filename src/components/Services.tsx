@@ -8,25 +8,25 @@ const services = [
     id: "software-development",
     icon: <Code className="w-12 h-12 text-primary" />,
     title: "Web/モバイルアプリ開発",
-    description: "顧客体験を重視した、使いやすく拡張性の高いアプリケーションの設計・開発",
+    description: "ECサイトから IoTデータ可視化、勤怠管理システム、生成AIを活用した安全管理システムまで、幅広い開発実績と最新技術の実装力を持っています",
   },
   {
     id: "legacy-modernization",
     icon: <Database className="w-12 h-12 text-primary" />,
-    title: "レガシーシステムの刷新",
-    description: "レガシーシステムの分析から、クラウド移行を含めた最適なシステム設計・開発まで",
+    title: "Webサイトの開発/保守",
+    description: "従来型WordPressから高速なJamstack構成まで、Cloudflareなど最新技術を活用し、運用負荷の軽減と安定稼働を実現",
   },
   {
     id: "cloud-solutions",
     icon: <Cloud className="w-12 h-12 text-primary" />,
-    title: "クラウドソリューション",
-    description: "AWS, Azure, GCPを使ったクラウドの構築",
+    title: "クラウドインテグレーション",
+    description: "AWSなどのクラウドサービスの導入設計から運用まで対応し、セキュアで運用効率の高いクラウド環境と、リソース最適化によるムダのない利用料を実現",
   },
   {
     id: "it-consulting",
     icon: <LineChart className="w-12 h-12 text-primary" />,
-    title: "DXコンサルティング",
-    description: "業務プロセスの可視化・分析から、デジタル技術を活用した業務改革の実現まで",
+    title: "DXコンサルティング/CTO代行",
+    description: "業務プロセスの可視化から技術戦略の立案、DevOpsの導入、開発体制の構築まで、企業のデジタル変革を現場目線で伴走支援",
   },
 ]
 
