@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { services } from '../../data/services';
 import WebDevelopment from '../../components/WebDevelopment';
+import CloudSolutions from '../../components/CloudSolutions';
 
 export function getStaticPaths() {
   return services.map(service => ({
@@ -20,6 +21,8 @@ const { service } = Astro.props;
   <main>
     {service.id === 'software-development' ? (
       <WebDevelopment client:load />
+    ) : service.id === 'cloud-solutions' ? (
+      <CloudSolutions client:load />
     ) : (
       <div class="max-w-4xl mx-auto px-4 py-12">
         <div class="space-y-12">
