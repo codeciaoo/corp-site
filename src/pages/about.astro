@@ -1,37 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
-
+import CompanyProfile from '../components/CompanyProfile';
 ---
 
-<Layout title="会社概要 | 企業名" description="企業理念や会社概要、経営陣の紹介など">
-  <Header />
-  <main class="container mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold mb-8">会社概要</h1>
-    
-    <div class="grid gap-8">
-      <section>
-        <h2 class="text-2xl font-semibold mb-4">企業理念</h2>
-        <p class="text-gray-700">テクノロジーの力で、よりよい未来を創造する</p>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-semibold mb-4">会社情報</h2>
-        <dl class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
-          <dt class="font-medium">社名</dt>
-          <dd>株式会社〇〇</dd>
-          <dt class="font-medium">設立</dt>
-          <dd>20XX年XX月</dd>
-          <dt class="font-medium">資本金</dt>
-          <dd>〇〇円</dd>
-          <dt class="font-medium">従業員数</dt>
-          <dd>〇〇名</dd>
-          <dt class="font-medium">所在地</dt>
-          <dd>東京都〇〇区...</dd>
-        </dl>
-      </section>
-    </div>
-  </main>
-  <Footer />
+<Header client:load />
+<Layout title="会社概要 | Corp Site" description="会社概要ページです。">
+  <CompanyProfile client:load />
 </Layout>

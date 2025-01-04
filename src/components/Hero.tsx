@@ -2,14 +2,14 @@ import { Button } from "./ui/button"
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[80vh] bg-gradient-to-b from-[#FAFAFA] to-white overflow-hidden flex items-center">
-      <div className="absolute top-20 -left-10 w-96 h-96 bg-primary/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-      <div className="absolute top-32 -right-10 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-      <div className="absolute -bottom-8 left-20 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-      
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      
-      <div className="container relative">
+    <section className="relative bg-gradient-to-b from-primary/5 to-background">
+      <div className="container relative flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="absolute top-20 -left-10 w-96 h-96 bg-primary/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute top-32 -right-10 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-5xl font-bold text-foreground mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 animate-fade-in animation-delay-200">
             戦略<span className="text-primary px-2">×</span>技術で、<br />
