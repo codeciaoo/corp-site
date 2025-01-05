@@ -1,14 +1,14 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header';
-import Hero from '../components/Hero';
-import Services from '../components/Services';
-import Strengths from '../components/Strengths';
-import CaseStudies from '../components/CaseStudies';
-import Issues from '../components/Issues';
-import ValuePropositions from '../components/ValuePropositions';
-import Footer from '../components/Footer';
-import ServiceComparisonTable from '../components/ServiceComparisonTable';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import Services from "../components/Services";
+import Strengths from "../components/Strengths";
+import CaseStudies from "../components/CaseStudies";
+import Issues from "../components/Issues";
+import Footer from "../components/Footer";
+import ServiceComparisonTable from "../components/ServiceComparisonTable";
+import ContactFlow from "../components/ContactFlow";
 ---
 
 <Layout title="CodeCiao">
@@ -16,12 +16,12 @@ import ServiceComparisonTable from '../components/ServiceComparisonTable';
     <Header client:load />
     <main>
       <Hero />
-      <Services />
-      <Strengths />
       <CaseStudies />
       <Issues />
+      <Strengths />
+      <Services />
+      <ContactFlow />
       <ServiceComparisonTable />
-      <ValuePropositions />
     </main>
     <Footer />
   </div>

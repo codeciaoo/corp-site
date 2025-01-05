@@ -54,7 +54,7 @@ const Case1 = () => {
                 <div className="mb-6">
                   <img
                     src="/placeholder.svg?height=60&width=200"
-                    alt="Weather News Logo"
+                    alt="Logo"
                     className="h-12"
                   />
                   <p className="text-sm text-gray-500 mt-3">更新日：2021年6月25日</p>

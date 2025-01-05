@@ -31,7 +31,7 @@ export default function Hero() {
       {/* Background pattern for visual interest */}
       <div className="absolute inset-0 bg-grid-gray-100/25 bg-[size:20px_20px] opacity-20" />
       
-      <div className="container relative flex flex-col lg:flex-row items-center justify-between min-h-[85vh] gap-8 py-12">
+      <div className="container relative flex flex-col lg:flex-row items-center justify-between min-h-[80vh] gap-8 py-8">
         <div className="lg:w-3/5 text-center lg:text-left">
           
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight bg-clip-text animate-fade-in animation-delay-200 mb-10">
