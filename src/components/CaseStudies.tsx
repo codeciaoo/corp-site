@@ -7,6 +7,7 @@ const caseStudies = [
     industry: "製造業 A社",
     title: "生産管理プロセスのDX化支援",
     description: "業務分析から導入まで一貫支援。結果、生産効率25%向上、在庫コスト30%削減を実現",
+    path: "/case1"
   },
   {
     industry: "小売業 B社",
@@ -33,9 +34,15 @@ export default function CaseStudies() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground mb-4">{study.description}</p>
-                <Button variant="link" className="p-0 text-primary hover:text-primary/90">
-                  詳細を見る
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                <Button 
+                  variant="link" 
+                  className="p-0 text-primary hover:text-primary/90"
+                  asChild
+                >
+                  <a href={study.path || "#"}>
+                    詳細を見る
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </a>
                 </Button>
               </CardContent>
             </Card>
