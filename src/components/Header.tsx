@@ -4,8 +4,7 @@ import { Menu, X } from 'lucide-react'
 const navigation = [
   { name: '会社概要', href: '/about' },
   { name: 'サービス', href: '/services' },
-  { name: 'ニュース', href: '/news' },
-  { name: '採用情報', href: '/careers' },
+  { name: 'メンバー', href: '/members' },
   { name: 'お問い合わせ', href: '/contact' },
 ]
 

@@ -1,4 +1,5 @@
 import { Button } from "./ui/button"
+import { Users } from "lucide-react"
 import { Code, Database, Cloud, LineChart, ArrowRight, Calendar } from 'lucide-react'
 
 export default function Hero() {
@@ -31,31 +32,38 @@ export default function Hero() {
       <div className="absolute inset-0 bg-grid-gray-100/25 bg-[size:20px_20px] opacity-20" />
       
       <div className="container relative flex flex-col lg:flex-row items-center justify-between min-h-[85vh] gap-8 py-12">
-        <div className="lg:w-3/5 text-center lg:text-left z-10 space-y-10">
+        <div className="lg:w-3/5 text-center lg:text-left">
           
-          <h2 className="text-5xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight bg-clip-text animate-fade-in animation-delay-200">
-            戦略<span className="text-primary px-3">×</span>技術で、<br />
-            ビジネスの<span className="relative">
-              <span className="text-teal-600">未来</span>
-              <span>を</span>
-              <span className="bg-gradient-to-r from-teal-600 to-green-500 text-transparent bg-clip-text">創造</span>
-            </span>する
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight bg-clip-text animate-fade-in animation-delay-200 mb-10">
+            クラウドネイティブ開発で<br className="hidden md:block" />
+            事業成長を<span className="relative">
+              <span className="text-teal-600">加速</span>
+              <span>する</span>
+            </span>
+            <div className="text-xl md:text-2xl mt-2 text-muted-foreground">企画から実装/運用まで一気通貫でサポート</div>
           </h2>
           
-          <p className="text-xl md:text-2xl text-muted-foreground/80 leading-relaxed animate-fade-in animation-delay-400 max-w-2xl">
-            コンサルティング知見と確かな技術力で、
-            経営課題の本質から解決まで伴走します
+          <p className="text-lg md:text-lg text-muted-foreground/80 leading-relaxed animate-fade-in animation-delay-400 max-w-4xl mb-16">
+            クラウドや生成AIなど最新技術に精通した専門エンジニア集団が<br />
+            スケーラブルでセキュアなWebシステム構築に必要なノウハウや<br />
+            エンジニア人員が不足しているクライアント様の課題を解決します
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in animation-delay-600">
-            <Button className="group bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 text-xl px-10 py-8 rounded-2xl hover:scale-105 shadow-lg hover:shadow-xl">
+            <Button className="group bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 text-xl px-6 py-8 rounded-2xl hover:scale-105 shadow-lg hover:shadow-xl">
               <Calendar className="w-6 h-6 mr-2" />
               無料相談を予約する
               <ArrowRight className="ml-2 w-6 h-6 transform group-hover:translate-x-1 transition-transform" />
             </Button>
+            <a href="/members">
+              <Button className="group bg-secondary hover:bg-secondary/90 text-secondary-foreground transition-all duration-300 text-xl px-10 py-8 rounded-2xl hover:scale-105 shadow-lg hover:shadow-xl">
+                <Users className="w-6 h-6 mr-2" />
+                メンバー紹介
+                <ArrowRight className="ml-2 w-6 h-6 transform group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </a>
           </div>
         </div>
-
         {/* Updated Services Section with better vertical space handling */}
         <div className="lg:w-2/5 min-h-[400px] relative bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 z-10 animate-fade-in animation-delay-800 border border-gray-100">
           <div className="services-container relative h-full min-h-[400px]">
