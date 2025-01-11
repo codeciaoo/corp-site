@@ -12,57 +12,43 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm">
-      <nav className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex-shrink-0">
-            <a href="/" className="flex items-center">
-              <img 
-                src="/corp_logo.png" 
-                alt="Code Ciao" 
-                className="h-6 w-40"
-              />
-            </a>
-          </div>
+    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
+        <a href="/" className="flex items-center">
+          <img src="/corp_logo.png" alt="Code Ciao" className="h-6 w-40" />
+        </a>
 
-          {/* デスクトップナビゲーション */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-gray-900 transition-colors"
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
-
-          {/* モバイルメニューボタン */}
-          <div className="md:hidden">
-            <button
-              type="button"
-              className="text-gray-700"
-              onClick={() => setIsOpen(!isOpen)}
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex md:gap-8">
+          {navigation.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="text-gray-700 transition-colors hover:text-gray-900"
             >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+              {item.name}
+            </a>
+          ))}
         </div>
 
-        {/* モバイルナビゲーション */}
+        {/* Mobile Menu Button */}
+        <button
+          type="button"
+          className="text-gray-700 md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
+        {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4">
-            <div className="flex flex-col space-y-4">
+          <div className="absolute left-0 right-0 top-20 bg-white py-4 md:hidden">
+            <div className="mx-auto max-w-7xl space-y-4 px-4">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-gray-900 transition-colors"
+                  className="block text-gray-700 transition-colors hover:text-gray-900"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
@@ -74,4 +60,4 @@ export default function Header() {
       </nav>
     </header>
   )
-} 
+}
