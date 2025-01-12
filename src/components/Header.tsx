@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
+      <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <a href="/" className="flex items-center">
           <img src="/corp_logo.png" alt="Code Ciao" className="h-6 w-40" />
         </a>

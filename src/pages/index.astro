@@ -9,17 +9,17 @@ import Issues from "../components/Issues";
 import Footer from "../components/Footer";
 import ServiceComparisonTable from "../components/ServiceComparisonTable";
 import ContactFlow from "../components/ContactFlow";
-import LandingPage from "@/components/LandingPage";
+import LandingPage from "@/components/LandingPage/LandingPage";
 ---
 
 <Layout title="CodeCiao">
   <div class="min-h-screen bg-background">
     <Header client:load />
     <main>
-      <LandingPage />
+      <LandingPage client:load />
       <!-- <Hero /> -->
       <!-- <CaseStudies /> -->
-      <Issues />
+      <!-- <Issues /> -->
       <Strengths />
       <Services />
       <ContactFlow />
