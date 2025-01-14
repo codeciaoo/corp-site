@@ -1,10 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header';
-import CompanyProfile from '../components/CompanyProfile';
+import Layout from "../layouts/Layout.astro";
+import CompanyProfile from "../components/CompanyProfile";
 ---
 
-<Header client:load />
 <Layout title="会社概要 | Corp Site" description="会社概要ページです。">
   <CompanyProfile client:load />
 </Layout>

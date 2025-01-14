@@ -1,38 +1,41 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 const news = [
   {
     id: 1,
-    title: '新サービスのリリースのお知らせ',
-    date: '2024-03-20',
-    excerpt: '当社は新しいAIソリューションサービスをリリースしました...'
+    title: "新サービスのリリースのお知らせ",
+    date: "2024-03-20",
+    excerpt: "当社は新しいAIソリューションサービスをリリースしました...",
   },
   {
     id: 2,
-    title: '東京オフィスの移転について',
-    date: '2024-03-15',
-    excerpt: '事業拡大に伴い、東京オフィスを移転することとなりました...'
-  }
+    title: "東京オフィスの移転について",
+    date: "2024-03-15",
+    excerpt: "事業拡大に伴い、東京オフィスを移転することとなりました...",
+  },
 ];
 ---
 
 <Layout title="ニュース | 企業名" description="企業の最新ニュースやお知らせ">
   <Header />
   <main class="container mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold mb-8">ニュース</h1>
-    
+    <h1 class="mb-8 text-4xl font-bold">ニュース</h1>
+
     <div class="grid gap-8">
-      {news.map(item => (
-        <article class="border-b pb-6">
-          <time class="text-sm text-gray-500">{item.date}</time>
-          <h2 class="text-xl font-semibold mt-2">{item.title}</h2>
-          <p class="text-gray-700 mt-2">{item.excerpt}</p>
-        </article>
-      ))}
+      {
+        news.map(item => (
+          <article class="border-b pb-6">
+            <time class="text-sm text-gray-500">{item.date}</time>
+            <h2 class="mt-2 text-xl font-semibold">{item.title}</h2>
+            <p class="mt-2 text-gray-700">{item.excerpt}</p>
+          </article>
+        ))
+      }
     </div>
   </main>
   <Footer />
-</Layout> 
+</Layout>
+

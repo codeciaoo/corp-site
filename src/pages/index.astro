@@ -1,30 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
 import Services from "../components/Services";
 import Strengths from "../components/Strengths";
-import CaseStudies from "../components/CaseStudies";
-import Issues from "../components/Issues";
-import Footer from "../components/Footer";
 import ServiceComparisonTable from "../components/ServiceComparisonTable";
 import ContactFlow from "../components/ContactFlow";
 import LandingPage from "@/components/LandingPage/LandingPage";
 ---
 
 <Layout title="CodeCiao">
-  <div class="min-h-screen bg-background">
-    <Header client:load />
-    <main>
-      <LandingPage client:load />
-      <!-- <Hero /> -->
-      <!-- <CaseStudies /> -->
-      <!-- <Issues /> -->
-      <Strengths />
-      <Services />
-      <ContactFlow />
-      <ServiceComparisonTable />
-    </main>
-    <Footer />
-  </div>
+  <LandingPage client:load />
+  <Strengths />
+  <Services />
+  <ContactFlow />
+  <ServiceComparisonTable />
 </Layout>

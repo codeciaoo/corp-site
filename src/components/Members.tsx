@@ -1,16 +1,16 @@
-import React from 'react'
+import React from "react";
 
 const teamMembers = [
   {
-    name: '田原 翼',
-    role: 'プロジェクトマネージャー & バックエンドエンジニア',
-    image: '/president.png?height=400&width=800',
+    name: "田原 翼",
+    role: "プロジェクトマネージャー & バックエンドエンジニア",
+    image: "/president.png?height=400&width=800",
     description: `
       経歴：
       - 慶應義塾大学卒業後、株式会社ベイカレントコンサルティングに入社
       - 2021年にlivepass株式会社にプロジェクトマネージャーとして入社
       - 自社SaaSの開発及び、上場企業向けに受託開発や技術コンサルティングを行う
-      - 2024年2月にCodeCia株式会社を設立
+      - 2024年2月にCodeCiao株式会社を設立
 
       得意分野：
       - プロジェクトマネジメント(ウォーターフォール、スクラム)
@@ -21,12 +21,12 @@ const teamMembers = [
       - レガシーシステムの刷新プロジェクトのリード
       - RAG × LLMを用いた社内事例検索システムの構築
       - 工場向けデータ可視化ダッシュボード及びホワイトボードの構築
-    `
+    `,
   },
   {
-    name: '一ノ瀬 英太',
-    role: 'フロント & ネイティブアプリエンジニア',
-    image: '/ichinose.jpg?height=400&width=400',
+    name: "一ノ瀬 英太",
+    role: "フロント & ネイティブアプリエンジニア",
+    image: "/ichinose.jpg?height=400&width=400",
     description: `
       経歴：
       - 専門学校卒業後、中島産業株式会社に入社
@@ -44,12 +44,12 @@ const teamMembers = [
       - 建設人材の派遣管理システム
       - メンテナンス点検管理システム
       - 工場向けデータ可視化ダッシュボード及びホワイトボードの構築
-    `
+    `,
   },
   {
-    name: '穐山 悠太',
-    role: 'バックエンド & AIエンジニア',
-    image: '/placeholder.svg?height=400&width=400',
+    name: "穐山 悠太",
+    role: "バックエンド & AIエンジニア",
+    image: "/placeholder.svg?height=400&width=400",
     description: `
       経歴：
       - 美術大学でグラフィックデザインを専攻
@@ -64,23 +64,25 @@ const teamMembers = [
       最近のプロジェクト：
       - RAG × LLMを用いた社内事例検索システムの構築
       - 企業向け生成AI活用のコンサルティング
-    `
-  }
-]
+    `,
+  },
+];
 
 const Members = () => {
   return (
     <div className="min-h-screen bg-white text-gray-800">
-      <header className="py-8 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-center mb-2 text-gray-900">主要メンバーの紹介</h1>
+      <header className="px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-2 text-center text-4xl font-bold text-gray-900">
+          主要メンバーの紹介
+        </h1>
       </header>
 
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-12">
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-lg overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl"
+              className="overflow-hidden rounded-lg bg-gray-50 shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl"
             >
               <div className="md:flex">
                 <div className="md:flex-shrink-0">
@@ -93,10 +95,14 @@ const Members = () => {
                   />
                 </div>
                 <div className="p-8">
-                  <div className="uppercase tracking-wide text-sm text-green-600 font-semibold">{member.role}</div>
-                  <h2 className="mt-1 text-2xl font-semibold text-gray-900">{member.name}</h2>
-                  <div className="mt-4 text-gray-700 space-y-4">
-                    {member.description.split('\n\n').map((paragraph, i) => (
+                  <div className="text-sm font-semibold uppercase tracking-wide text-green-600">
+                    {member.role}
+                  </div>
+                  <h2 className="mt-1 text-2xl font-semibold text-gray-900">
+                    {member.name}
+                  </h2>
+                  <div className="mt-4 space-y-4 text-gray-700">
+                    {member.description.split("\n\n").map((paragraph, i) => (
                       <p key={i} className="whitespace-pre-line">
                         {paragraph}
                       </p>
@@ -109,11 +115,11 @@ const Members = () => {
         </div>
       </main>
 
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-600">
+      <footer className="px-4 py-8 text-center text-gray-600 sm:px-6 lg:px-8">
         <p>&copy; 2025 Our Amazing Company. All rights reserved.</p>
       </footer>
     </div>
-  )
-}
+  );
+};
 
 export default Members;

@@ -1,4 +1,7 @@
 ---
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 interface Props {
   title: string;
   description?: string;
@@ -18,7 +21,11 @@ const { title, description = 'クラウドネイティブ開発で事業成長�
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <Header client:load />
+    <main class="min-h-screen mx-auto">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
 

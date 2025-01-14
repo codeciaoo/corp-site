@@ -1,56 +1,55 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const positions = [
   {
-    title: 'フロントエンドエンジニア',
-    type: '正社員',
-    location: '東京'
+    title: "フロントエンドエンジニア",
+    type: "正社員",
+    location: "東京",
   },
   {
-    title: 'バックエンドエンジニア',
-    type: '正社員',
-    location: '東京/リモート'
+    title: "バックエンドエンジニア",
+    type: "正社員",
+    location: "東京/リモート",
   },
   {
-    title: 'プロジェクトマネージャー',
-    type: '正社員',
-    location: '東京'
-  }
+    title: "プロジェクトマネージャー",
+    type: "正社員",
+    location: "東京",
+  },
 ];
 ---
 
 <Layout title="採用情報 | 企業名" description="私たちと一緒に働きませんか？">
-  <Header />
-  <main class="container mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold mb-8">採用情報</h1>
-    
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">募集職種</h2>
-      <div class="grid gap-6">
-        {positions.map(position => (
-          <div class="border p-6 rounded-lg">
+  <h1 class="mb-8 text-4xl font-bold">採用情報</h1>
+
+  <section class="mb-12">
+    <h2 class="mb-4 text-2xl font-semibold">募集職種</h2>
+    <div class="grid gap-6">
+      {
+        positions.map(position => (
+          <div class="rounded-lg border p-6">
             <h3 class="text-xl font-semibold">{position.title}</h3>
-            <p class="text-gray-700 mt-2">雇用形態: {position.type}</p>
+            <p class="mt-2 text-gray-700">雇用形態: {position.type}</p>
             <p class="text-gray-700">勤務地: {position.location}</p>
           </div>
-        ))}
-      </div>
-    </section>
+        ))
+      }
+    </div>
+  </section>
 
-    <section>
-      <h2 class="text-2xl font-semibold mb-4">働く環境</h2>
-      <div class="prose max-w-none">
-        <ul>
-          <li>フレックスタイム制</li>
-          <li>リモートワーク可</li>
-          <li>書籍購入支援</li>
-          <li>資格取得支援</li>
-        </ul>
-      </div>
-    </section>
-  </main>
-  <Footer />
-</Layout> 
+  <section>
+    <h2 class="mb-4 text-2xl font-semibold">働く環境</h2>
+    <div class="prose max-w-none">
+      <ul>
+        <li>フレックスタイム制</li>
+        <li>リモートワーク可</li>
+        <li>書籍購入支援</li>
+        <li>資格取得支援</li>
+      </ul>
+    </div>
+  </section>
+</Layout>
+

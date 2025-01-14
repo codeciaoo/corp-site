@@ -1,45 +1,52 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import React from "react";
+import { ChevronDown } from "lucide-react";
 
 const Issues = () => {
   const issues = [
     {
       title: "開発スピードが遅く、市場投入が間に合わない",
-      description: "最新の開発手法とツールの導入、効率的な開発体制の構築により、開発期間の短縮とリリースサイクルの高速化を実現します。"
+      description:
+        "最新の開発手法とツールの導入、効率的な開発体制の構築により、開発期間の短縮とリリースサイクルの高速化を実現します。",
     },
     {
       title: "社内にDX推進のノウハウが不足している",
-      description: "技術選定から開発プロセスの改善まで、豊富な実績を持つエンジニアが、現場に寄り添いながら段階的な改善を支援します。"
+      description:
+        "技術選定から開発プロセスの改善まで、豊富な実績を持つエンジニアが、現場に寄り添いながら段階的な改善を支援します。",
     },
     {
       title: "システムの保守運用負荷が高すぎる",
-      description: "クラウドネイティブな設計とDevOpsの導入により、運用の自動化と効率化を図り、本質的な開発業務に注力できる環境を構築します。"
-    }
+      description:
+        "クラウドネイティブな設計とDevOpsの導入により、運用の自動化と効率化を図り、本質的な開発業務に注力できる環境を構築します。",
+    },
   ];
 
   return (
-    <div className="bg-gradient-to-b from-primary/5 to-background relative py-20">
-      <div className="absolute inset-0 bg-grid-gray-100/25 bg-[size:20px_20px] opacity-20" />
-      <div className="relative max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-2 text-foreground">解決できる課題</h2>
+    <div className="from-primary/5 to-background relative bg-gradient-to-b py-20">
+      <div className="bg-grid-gray-100/25 absolute inset-0 bg-[size:20px_20px] opacity-20" />
+      <div className="relative mx-auto max-w-7xl px-4">
+        <div className="mb-16 text-center">
+          <h2 className="text-foreground mb-2 text-4xl font-bold">
+            解決できる課題
+          </h2>
           <p className="text-muted-foreground">issues we can solve</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {issues.map((item, index) => (
-            <div key={index} className="flex flex-col h-full">
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 mb-4 shadow-lg border border-gray-100 h-[180px] flex flex-col">
-                <div className="text-4xl text-primary font-serif">"</div>
-                <h3 className="text-xl font-bold mb-4 mt-4 text-gray-900 flex-1">
+            <div key={index} className="flex h-full flex-col">
+              <div className="mb-4 flex h-[180px] flex-col rounded-2xl border border-gray-100 bg-white/70 p-8 shadow-lg backdrop-blur-sm">
+                <div className="text-primary font-serif text-4xl">"</div>
+                <h3 className="mb-4 mt-4 flex-1 text-xl font-bold text-gray-900">
                   {item.title}
                 </h3>
               </div>
               <div className="flex justify-center">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center">
-                  <ChevronDown className="w-6 h-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full">
+                  <ChevronDown className="text-primary h-6 w-6" />
                 </div>
               </div>
-              <p className="text-muted-foreground mt-4 text-center px-4 h-[100px]">{item.description}</p>
+              <p className="text-muted-foreground mt-4 h-[100px] px-4 text-center">
+                {item.description}
+              </p>
             </div>
           ))}
         </div>
