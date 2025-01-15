@@ -72,7 +72,7 @@ const Members = () => {
   return (
     <div className="min-h-screen bg-white text-gray-800">
       <header className="px-4 py-8 sm:px-6 lg:px-8">
-        <h1 className="mb-2 text-center text-4xl font-bold text-gray-900">
+        <h1 className="text-center text-4xl font-bold text-gray-900">
           主要メンバーの紹介
         </h1>
       </header>
@@ -95,7 +95,7 @@ const Members = () => {
                   />
                 </div>
                 <div className="p-8">
-                  <div className="text-sm font-semibold uppercase tracking-wide text-green-600">
+                  <div className="text-sm font-semibold uppercase tracking-wide text-teal-600">
                     {member.role}
                   </div>
                   <h2 className="mt-1 text-2xl font-semibold text-gray-900">

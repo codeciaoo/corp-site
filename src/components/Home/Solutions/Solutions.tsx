@@ -3,7 +3,7 @@ import SolutionCard from "./SolutionCard";
 
 export default function Solutions() {
   return (
-    <div className="container py-8">
+    <div className="py-12">
       <h2 className="mb-8 text-center text-3xl font-bold text-[#009a9a]">
         解決できる課題
       </h2>
@@ -12,7 +12,7 @@ export default function Solutions() {
           title="クラウド活用がしたい"
           description="クラウドの導入から運用まで、ビジネスに最適なクラウド環境を実現します"
           bulletPoints={[
-            { id: "1", text: "オンプレミスからクラウドへの移行支援" },
+            { id: "1", text: "オンプレからクラウドへの移行支援" },
             { id: "2", text: "クラウドインフラの設計と構築" },
             { id: "3", text: "セキュアなクラウド環境の実現" },
           ]}

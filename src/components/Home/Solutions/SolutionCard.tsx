@@ -81,8 +81,10 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
               ref={defaultContentRef}
               className={`absolute w-full transition-all duration-300 ease-in-out ${isExpanded ? "-translate-y-2 opacity-0" : "translate-y-0 opacity-100"}`}
             >
-              <h3 className="mb-2 text-xl font-semibold text-black">{title}</h3>
-              <p className="text-sm text-gray-600">{description}</p>
+              <h3 className="mb-1 text-xl font-semibold text-black">{title}</h3>
+              <p className="border-t border-gray-200 pt-3 text-sm text-gray-600">
+                {description}
+              </p>
             </div>
 
             {/* Hover Content */}
@@ -104,7 +106,7 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
                   </li>
                 ))}
               </ul>
-              <button
+              {/* <button
                 onClick={e => {
                   e.stopPropagation();
                   handleNavigation(e);
@@ -112,7 +114,7 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
                 className="inline-block rounded-full bg-teal-600 px-6 py-1 text-sm text-white transition-all duration-200 hover:scale-105 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-opacity-50"
               >
                 MORE
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

@@ -1,77 +1,62 @@
-import { Button } from "./ui/button";
+import React from "react";
 
-export default function Footer() {
+const Footer: React.FC = () => {
+  const handleContactClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const isHomePage = window.location.pathname === "/";
+    if (isHomePage) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const quickLinks = ["サービス", "強み", "実績", "会社情報"];
+
   return (
-    <footer className="bg-white py-12">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">CodeCiao</h3>
-            <p className="text-muted-foreground">
-              戦略と技術で、ビジネスの未来を創造する
-            </p>
+    <footer className="bg-gray-900 py-8 text-gray-300">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
+          <div className="text-center md:text-left">
+            <h3 className="mb-2 text-3xl font-bold text-white">CodeCiao</h3>
+            <p className="text-sm">戦略と技術で、ビジネスの未来を創造する</p>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">クイックリンク</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  サービス
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  強み
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  実績
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  会社情報
-                </a>
-              </li>
+            <h4 className="text-md mb-1 font-semibold text-white">
+              クイックリンク
+            </h4>
+            <ul className="flex flex-wrap justify-center space-x-4 md:justify-end">
+              {quickLinks.map(item => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className="text-sm transition-colors hover:text-teal-400"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">ニュースレター登録</h3>
-            <p className="text-muted-foreground mb-4">
-              最新の技術トレンドや事例をお届けします
-            </p>
-            <form className="flex space-x-2">
-              <input
-                type="email"
-                placeholder="メールアドレス"
-                className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-              <Button
-                type="submit"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                登録
-              </Button>
-            </form>
+          <div className="text-center md:text-right">
+            <h4 className="text-md mb-2 text-left font-semibold text-white">
+              お問い合わせ
+            </h4>
+            <a
+              href="/contact"
+              onClick={handleContactClick}
+              className="inline-block rounded-md bg-teal-600 px-4 py-2 text-sm text-white transition-colors hover:bg-teal-700"
+            >
+              お問い合わせフォームへ
+            </a>
           </div>
         </div>
-        <div className="border-muted-foreground/20 text-muted-foreground mt-8 border-t pt-8 text-center">
-          <p>&copy; 2024 CodeCiao. All rights reserved.</p>
+        <div className="mt-8 border-t border-gray-800 pt-6 text-center">
+          <p className="text-sm">
+            &copy; {new Date().getFullYear()} CodeCiao. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

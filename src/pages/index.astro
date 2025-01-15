@@ -1,16 +1,40 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Services from "../components/Services";
-import Strengths from "../components/Strengths";
-import ServiceComparisonTable from "../components/ServiceComparisonTable";
-import ContactFlow from "../components/ContactFlow";
-import LandingPage from "@/components/LandingPage/LandingPage";
+import Services from "../components/Home/Services";
+import Strengths from "../components/Home/Strengths";
+import Acheivements from "../components/Home/Achievements";
+import ServiceComparisonTable from "../components/Home/ServiceComparisonTable";
+import ContactFlow from "../components/Home/ContactFlow";
+import HeroSection from "@/components/Home/Hero/HeroSection";
+import Solutions from "@/components/Home/Solutions/Solutions";
+
+import Section from "@/components/Section";
 ---
 
 <Layout title="CodeCiao">
-  <LandingPage client:load />
-  <Strengths />
-  <Services />
-  <ContactFlow />
-  <ServiceComparisonTable />
+  <HeroSection client:load />
+
+  <Section bg="light" ariaLabel="解決できる課題">
+    <Solutions client:load />
+  </Section>
+
+  <Section bg="dark" ariaLabel="3つの強み">
+    <Strengths />
+  </Section>
+
+  <Section bg="light" ariaLabel="実績">
+    <Acheivements />
+  </Section>
+
+  <Section bg="dark" ariaLabel="主要サービス">
+    <Services />
+  </Section>
+
+  <Section bg="light" ariaLabel="契約プラン">
+    <ServiceComparisonTable />
+  </Section>
+
+  <Section bg="dark" ariaLabel="お問い合わせから開始までの流れ">
+    <ContactFlow />
+  </Section>
 </Layout>

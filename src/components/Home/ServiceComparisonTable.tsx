@@ -58,35 +58,41 @@ const ServiceComparisonTable = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
-      <h1 className="mb-8 text-center text-3xl font-bold">契約プラン</h1>
+    <div className="py-12">
+      <h2 className="mb-8 text-center text-3xl font-bold text-teal-600">
+        契約プラン
+      </h2>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-lg border border-teal-600/20 bg-white shadow-md">
         <table className="w-full border-collapse">
           <thead>
-            <tr>
-              <th className="border-b-2 border-gray-200 p-4"></th>
-              <th className="border-b-2 border-blue-200 bg-blue-50 p-4">
-                <div className="flex items-center justify-center space-x-2">
-                  <Zap className="h-8 w-8 text-blue-600" />
+            <tr className="bg-teal-50/50">
+              <th className="w-1/5 border-b border-teal-600/20 p-4"></th>
+              <th className="border-b border-teal-600/20 p-6">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600/10">
+                    <Zap className="h-6 w-6 text-teal-600" />
+                  </div>
                   <div>
-                    <div className="text-xl font-bold text-blue-800">
+                    <div className="text-xl font-bold text-teal-900">
                       確実爆速納品プラン
                     </div>
-                    <div className="mt-1 text-sm text-blue-600">
+                    <div className="mt-1 text-sm text-teal-600">
                       期限内の確実な納品をお約束
                     </div>
                   </div>
                 </div>
               </th>
-              <th className="border-b-2 border-green-200 bg-green-50 p-4">
-                <div className="flex items-center justify-center space-x-2">
-                  <Lightbulb className="h-8 w-8 text-green-600" />
+              <th className="border-b border-teal-600/20 p-6">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600/10">
+                    <Lightbulb className="h-6 w-6 text-teal-600" />
+                  </div>
                   <div>
-                    <div className="text-xl font-bold text-green-800">
+                    <div className="text-xl font-bold text-teal-900">
                       デジタル共創ラボ
                     </div>
-                    <div className="mt-1 text-sm text-green-600">
+                    <div className="mt-1 text-sm text-teal-600">
                       事業成長のための技術パートナー
                     </div>
                   </div>
@@ -98,15 +104,15 @@ const ServiceComparisonTable = () => {
             {features.map((feature, idx) => (
               <tr
                 key={idx}
-                className={idx % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                className={idx % 2 === 0 ? "bg-gray-50/50" : "bg-white"}
               >
-                <td className="w-1/5 border-b border-gray-200 p-4 font-semibold">
+                <td className="border-b border-gray-200 p-4 font-semibold text-teal-900">
                   {feature.category}
                 </td>
-                <td className="border-b border-gray-200 p-4">
+                <td className="border-b border-gray-200 p-4 text-gray-600">
                   <div className="whitespace-pre-line">{feature.project}</div>
                 </td>
-                <td className="border-b border-gray-200 p-4">
+                <td className="border-b border-gray-200 p-4 text-gray-600">
                   <div className="whitespace-pre-line">
                     {feature.innovation}
                   </div>
@@ -114,14 +120,17 @@ const ServiceComparisonTable = () => {
               </tr>
             ))}
             <tr>
-              <td className="border-b border-gray-200 p-4 font-semibold">
+              <td className="border-b border-gray-200 p-4 font-semibold text-teal-900">
                 導入実績
               </td>
               <td className="border-b border-gray-200 p-4">
                 <ul className="space-y-2">
                   {recommendedCases.project.map((item, idx) => (
-                    <li key={idx} className="flex items-start space-x-2">
-                      <ArrowRight className="mt-1 h-4 w-4 flex-shrink-0 text-blue-500" />
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2 text-gray-600"
+                    >
+                      <ArrowRight className="mt-1 h-4 w-4 flex-shrink-0 text-teal-500" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -130,8 +139,11 @@ const ServiceComparisonTable = () => {
               <td className="border-b border-gray-200 p-4">
                 <ul className="space-y-2">
                   {recommendedCases.innovation.map((item, idx) => (
-                    <li key={idx} className="flex items-start space-x-2">
-                      <ArrowRight className="mt-1 h-4 w-4 flex-shrink-0 text-green-500" />
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2 text-gray-600"
+                    >
+                      <ArrowRight className="mt-1 h-4 w-4 flex-shrink-0 text-teal-500" />
                       <span>{item}</span>
                     </li>
                   ))}
