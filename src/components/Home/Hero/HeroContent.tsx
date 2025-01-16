@@ -4,10 +4,10 @@ import { BarChartIcon, Users2Icon } from "lucide-react";
 
 export default function HeroContent() {
   return (
-    <div className="space-y-6 md:space-y-8 lg:col-span-7">
+    <div className="space-y-6">
       <div className="space-y-4">
         <div
-          className="relative max-w-3xl text-center text-3xl font-black tracking-tight sm:text-5xl lg:text-left xl:text-6xl"
+          className="relative max-w-3xl text-center text-3xl font-black tracking-tight dark:text-white sm:text-5xl lg:text-left xl:text-6xl"
           style={{
             fontFamily: "'Noto Sans JP', sans-serif",
             fontFeatureSettings: "'palt'",
@@ -31,13 +31,13 @@ export default function HeroContent() {
               stiffness: 100,
               damping: 20,
             }}
-            className="block bg-gradient-to-r from-[#009a9a] via-indigo-500 to-sky-500 bg-clip-text leading-snug text-transparent"
+            className="block bg-gradient-to-r from-[#009a9a] via-indigo-500 to-sky-500 bg-clip-text leading-snug text-transparent dark:from-teal-400 dark:via-indigo-400 dark:to-sky-400"
           >
             事業成長を加速する
           </motion.div>
         </div>
 
-        <p className="text-muted-foreground max-w-2xl text-base md:text-xl">
+        <p className="max-w-2xl text-base text-gray-500 dark:text-gray-300 md:text-xl">
           企画から実装/運用まで一気通貫でサポート。スケーラブルでセキュアなWebシステム構築に必要なノウハウやエンジニア人員が不足しているクライアント様の課題を解決します。
         </p>
       </div>
@@ -46,7 +46,7 @@ export default function HeroContent() {
         <Button
           size="lg"
           variant="default"
-          className="inline-flex items-center justify-center bg-teal-600 px-4 py-4 text-base text-white transition-colors duration-200 hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:bg-teal-800 md:px-8 md:py-6 md:text-lg"
+          className="inline-flex items-center justify-center bg-teal-600 px-4 py-4 text-base text-white transition-colors duration-200 hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:bg-teal-800 dark:bg-teal-500 dark:hover:bg-teal-600 dark:focus:ring-teal-400 dark:active:bg-teal-700 md:px-8 md:py-6 md:text-lg"
           aria-label="メンバー紹介を見る"
         >
           <Users2Icon
@@ -59,7 +59,7 @@ export default function HeroContent() {
         <Button
           size="lg"
           variant="outline"
-          className="inline-flex w-full items-center justify-center border-teal-600 px-4 py-4 text-base text-teal-600 transition-colors duration-200 hover:bg-teal-50 hover:text-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:bg-teal-100 sm:w-auto md:px-8 md:py-6 md:text-lg"
+          className="inline-flex w-full items-center justify-center border-teal-600 px-4 py-4 text-base text-teal-600 transition-colors duration-200 hover:bg-teal-50 hover:text-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:bg-teal-100 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-900/30 dark:hover:text-teal-300 dark:focus:ring-teal-400 dark:active:bg-teal-900/50 sm:w-auto md:px-8 md:py-6 md:text-lg"
           aria-label="実績を見る"
         >
           <BarChartIcon
@@ -70,8 +70,8 @@ export default function HeroContent() {
         </Button>
       </div>
 
-      {/* Stats section - Made responsive */}
-      <div className="border-t border-[#009a9a]/20 pt-6 md:pt-8">
+      {/* Stats section - Made responsive with dark mode */}
+      <div className="border-t border-[#009a9a]/20 pt-6 dark:border-teal-500/20 md:pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex -space-x-4">
             {[1, 2, 3].map(i => (
@@ -80,7 +80,7 @@ export default function HeroContent() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: i * 0.3 }}
-                className="h-10 w-10 rounded-full border-2 border-white bg-[#009a9a] shadow-lg md:h-12 md:w-12"
+                className="h-10 w-10 rounded-full border-2 border-white bg-[#009a9a] shadow-lg dark:border-gray-900 dark:bg-teal-500 md:h-12 md:w-12"
               />
             ))}
           </div>
@@ -91,10 +91,10 @@ export default function HeroContent() {
               transition={{ delay: 0.35 }}
               className="flex items-center gap-2"
             >
-              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent md:text-2xl">
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-2xl">
                 200+
               </span>
-              <span className="text-muted-foreground text-xs md:text-sm">
+              <span className="text-muted-foreground text-xs dark:text-gray-300 md:text-sm">
                 プロジェクト実績
               </span>
             </motion.div>
@@ -104,10 +104,10 @@ export default function HeroContent() {
               transition={{ delay: 0.55 }}
               className="flex items-center gap-2"
             >
-              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent md:text-2xl">
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-2xl">
                 98%
               </span>
-              <span className="text-muted-foreground text-xs md:text-sm">
+              <span className="text-muted-foreground text-xs dark:text-gray-300 md:text-sm">
                 顧客満足度
               </span>
             </motion.div>

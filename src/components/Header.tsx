@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const navigation = [
   { name: "会社概要", href: "/about" },
@@ -10,34 +11,36 @@ const navigation = [
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setHasScrolled(window.scrollY > 0);
+      setIsVisible(window.scrollY > 10);
+      setIsOpen(false);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`sticky top-0 z-10 border-b border-gray-200 transition-colors ${
-        hasScrolled ? "bg-white/80" : "bg-transparent"
+      className={`fixed left-0 right-0 top-0 z-50 border-b border-gray-200 bg-white backdrop-blur-sm transition-transform duration-300 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <a href="/" className="flex items-center">
-          <img src="/corp_logo.png" alt="Code Ciao" className="h-6 w-40" />
+          <img src="/corp_logo.png" alt="Code Ciao" className="h-7" />
         </a>
 
         <div className="hidden md:flex md:gap-8">
-          {navigation.map((item) => (
+          <ThemeToggle />
+          {navigation.map(item => (
             <a
               key={item.name}
               href={item.href}
-              className="text-gray-700 transition-colors hover:text-gray-900"
+              className="flex items-center text-gray-700 transition-colors hover:text-gray-900"
             >
               {item.name}
             </a>
@@ -52,10 +55,12 @@ export default function Header() {
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
 
-        {isOpen && (
-          <div className="absolute left-0 right-0 top-20 bg-white py-4 md:hidden">
+        {isOpen && isVisible && (
+          <div className="fixed left-0 right-0 top-14 bg-white py-4 shadow-lg md:hidden">
             <div className="mx-auto max-w-7xl space-y-4 px-4">
-              {navigation.map((item) => (
+              <ThemeToggle />
+
+              {navigation.map(item => (
                 <a
                   key={item.name}
                   href={item.href}

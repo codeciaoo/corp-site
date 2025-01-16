@@ -13,7 +13,7 @@ import {
 
 export default function ContactForm() {
   return (
-    <Card className="space-y-4 rounded-xl border-teal-600/20 bg-white p-4 shadow-xl md:space-y-6 md:rounded-2xl md:p-6 lg:col-span-5 lg:p-8">
+    <Card className="space-y-4 rounded-xl border-teal-600/20 bg-gray-100 p-4 shadow-xl md:space-y-6 md:rounded-2xl md:p-6 lg:p-8">
       <div className="space-y-2">
         <h2 className="text-xl font-semibold text-teal-600 md:text-2xl">
           無料相談を予約する
@@ -28,7 +28,7 @@ export default function ContactForm() {
           <Input
             id="company"
             placeholder="株式会社Example"
-            className="border-teal-600/20 transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
           />
         </div>
         <div className="space-y-2">
@@ -36,7 +36,7 @@ export default function ContactForm() {
           <Input
             id="name"
             placeholder="山田 太郎"
-            className="border-teal-600/20 transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
           />
         </div>
         <div className="space-y-2">
@@ -45,7 +45,7 @@ export default function ContactForm() {
             id="email"
             type="email"
             placeholder="taro.yamada@example.com"
-            className="border-teal-600/20 transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
           />
         </div>
         <div className="space-y-2">
@@ -53,11 +53,11 @@ export default function ContactForm() {
           <Select>
             <SelectTrigger
               id="service"
-              className="border-teal-600/20 transition-colors focus:border-teal-600 focus:ring-teal-600"
+              className="border-teal-600/20 bg-white shadow-sm transition-colors hover:bg-gray-50 focus:border-teal-600 focus:ring-teal-600"
             >
               <SelectValue placeholder="サービスを選択してください" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="cloud">クラウドインテグレーション</SelectItem>
               <SelectItem value="development">システム開発</SelectItem>
               <SelectItem value="consulting">技術コンサルティング</SelectItem>
@@ -69,7 +69,7 @@ export default function ContactForm() {
           <Label htmlFor="message">ご相談内容</Label>
           <textarea
             id="message"
-            className="bg-background ring-offset-background placeholder:text-muted-foreground min-h-[80px] w-full rounded-md border border-teal-600/20 px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[100px]"
+            className="ring-offset-background placeholder:text-muted-foreground min-h-[80px] w-full rounded-md border border-teal-600/20 bg-white px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[100px]"
             placeholder="現在の課題や目標についてお聞かせください"
           />
         </div>
