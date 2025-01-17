@@ -35,7 +35,7 @@ export default function Header() {
         </a>
 
         <div className="hidden md:flex md:gap-8">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           {navigation.map(item => (
             <a
               key={item.name}
@@ -58,7 +58,7 @@ export default function Header() {
         {isOpen && isVisible && (
           <div className="fixed left-0 right-0 top-14 bg-white py-4 shadow-lg md:hidden">
             <div className="mx-auto max-w-7xl space-y-4 px-4">
-              <ThemeToggle />
+              {/* <ThemeToggle /> */}
 
               {navigation.map(item => (
                 <a

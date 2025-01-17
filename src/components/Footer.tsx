@@ -1,52 +1,40 @@
-import React from "react";
-
-const Footer: React.FC = () => {
-  const handleContactClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const isHomePage = window.location.pathname === "/";
-    if (isHomePage) {
-      event.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  const quickLinks = ["サービス", "強み", "実績", "会社情報"];
+const Footer = () => {
+  const quickLinks = [
+    { name: "サービス", path: "/services" },
+    { name: "強み", path: "/strengths" },
+    { name: "実績", path: "/achievements" },
+    { name: "会社情報", path: "/company" },
+    { name: "お問い合わせ", path: "/contact" },
+  ];
 
   return (
     <footer className="bg-gray-900 py-8 text-gray-300">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
+        <div className="flex flex-col space-y-8 md:flex-row md:justify-between md:space-y-0">
           <div className="text-center md:text-left">
-            <h3 className="mb-2 text-3xl font-bold text-white">CodeCiao</h3>
+            <a href="/" className="inline-block">
+              <h3 className="mb-2 text-3xl font-bold text-white transition-colors hover:text-teal-400">
+                CodeCiao
+              </h3>
+            </a>
             <p className="text-sm">戦略と技術で、ビジネスの未来を創造する</p>
           </div>
-          <div>
-            <h4 className="text-md mb-1 font-semibold text-white">
+          <div className="text-left md:text-left">
+            <h4 className="mb-3 text-lg font-semibold text-white">
               クイックリンク
             </h4>
-            <ul className="flex flex-wrap justify-center space-x-4 md:justify-end">
+            <ul className="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0">
               {quickLinks.map(item => (
-                <li key={item}>
+                <li key={item.name}>
                   <a
-                    href="#"
-                    className="text-sm transition-colors hover:text-teal-400"
+                    href={item.path}
+                    className="text-base transition-colors hover:text-teal-400"
                   >
-                    {item}
+                    {item.name}
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="text-center md:text-right">
-            <h4 className="text-md mb-2 text-left font-semibold text-white">
-              お問い合わせ
-            </h4>
-            <a
-              href="/contact"
-              onClick={handleContactClick}
-              className="inline-block rounded-md bg-teal-600 px-4 py-2 text-sm text-white transition-colors hover:bg-teal-700"
-            >
-              お問い合わせフォームへ
-            </a>
           </div>
         </div>
         <div className="mt-8 border-t border-gray-800 pt-6 text-center">

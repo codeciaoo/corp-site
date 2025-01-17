@@ -1,7 +1,7 @@
 ---
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ThemeToggle from "@/components/ThemeToggle";
+import SecondaryCTA from "../components/SecondaryCTA";
 
 interface Props {
   title: string;
@@ -24,10 +24,10 @@ const { title, description = "クラウドネイティブ開発で事業成長�
   </head>
   <body>
     <Header client:load />
-    <!-- <ThemeToggle client:load /> -->
     <main class="mx-auto min-h-screen">
       <slot />
     </main>
+    <SecondaryCTA />
     <Footer />
   </body>
 </html>

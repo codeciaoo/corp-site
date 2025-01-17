@@ -1,0 +1,28 @@
+export default function SecondaryCTA() {
+  return (
+    <section className="w-full bg-gray-50 px-4 py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl text-center">
+        <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          お客様の成功をサポートします
+        </h2>
+        <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
+          戦略的なテクノロジーソリューションで、ビジネスの成長を実現。まずは無料相談からはじめましょう。
+        </p>
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href="/contact"
+            className="inline-flex min-w-[200px] items-center justify-center rounded-md bg-[#00A497] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#008E82] focus:outline-none focus:ring-2 focus:ring-[#00A497] focus:ring-offset-2"
+          >
+            お問い合わせ
+          </a>
+          {/* <a
+            href="#case-studies"
+            className="inline-flex min-w-[200px] items-center justify-center rounded-md border border-[#00A497] px-6 py-3 text-base font-medium text-[#00A497] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#00A497] focus:ring-offset-2"
+          >
+            事例を見る
+          </a> */}
+        </div>
+      </div>
+    </section>
+  );
+}

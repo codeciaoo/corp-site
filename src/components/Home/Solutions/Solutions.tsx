@@ -128,7 +128,8 @@ export default function ChallengesSection() {
   return (
     <div className="mx-auto max-w-7xl py-8 sm:px-6 sm:py-16">
       <h2 className="mb-8 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
-        こんな悩みありませんか？
+        <span className="whitespace-nowrap">こんな悩み</span>
+        <span className="whitespace-nowrap">ありませんか？</span>
       </h2>
 
       {/* Mobile layout (default) */}

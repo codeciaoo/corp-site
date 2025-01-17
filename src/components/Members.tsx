@@ -114,10 +114,6 @@ const Members = () => {
           ))}
         </div>
       </main>
-
-      <footer className="px-4 py-8 text-center text-gray-600 sm:px-6 lg:px-8">
-        <p>&copy; 2025 Our Amazing Company. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
