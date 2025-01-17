@@ -118,14 +118,15 @@ const challenges: Challenge[] = [
 ];
 
 export default function ChallengesSection() {
-  const [activeChallenge, setActiveChallenge] = useState<number>(1);
+  const [activeChallenge, setActiveChallenge] = useState<number>(0);
+  const desktopActiveChallenge = activeChallenge > 0 ? activeChallenge : 1;
 
   const toggleChallenge = (id: number) => {
     setActiveChallenge(id === activeChallenge ? 0 : id);
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-7xl py-8 sm:px-6 sm:py-16">
       <h2 className="mb-8 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
         こんな悩みありませんか？
       </h2>
@@ -138,7 +139,7 @@ export default function ChallengesSection() {
               className="flex cursor-pointer items-center justify-between p-4 sm:p-6"
               onClick={() => toggleChallenge(challenge.id)}
             >
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 sm:h-12 sm:w-12">
                   {challenge.icon}
                 </div>
@@ -197,12 +198,14 @@ export default function ChallengesSection() {
               <div
                 key={challenge.id}
                 className={`relative cursor-pointer transition-all duration-300 ${
-                  activeChallenge === challenge.id ? "scale-105 transform" : ""
+                  desktopActiveChallenge === challenge.id
+                    ? "scale-105 transform"
+                    : ""
                 }`}
                 onClick={() => setActiveChallenge(challenge.id)}
               >
                 <div
-                  className={`relative rounded-2xl bg-white p-6 shadow-xl ${activeChallenge === challenge.id ? "ring-2 ring-teal-600 ring-offset-2" : "opacity-70 hover:opacity-100 hover:shadow-lg"}`}
+                  className={`relative rounded-2xl bg-white p-6 shadow-xl ${desktopActiveChallenge === challenge.id ? "ring-2 ring-teal-600 ring-offset-2" : "opacity-70 hover:opacity-100 hover:shadow-lg"}`}
                 >
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
                     <div className="h-6 w-6 rotate-45 transform bg-white shadow-xl" />
@@ -224,33 +227,30 @@ export default function ChallengesSection() {
           <div className="mt-12">
             <div className="rounded-3xl bg-gray-100 p-8">
               <h3 className="mb-6 text-2xl font-bold text-teal-900">
-                {activeChallenge > 0
-                  ? challenges[activeChallenge - 1].title
-                  : challenges[0].title}
+                {challenges[desktopActiveChallenge - 1].title}
                 の解決策
               </h3>
               <div className="grid grid-cols-3 gap-8">
-                {(activeChallenge > 0
-                  ? challenges[activeChallenge - 1].solutions
-                  : challenges[0].solutions
-                ).map(solution => (
-                  <div
-                    key={solution.id}
-                    className="rounded-xl bg-white p-8 shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="mb-4 flex items-center">
-                      <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
-                        {solution.icon}
+                {challenges[desktopActiveChallenge - 1].solutions.map(
+                  solution => (
+                    <div
+                      key={solution.id}
+                      className="rounded-xl bg-white p-8 shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                    >
+                      <div className="mb-4 flex items-center">
+                        <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
+                          {solution.icon}
+                        </div>
+                        <h4 className="text-lg font-semibold text-gray-900">
+                          {solution.title}
+                        </h4>
                       </div>
-                      <h4 className="text-lg font-semibold text-gray-900">
-                        {solution.title}
-                      </h4>
+                      <p className="text-sm text-gray-800">
+                        {solution.description}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-800">
-                      {solution.description}
-                    </p>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           </div>
