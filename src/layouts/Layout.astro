@@ -12,7 +12,7 @@ interface Props {
 
 const {
   title,
-  description = "クラウドネイティブ開発で事業成長を加速する",
+  description = "テクノロジー戦略で事業成長を加速する",
   ogImage = "/default-og-image.webp",
   canonicalUrl = Astro.url.href,
 } = Astro.props;
@@ -70,7 +70,7 @@ const { pathname } = Astro.url;
       })}
     />
 
-    <title>{title} | Your Company Name</title>
+    <title>{title} | CodeCiao</title>
   </head>
   <body>
     <Header client:load pathname={pathname} />
