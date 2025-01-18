@@ -6,10 +6,16 @@ import SecondaryCTA from "../components/SecondaryCTA";
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
 }
 
-const { title, description = "クラウドネイティブ開発で事業成長を加速する" } =
-  Astro.props;
+const {
+  title,
+  description = "クラウドネイティブ開発で事業成長を加速する",
+  ogImage = "/default-og-image.webp",
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
 
 const { pathname } = Astro.url;
 ---
@@ -18,12 +24,53 @@ const { pathname } = Astro.url;
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/webp" href="/icon.webp" />
+
+    <!-- SEO Meta Tags -->
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="CodeCiao" />
+    <meta name="keywords" content="クラウドネイティブ, 開発, 事業成長" />
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={Astro.url.href} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="CodeCiao" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Sitemap -->
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>{title}</title>
+
+    <!-- JSON-LD structured data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: title,
+        description: description,
+        url: Astro.url.href,
+      })}
+    />
+
+    <title>{title} | Your Company Name</title>
   </head>
   <body>
     <Header client:load pathname={pathname} />
