@@ -86,7 +86,7 @@ export default function ContactForm() {
         <div className="text-muted-foreground flex flex-col items-start justify-between gap-2 text-xs sm:flex-row sm:items-center sm:gap-0 md:text-sm">
           <div className="flex items-center">
             <CheckCircleIcon className="mr-2 h-4 w-4 text-teal-600 md:h-5 md:w-5" />
-            24時間以内に返信
+            2時間以内に返信
           </div>
           <div className="flex items-center">
             <CheckCircleIcon className="mr-2 h-4 w-4 text-teal-600 md:h-5 md:w-5" />

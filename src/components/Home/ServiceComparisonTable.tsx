@@ -16,7 +16,7 @@ const ServiceComparisonTable = () => {
           points: [
             {
               title: "要件が明確で確実な納品が必要",
-              description: "仕様が固まっており、確実な期日までの納品が求められるプロジェクトに最適です。計画通りの遂行をお約束します。"
+              description: "仕様が固まっており、期日までの納品が求められるプロジェクトに最適です。計画通りの遂行をお約束します。"
             },
             {
               title: "品質と納期の保証が重要",
@@ -96,7 +96,7 @@ const ServiceComparisonTable = () => {
               {plan.icon}
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">{plan.title}</h2>
-                <p className={idx === 0 ? "text-blue-600" : "text-green-600"} className="mt-1">{plan.subtitle}</p>
+                <p className={`${idx === 0 ? "text-blue-600" : "text-green-600"} mt-1`}>{plan.subtitle}</p>
               </div>
             </div>
 

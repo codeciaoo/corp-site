@@ -5,21 +5,21 @@ const strengths = [
     icon: <Lightbulb className="h-6 w-6 text-teal-600" />,
     title: "経営課題解決のための戦略立案",
     description:
-      "コンサルティングファーム出身者による、業務プロセス分析から投資対効果の可視化まで",
+      "大手コンサルティングファーム出身者による、業務プロセスの可視化・分析、ROI算出、KPI設計、データドリブンな意思決定支援まで、経営層の課題解決を包括的に支援",
     illustration: "/analysis_illustration.jpg",
   },
   {
     icon: <Cpu className="h-6 w-6 text-teal-600" />,
     title: "最新技術の活用",
     description:
-      "AI・クラウドなど最新技術へのキャッチアップと、実務での適切な技術選定力",
+      "AWS/GCPを用いたクラウドインフラ構築、RAGシステムやAIエージェントの開発、TensorFlow/PyTorchでの機械学習モデル構築など、実績豊富な最新技術の実装経験",
     illustration: "/tech_illustration.jpg",
   },
   {
     icon: <TrendingUp className="h-6 w-6 text-teal-600" />,
     title: "実践的なアプローチ",
     description:
-      "システム開発の現場経験を活かした、実現性の高いソリューションの提供",
+      "マイクロサービスアーキテクチャの設計、CI/CDパイプラインの構築、Infrastructure as Codeによる環境構築に加え、負荷試験によるパフォーマンス検証やセキュリティ診断まで、エンタープライズレベルの開発実績に基づく包括的なソリューション提供",
     illustration: "/application_illustration.jpg",
   },
 ];

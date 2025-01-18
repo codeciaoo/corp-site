@@ -49,21 +49,28 @@ const teamMembers = [
   {
     name: "穐山 悠太",
     role: "バックエンド & AIエンジニア",
-    image: "/placeholder.svg?height=400&width=400",
+    image: "/akiyama.jpg?height=400&width=400",
     description: `
       経歴：
-      - 美術大学でグラフィックデザインを専攻
-      - 広告代理店でのデザイナー経験を経て、UI/UXデザインの世界へ
-      - 当社では主要プロダクトのUI設計とブランディングを担当
+      - 大学卒業後、システム開発会社に入社
+      - 公共機関向けシステムや不動産データ分析サービスの開発を担当
+      - 個人開発のサブスクリプションWebアプリで顧客450人、売上1,000万円を達成
 
       得意分野：
       - Python/FastAPIを用いたバックエンド開発
-      - 生成AI/LLMを活用したアプリケーション開発
-      - 機械学習モデルの構築と本番環境での運用
+      - 機械学習/生成AIを活用したシステム開発
+      - 要件定義から運用までの一貫した開発支援
 
       最近のプロジェクト：
-      - RAG × LLMを用いた社内事例検索システムの構築
+      - 機械学習を活用した画像識別システムの開発
+      - 越境EC向け自動化ツールの開発
       - 企業向け生成AI活用のコンサルティング
+
+      メディア出演：
+      - ABEMA Prime アベプラ
+      <a href="https://youtu.be/QvWevDJEDIM?si=j6eNEAzGLUKlxcRs" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:text-teal-800 underline">
+        【AIカバー】声の無断生成にNO！声優やアーティストの想いは？悪用も？
+      </a>
     `,
   },
 ];
@@ -102,11 +109,22 @@ const Members = () => {
                     {member.name}
                   </h2>
                   <div className="mt-4 space-y-4 text-gray-700">
-                    {member.description.split("\n\n").map((paragraph, i) => (
-                      <p key={i} className="whitespace-pre-line">
-                        {paragraph}
-                      </p>
-                    ))}
+                   {member.description.split("\n\n").map((paragraph, i) => {
+                     if (paragraph.includes("<a")) {
+                       return (
+                         <div
+                           key={i}
+                           dangerouslySetInnerHTML={{ __html: paragraph }}
+                           className="whitespace-pre-line"
+                         />
+                       );
+                     }
+                     return (
+                       <p key={i} className="whitespace-pre-line">
+                         {paragraph}
+                       </p>
+                     );
+                   })}
                   </div>
                 </div>
               </div>
