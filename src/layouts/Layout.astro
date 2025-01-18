@@ -10,6 +10,8 @@ interface Props {
 
 const { title, description = "クラウドネイティブ開発で事業成長を加速する" } =
   Astro.props;
+
+const { pathname } = Astro.url;
 ---
 
 <!doctype html>
@@ -18,13 +20,18 @@ const { title, description = "クラウドネイティブ開発で事業成長�
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="icon" type="image/webp" href="/icon.webp" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
-    <Header client:load />
-    <main class="mx-auto min-h-screen">
+    <Header client:load pathname={pathname} />
+    <main
+      class:list={[
+        "mx-auto min-h-screen",
+        { "pt-16": Astro.url.pathname !== "/" },
+      ]}
+    >
       <slot />
     </main>
     <SecondaryCTA />

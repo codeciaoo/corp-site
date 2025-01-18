@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
+interface HeaderProps {
+  pathname: string;
+}
+
 const navigation = [
   { name: "会社概要", href: "/about" },
   { name: "サービス", href: "/services" },
@@ -9,18 +13,25 @@ const navigation = [
   { name: "お問い合わせ", href: "/contact" },
 ];
 
-export default function Header() {
+export default function Header({ pathname }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(pathname !== "/");
+  const [currentPath, setCurrentPath] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsVisible(window.scrollY > 10);
+      if (pathname === "/") {
+        setIsVisible(window.scrollY > 10);
+      }
       setIsOpen(false);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
   }, []);
 
   return (
@@ -31,7 +42,7 @@ export default function Header() {
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <a href="/" className="flex items-center">
-          <img src="/corp_logo.png" alt="Code Ciao" className="h-7" />
+          <img src="/corp_logo.webp" alt="Code Ciao" className="h-7" />
         </a>
 
         <div className="hidden md:flex md:gap-8">
@@ -40,7 +51,11 @@ export default function Header() {
             <a
               key={item.name}
               href={item.href}
-              className="flex items-center text-gray-700 transition-colors hover:text-gray-900"
+              className={`text-md flex items-center transition-transform hover:scale-105 ${
+                currentPath === item.href
+                  ? "font-medium text-blue-600"
+                  : "text-gray-700 hover:text-gray-900"
+              }`}
             >
               {item.name}
             </a>
@@ -64,8 +79,14 @@ export default function Header() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block text-gray-700 transition-colors hover:text-gray-900"
+                  className={`text-md flex items-center transition-colors ${
+                    currentPath === item.href
+                      ? "font-medium text-blue-600"
+                      : "text-gray-700 hover:text-gray-900"
+                  }`}
                   onClick={() => setIsOpen(false)}
+                  aria-label={isOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={isOpen}
                 >
                   {item.name}
                 </a>

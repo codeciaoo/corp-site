@@ -19,22 +19,22 @@ import Section from "@/components/Section";
   </Section>
 
   <Section bg="dark" ariaLabel="3つの強み">
-    <Strengths />
+    <Strengths client:idle />
   </Section>
 
   <Section bg="light" ariaLabel="実績">
-    <Acheivements />
+    <Acheivements client:idle />
   </Section>
 
   <Section bg="dark" ariaLabel="主要サービス">
-    <Services />
+    <Services client:visible />
   </Section>
 
   <Section bg="light" ariaLabel="契約プラン">
-    <ServiceComparisonTable />
+    <ServiceComparisonTable client:visible />
   </Section>
 
   <Section bg="dark" ariaLabel="お問い合わせから開始までの流れ">
-    <ContactFlow />
+    <ContactFlow client:visible />
   </Section>
 </Layout>
