@@ -2,6 +2,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SecondaryCTA from "../components/SecondaryCTA";
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 
 interface Props {
   title?: string;
@@ -23,6 +24,9 @@ const { pathname } = Astro.url;
 <!doctype html>
 <html lang="ja">
   <head>
+    <GoogleFontsOptimizer
+      url="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />

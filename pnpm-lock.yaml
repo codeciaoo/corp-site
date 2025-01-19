@@ -26,6 +26,9 @@ dependencies:
   astro:
     specifier: ^4.16.18
     version: 4.16.18(typescript@5.7.2)
+  astro-google-fonts-optimizer:
+    specifier: ^0.2.2
+    version: 0.2.2
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.1
@@ -1981,6 +1984,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /astro-google-fonts-optimizer@0.2.2:
+    resolution: {integrity: sha512-YQxp/ExF3NzUomAGuu1VKecO7/ETRnhnE50gqwAqfpbGPZFj4MYa4XxK1ukBg3R63QmKuE5uurOiKmXiLzttuw==}
+    dev: false
 
   /astro@4.16.18(typescript@5.7.2):
     resolution: {integrity: sha512-G7zfwJt9BDHEZwlaLNvjbInIw2hPryyD654314KV/XT34pJU6SfN1S+mWa8RAkALcZNJnJXCJmT3JXLQStD3Lw==}
