@@ -10,6 +10,12 @@
         "summary": {
           "type": "string"
         },
+        "cover": {
+          "type": "string"
+        },
+        "coverAlt": {
+          "type": "string"
+        },
         "publishedDate": {
           "anyOf": [
             {
@@ -33,6 +39,8 @@
       "required": [
         "title",
         "summary",
+        "cover",
+        "coverAlt",
         "publishedDate"
       ],
       "additionalProperties": false

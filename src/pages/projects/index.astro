@@ -1,4 +1,5 @@
 ---
+import Projects from "@/components/Projects";
 import Section from "@/components/Section";
 import Layout from "@/layouts/Layout.astro";
 import { getCollection } from "astro:content";
@@ -10,22 +11,16 @@ const sortedProjects = projects.sort(
 ---
 
 <Layout>
-  <Section>
-    <ul>
-      {
-        sortedProjects.map(project => (
-          <li>
-            <h2>{project.data.title}</h2>
-            <p>{project.data.summary}</p>
-            <p>
-              公開日: {project.data.publishedDate.toLocaleDateString("ja-JP")}
-            </p>
-            <p>
-              <a href={`/projects/${project.id}`}>{project.id}</a>
-            </p>
-          </li>
-        ))
-      }
-    </ul>
+  <Section bg="light">
+    <Projects
+      projects={sortedProjects.map(project => ({
+        title: project.data.title,
+        summary: project.data.summary,
+        publishedDate: project.data.publishedDate,
+        cover: project.data.cover.src,
+        coverAlt: project.data.coverAlt,
+        href: `/projects/${project.id}`,
+      }))}
+    />
   </Section>
 </Layout>

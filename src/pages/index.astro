@@ -2,13 +2,19 @@
 import Layout from "../layouts/Layout.astro";
 import Services from "../components/Home/Services";
 import Strengths from "../components/Home/Strengths";
-import Acheivements from "../components/Home/Achievements";
 import ServiceComparisonTable from "../components/Home/ServiceComparisonTable";
 import ContactFlow from "../components/Home/ContactFlow";
 import HeroSection from "@/components/Home/Hero/HeroSection";
 import Solutions from "@/components/Home/Solutions/Solutions";
 
 import Section from "@/components/Section";
+import Projects from "@/components/Projects";
+import { getCollection } from "astro:content";
+
+const projects = (await getCollection("projects")).slice(0, 3);
+const sortedProjects = projects.sort(
+  (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
+);
 ---
 
 <Layout>
@@ -23,7 +29,18 @@ import Section from "@/components/Section";
   </Section>
 
   <Section bg="light" ariaLabel="実績">
-    <Acheivements client:idle />
+    <Projects
+      client:idle
+      projects={sortedProjects.map(project => ({
+        title: project.data.title,
+        summary: project.data.summary,
+        publishedDate: project.data.publishedDate,
+        cover: project.data.cover.src,
+        coverAlt: project.data.coverAlt,
+        href: `/projects/${project.id}`,
+      }))}
+    />
+    <!-- <Acheivements client:idle /> -->
   </Section>
 
   <Section bg="dark" ariaLabel="主要サービス">
