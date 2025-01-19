@@ -17,7 +17,6 @@ const { service } = Astro.props;
 ---
 
 <Layout title={`${service.title} | 企業名`}>
-  <Header />
   <main>
     {service.id === 'software-development' ? (
       <WebDevelopment client:load />

@@ -19,23 +19,18 @@ const news = [
 ];
 ---
 
-<Layout title="ニュース | 企業名" description="企業の最新ニュースやお知らせ">
-  <Header />
-  <main class="container mx-auto px-4 py-12">
-    <h1 class="mb-8 text-4xl font-bold">ニュース</h1>
+<Layout title="ニュース" description="企業の最新ニュースやお知らせ">
+  <h1 class="mb-8 text-4xl font-bold">ニュース</h1>
 
-    <div class="grid gap-8">
-      {
-        news.map(item => (
-          <article class="border-b pb-6">
-            <time class="text-sm text-gray-500">{item.date}</time>
-            <h2 class="mt-2 text-xl font-semibold">{item.title}</h2>
-            <p class="mt-2 text-gray-700">{item.excerpt}</p>
-          </article>
-        ))
-      }
-    </div>
-  </main>
-  <Footer />
+  <div class="grid gap-8">
+    {
+      news.map(item => (
+        <article class="border-b pb-6">
+          <time class="text-sm text-gray-500">{item.date}</time>
+          <h2 class="mt-2 text-xl font-semibold">{item.title}</h2>
+          <p class="mt-2 text-gray-700">{item.excerpt}</p>
+        </article>
+      ))
+    }
+  </div>
 </Layout>
-

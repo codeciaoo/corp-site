@@ -1,0 +1,74 @@
+02:19:30 [types] Generated 76ms
+02:19:30 [build] output: "static"
+02:19:30 [build] directory: /home/daiki/coding/codeciao/corp-site/dist/
+02:19:30 [build] Collecting build info...
+02:19:30 [build] ✓ Completed in 122ms.
+02:19:30 [build] Building static entrypoints...
+02:19:32 [vite] ✓ built in 1.57s
+02:19:32 [build] ✓ Completed in 1.61s.
+
+ building client (vite) 
+02:19:32 [vite] transforming...
+02:19:34 [vite] ✓ 1922 modules transformed.
+02:19:34 [vite] rendering chunks...
+02:19:34 [vite] computing gzip size...
+02:19:34 [vite] dist/_astro/shield.BHzlY8tJ.js                    0.33 kB │ gzip:  0.27 kB
+02:19:34 [vite] dist/_astro/lightbulb.DXqHQHX0.js                 0.47 kB │ gzip:  0.33 kB
+02:19:34 [vite] dist/_astro/server.DkOmQEVa.js                    0.52 kB │ gzip:  0.32 kB
+02:19:34 [vite] dist/_astro/chevron-up.BEAMB3n4.js                0.55 kB │ gzip:  0.28 kB
+02:19:34 [vite] dist/_astro/ContactSection.BEcmrCjp.js            0.84 kB │ gzip:  0.59 kB
+02:19:34 [vite] dist/_astro/jsx-runtime.B6N9iRLn.js               0.92 kB │ gzip:  0.58 kB
+02:19:34 [vite] dist/_astro/createLucideIcon.CVrS6vO8.js          1.04 kB │ gzip:  0.57 kB
+02:19:34 [vite] dist/_astro/line-chart.oL44mmU8.js                1.30 kB │ gzip:  0.48 kB
+02:19:34 [vite] dist/_astro/client.B-WsCjTb.js                    1.75 kB │ gzip:  0.89 kB
+02:19:34 [vite] dist/_astro/ContactFlow.B49AGbKe.js               2.36 kB │ gzip:  1.47 kB
+02:19:34 [vite] dist/_astro/Header.RYHHNK5w.js                    2.57 kB │ gzip:  1.21 kB
+02:19:34 [vite] dist/_astro/Strengths.C-xxRC1d.js                 3.04 kB │ gzip:  1.80 kB
+02:19:34 [vite] dist/_astro/CompanyProfile.DNnsmmjG.js            3.13 kB │ gzip:  1.48 kB
+02:19:34 [vite] dist/_astro/Members.BVXqQ9Hx.js                   3.14 kB │ gzip:  2.33 kB
+02:19:34 [vite] dist/_astro/Services.BE671AeP.js                  3.29 kB │ gzip:  1.93 kB
+02:19:34 [vite] dist/_astro/Achievements.Cx_OwQTN.js              3.34 kB │ gzip:  1.73 kB
+02:19:34 [vite] dist/_astro/ServicesComponent.pzwtTGYD.js         3.47 kB │ gzip:  1.86 kB
+02:19:34 [vite] dist/_astro/ServiceComparisonTable.DqQdwUJv.js    4.70 kB │ gzip:  2.37 kB
+02:19:34 [vite] dist/_astro/WebDevelopment.WItgZdlL.js            5.71 kB │ gzip:  2.39 kB
+02:19:34 [vite] dist/_astro/Solutions.Dtw79FRs.js                 7.13 kB │ gzip:  2.89 kB
+02:19:34 [vite] dist/_astro/CloudSolutions.DOmSXbUr.js            7.19 kB │ gzip:  2.58 kB
+02:19:34 [vite] dist/_astro/index.DNi1g-pO.js                     7.23 kB │ gzip:  2.91 kB
+02:19:34 [vite] dist/_astro/Case1.B4xcVDIQ.js                     7.49 kB │ gzip:  2.20 kB
+02:19:34 [vite] dist/_astro/button.CWYXokn3.js                   23.70 kB │ gzip:  8.20 kB
+02:19:34 [vite] dist/_astro/ContactForm.BU9dCbZl.js              76.51 kB │ gzip: 26.83 kB
+02:19:34 [vite] dist/_astro/HeroSection.CygyZOSK.js             118.51 kB │ gzip: 39.18 kB
+02:19:34 [vite] dist/_astro/index.Ds4CVZP7.js                   133.92 kB │ gzip: 43.13 kB
+02:19:34 [vite] ✓ built in 2.40s
+
+ generating static routes 
+02:19:34 ▶ src/pages/about.astro
+02:19:34   └─ /about/index.html (+144ms)
+02:19:34 ▶ src/pages/careers.astro
+02:19:34   └─ /careers/index.html (+55ms)
+02:19:35 ▶ src/pages/case1.astro
+02:19:35   └─ /case1/index.html (+57ms)
+02:19:35 ▶ src/pages/contact.astro
+02:19:35   └─ /contact/index.html (+61ms)
+02:19:35 ▶ src/pages/members.astro
+02:19:35   └─ /members/index.html (+50ms)
+02:19:35 ▶ src/pages/news/index.astro
+02:19:35   └─ /news/index.html (+45ms)
+02:19:35 ▶ src/pages/projects/index.astro
+02:19:35   └─ /projects/index.html (+54ms)
+02:19:35 λ src/pages/robots.txt.ts
+02:19:35   └─ /robots.txt (+1ms)
+02:19:35 ▶ src/pages/services/[id].astro
+02:19:35   ├─ /services/software-development/index.html (+58ms)
+02:19:35   ├─ /services/legacy-modernization/index.html (+48ms)
+02:19:35   ├─ /services/cloud-solutions/index.html (+62ms)
+02:19:35   └─ /services/it-consulting/index.html (+52ms)
+02:19:35 ▶ src/pages/services.astro
+02:19:35   └─ /services/index.html (+54ms)
+02:19:35 ▶ src/pages/index.astro
+02:19:35   └─ /index.html (+45ms)
+02:19:35 ✓ Completed in 985ms.
+
+02:19:35 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+02:19:35 [build] 13 page(s) built in 5.15s
+02:19:35 [build] Complete!

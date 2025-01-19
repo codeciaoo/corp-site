@@ -8,7 +8,8 @@ interface HeaderProps {
 
 const navigation = [
   { name: "会社概要", href: "/about" },
-  { name: "サービス", href: "/services" },
+  // { name: "サービス", href: "/services" },
+  { name: "導入実績", href: "/projects" },
   { name: "メンバー", href: "/members" },
   { name: "お問い合わせ", href: "/contact" },
 ];
