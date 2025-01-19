@@ -4,14 +4,14 @@ import Footer from "../components/Footer";
 import SecondaryCTA from "../components/SecondaryCTA";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   ogImage?: string;
   canonicalUrl?: string;
 }
 
 const {
-  title,
+  title = "CodeCiao",
   description = "テクノロジー戦略で事業成長を加速する",
   ogImage = "/default-og-image.webp",
   canonicalUrl = Astro.url.href,
@@ -36,16 +36,20 @@ const { pathname } = Astro.url;
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta name="title" property="og:title" content={title} />
+    <meta name="description" property="og:description" content={description} />
+    <meta
+      name="image"
+      property="og:image"
+      content={`https://code-ciao.com${ogImage}`}
+    />
     <meta property="og:url" content={Astro.url.href} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={`https://code-ciao.com${ogImage}`} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
