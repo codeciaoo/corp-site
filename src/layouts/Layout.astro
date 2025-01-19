@@ -12,11 +12,14 @@ interface Props {
 }
 
 const {
-  title = "CodeCiao",
+  title,
   description = "テクノロジー戦略で事業成長を加速する",
   ogImage = "/default-og-image.webp",
   canonicalUrl = Astro.url.href,
 } = Astro.props;
+
+const formattedTitle =
+  !title || title === "" ? "CodeCiao" : `${title} | CodeCiao`;
 
 const { pathname } = Astro.url;
 ---
@@ -40,7 +43,7 @@ const { pathname } = Astro.url;
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
-    <meta name="title" property="og:title" content={title} />
+    <meta name="title" property="og:title" content={formattedTitle} />
     <meta name="description" property="og:description" content={description} />
     <meta
       name="image"
@@ -51,7 +54,7 @@ const { pathname } = Astro.url;
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={formattedTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`https://code-ciao.com${ogImage}`} />
 
@@ -78,7 +81,7 @@ const { pathname } = Astro.url;
       })}
     />
 
-    <title>{title} | CodeCiao</title>
+    <title>{formattedTitle}</title>
   </head>
   <body>
     <Header client:load pathname={pathname} />
