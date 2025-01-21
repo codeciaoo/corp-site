@@ -21,7 +21,7 @@ const HeroContent: FC = () => {
             transition={{ duration: 0.6 }}
             className="leading-tight"
           >
-            テクノロジー戦略で
+            クラウドネイティブ開発で
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -41,8 +41,8 @@ const HeroContent: FC = () => {
         </div>
 
         <p className="max-w-2xl text-center text-sm text-gray-500 dark:text-gray-300 md:text-lg lg:text-left">
-          戦略立案からシステム実装、運用保守まで包括的にサポート。
-          最新テクノロジーの導入とデジタル変革を実現し、クライアント企業の持続的な成長を支援します。
+        クラウドや生成AIを用いたWebシステムの開発経験や、
+        技術者が不足している企業様の課題解決を、企画から開発、運用までお手伝いします
         </p>
       </div>
 
