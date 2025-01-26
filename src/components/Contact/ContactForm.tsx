@@ -36,8 +36,10 @@ export default function ContactForm() {
         body: JSON.stringify(formData),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("通知の送信に失敗しました");
+        throw new Error(responseData.details || responseData.error || "通知の送信に失敗しました");
       }
 
       // フォームをリセット
@@ -51,8 +53,8 @@ export default function ContactForm() {
 
       alert("お問い合わせありがとうございます。担当者より連絡させていただきます。");
     } catch (error) {
-      console.error("Error:", error);
-      alert("送信に失敗しました。時間をおいて再度お試しください。");
+      console.error("Error details:", error);
+      alert(`送信に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`);
     } finally {
       setIsSubmitting(false);
     }
