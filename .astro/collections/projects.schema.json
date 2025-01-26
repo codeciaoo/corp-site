@@ -39,8 +39,6 @@
       "required": [
         "title",
         "summary",
-        "cover",
-        "coverAlt",
         "publishedDate"
       ],
       "additionalProperties": false

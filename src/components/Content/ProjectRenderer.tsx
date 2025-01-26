@@ -1,54 +1,103 @@
-import React, { type ReactNode } from "react";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
-const ProjectRenderer = ({
-  children,
-  className = "",
-}: {
-  children: ReactNode;
+interface ProjectRendererProps {
+  
+  children: React.ReactNode;
   className?: string;
-}) => (
-  <div className="my-12 bg-white py-12 pl-10">
-    {/* prettier-ignore */}
-    <div
-      className={`prose prose-teal dark:prose-invert max-w-none text-gray-800
-        /* Typography - Reduced margins */
-        prose-h1:text-4xl prose-h1:font-bold prose-h1:text-teal-900 prose-h1:mb-4
-        prose-h2:text-2xl prose-h2:font-bold prose-h2:text-teal-800 prose-h2:mb-3
-        prose-h3:text-xl prose-h3:font-semibold prose-h3:text-teal-900 prose-h3:mb-2
-        prose-p:leading-tight prose-p:mt-0 prose-p:mb-0
+}
+
+const ProjectRenderer: React.FC<ProjectRendererProps> = ({ children, className }) => {
+  const sections = React.useMemo(() => {
+    const result = {
+      background: [] as React.ReactNode[],
+      result: [] as React.ReactNode[],
+      others: [] as React.ReactNode[],
+    };
+
+    let currentHeading = '';
+    let contentBuffer: React.ReactNode[] = [];
+
+    React.Children.forEach(children, (child) => {
+      if (!React.isValidElement(child)) return;
+
+      if (child.type === 'h2') {
+        // 前のセクションのコンテンツを保存
+        if (contentBuffer.length > 0) {
+          if (currentHeading === 'ご相談の背景') {
+            result.background = contentBuffer;
+          } else if (currentHeading === '導入結果') {
+            result.result = contentBuffer;
+          } else {
+            result.others = result.others.concat(contentBuffer);
+          }
+        }
         
-        /* Lists & Links - Tighter spacing */
-        prose-ul:list-disc prose-ol:list-decimal prose-[ul,ol]:pl-4 prose-[ul,ol]:mb-3
-        prose-li:m-0 prose-li:p-0 prose-[li,p]:text-gray-800
-        prose-a:text-teal-600 prose-a:no-underline hover:prose-a:text-teal-700
-        dark:prose-a:text-teal-500 dark:hover:prose-a:text-teal-400
-        
-        /* Content Blocks - Reduced margins */
-        prose-blockquote:border-l-4 prose-blockquote:border-teal-200 prose-blockquote:pl-4
-        prose-blockquote:italic prose-blockquote:my-3 prose-blockquote:text-gray-700
-        dark:prose-blockquote:border-teal-800
-        
-        /* Code & Pre - Compact padding */
-        prose-code:bg-teal-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-        prose-code:font-mono prose-code:text-sm prose-code:text-teal-800
-        dark:prose-code:bg-teal-900/10
-        prose-pre:bg-gray-50 prose-pre:p-4 prose-pre:rounded-xl prose-pre:shadow-sm
-        prose-pre:mb-3 dark:prose-pre:bg-gray-900/10 prose-pre:prose-code:bg-transparent
-        prose-pre:prose-code:p-0
-        
-        /* Media & Dividers - Reduced spacing */
-        prose-img:max-w-full prose-img:h-auto prose-img:rounded-xl prose-img:shadow-md
-        prose-img:my-3
-        prose-hr:my-4 prose-hr:border-teal-100 dark:prose-hr:border-teal-900/20
-        
-        /* Tables - Compact padding */
-        prose-table:w-full prose-table:my-3 prose-th:bg-teal-50 prose-th:text-teal-900
-        prose-th:p-2 prose-th:font-semibold prose-td:p-2 prose-td:border-b
-        prose-td:border-teal-100 ${className}`}
-    >
-      {children}
-    </div>
-  </div>
-);
+        // 新しいセクションの開始
+        currentHeading = child.props.children;
+        contentBuffer = [];
+      }
+      
+      contentBuffer.push(child);
+    });
+
+    // 最後のセクションのコンテンツを保存
+    if (contentBuffer.length > 0) {
+      if (currentHeading === 'ご相談の背景') {
+        result.background = contentBuffer;
+      } else if (currentHeading === '導入結果') {
+        result.result = contentBuffer;
+      } else {
+        result.others = result.others.concat(contentBuffer);
+      }
+    }
+
+    return result;
+  }, [children]);
+
+  return (
+    <article className={cn('max-w-6xl mx-auto px-4 py-12', className)}>
+      <div className="space-y-16">
+        {/* プロジェクトの概要セクション */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">
+            {React.Children.map(children, (child) => {
+              if (React.isValidElement(child) && child.type === 'h1') {
+                return child.props.children;
+              }
+              return null;
+            })?.[0] || ''}
+          </h1>
+        </div>
+
+        {/* メインコンテンツ */}
+        <div className="space-y-16">
+          {/* 背景と結果のグリッド */}
+          {(sections.background.length > 0 || sections.result.length > 0) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {sections.background.length > 0 && (
+                <div className="bg-white p-10 rounded-xl shadow-lg prose prose-slate max-w-none">
+                  {sections.background}
+                </div>
+              )}
+              {sections.result.length > 0 && (
+                <div className="bg-white p-10 rounded-xl shadow-lg prose prose-slate max-w-none">
+                  {sections.result}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* その他のセクション */}
+          {sections.others.length > 0 && (
+            <div className="bg-white p-10 rounded-xl shadow-lg prose prose-slate max-w-none">
+              {sections.others}
+            </div>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+};
 
 export default ProjectRenderer;

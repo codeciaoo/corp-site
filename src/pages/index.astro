@@ -35,8 +35,8 @@ const sortedProjects = projects.sort(
         title: project.data.title,
         summary: project.data.summary,
         publishedDate: project.data.publishedDate,
-        cover: project.data.cover.src,
-        coverAlt: project.data.coverAlt,
+        cover: project.data.cover?.src,
+        coverAlt: project.data.coverAlt || "",
         href: `/projects/${project.id}`,
       }))}
     />
