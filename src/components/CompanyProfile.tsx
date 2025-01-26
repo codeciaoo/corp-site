@@ -1,10 +1,9 @@
 import React from "react";
-import { AuroraBackground } from "./ui/aurora-background";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const CompanyProfile = () => {
   return (
-    <AuroraBackground className="pt-16">
+    <div className="pt-16">
       <main className="relative mx-auto max-w-5xl px-8 py-12">
         <h1 className="mb-16 text-center text-4xl font-bold tracking-tight">
           会社概要
@@ -133,15 +132,14 @@ const CompanyProfile = () => {
                 高度な技術力と実践的な経験を活かし、お客様のビジネス課題に最適なソリューションを提供してまいります。Webアプリケーション開発からクラウドインフラ構築まで、包括的なITサービスを通じて、お客様のビジネスの成長と進化をサポートしていきたいと考えています。
               </p>
                 <p className="mt-6 text-right text-lg">
-                  代表取締役{" "}
-                  <span className="font-bold text-emerald-600">田原 翼</span>
+                  <span className="font-bold">代表取締役 田原 翼</span>
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
       </main>
-    </AuroraBackground>
+    </div>
   );
 };
 

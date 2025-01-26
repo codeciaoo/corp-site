@@ -65,7 +65,7 @@ function StepCard({
             </div>
           </div>
           {/* Mobile Arrow */}
-          <div className="absolute bottom-0 left-1/2 block -translate-x-1/2 translate-y-4 transform md:hidden">
+          <div className="absolute bottom-0 left-1/2 block -translate-x-1/2 translate-y-8 transform md:hidden">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600/10">
               <ArrowRight className="h-4 w-4 rotate-90 text-teal-600" />
             </div>
@@ -79,7 +79,7 @@ function StepCard({
 export default function ContactFlow() {
   return (
     <div className="py-12">
-      <h2 className="mb-12 text-center text-3xl font-bold text-teal-600">
+      <h2 className="mb-12 text-center text-2xl font-bold text-teal-600 md:text-2xl text-[1.6rem]">
         お問い合わせから開始までの流れ
       </h2>
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-3 lg:grid-cols-5">

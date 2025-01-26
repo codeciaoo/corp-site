@@ -75,7 +75,7 @@ const HeroContent: FC = () => {
         </a>
 
         <a
-          href="/achievements"
+          href="/projects"
           className={cn(
             buttonVariants({ size: "lg", variant: "outline" }),
             "inline-flex w-full items-center justify-center border-teal-600 px-4 py-4 text-base text-teal-600 hover:bg-teal-50 hover:text-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:bg-teal-100 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-900 dark:hover:text-teal-300 dark:focus:ring-teal-400 dark:active:bg-teal-900 md:px-8 md:py-6 md:text-lg"

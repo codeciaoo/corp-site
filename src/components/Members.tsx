@@ -40,6 +40,7 @@ const teamMembers = [
 
       得意分野：
       - プロジェクトマネジメント(ウォーターフォール、スクラム)
+      - 生成AI/RAGを用いた検索システム/チャットボットの構築
       - クラウドインフラストラクチャの設計とIaCによる構築・運用
       - マイクロサービスアーキテクチャの設計と実装
 
@@ -204,7 +205,7 @@ const Members = () => {
                       alt={member.name}
                       width={300}
                       height={300}
-                      className="h-40 w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.02] md:h-[280px] md:w-[300px]"
+                      className="aspect-[4/3] h-auto w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.02] md:h-[280px] md:w-[300px]"
                     />
                   </div>
                   <div className="flex-1 space-y-4 p-6">

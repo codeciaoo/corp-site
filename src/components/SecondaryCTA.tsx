@@ -1,11 +1,11 @@
 export default function SecondaryCTA() {
   return (
     <section className="w-full bg-gray-50 px-4 py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl text-center">
-        <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          クラウドとAIで事業の未来を創造します
+      <div className="mx-auto max-w-7xl text-left lg:text-center">
+        <h2 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl lg:text-4xl">
+          クラウドとAIで事業成長を加速します
         </h2>
-        <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
+        <p className="mb-8 max-w-2xl text-base text-gray-600 lg:mx-auto lg:text-lg">
           クラウド移行からAIソリューション開発まで、豊富な実績で貴社のDXを加速。<br />
           初回無料相談で具体的な改善提案をご提示します。
         </p>

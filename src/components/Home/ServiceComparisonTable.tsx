@@ -83,55 +83,55 @@ const ServiceComparisonTable = () => {
     <div className="py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">ご支援イメージ</h2>
-          <p className="text-xl text-gray-600">プロジェクトの特性に合わせて最適なプランをご提案します</p>
+          <h2 className="text-4xl md:text-4xl text-3xl font-bold text-gray-900 mb-4">ご支援イメージ</h2>
+          <p className="text-sm md:text-lg text-gray-600">ご要望に合わせて最適なプランをご提案します</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, idx) => (
             <div 
               key={idx} 
-              className={`${plan.bgColor} rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group`}
+              className={`${plan.bgColor} rounded-2xl p-4 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden group`}
             >
               {/* 装飾的な背景要素 */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-gray-50 to-transparent opacity-50 rounded-full -mr-32 -mt-32 transition-opacity duration-500 group-hover:opacity-100" />
               
               <div className="relative">
                 {/* ヘッダーセクション */}
-                <div className="flex items-start space-x-4 mb-10">
-                  <div className={`p-3 rounded-xl ${idx === 0 ? 'bg-blue-50' : 'bg-green-50'} transition-transform duration-300 group-hover:scale-110`}>
-                    {plan.icon}
+                <div className="flex items-start space-x-4 mb-8 md:mb-10">
+                  <div className={`p-2 md:p-3 rounded-xl ${idx === 0 ? 'bg-blue-50' : 'bg-green-50'} transition-transform duration-300 group-hover:scale-110`}>
+                    {React.cloneElement(plan.icon, { className: 'w-8 h-8 md:w-12 md:h-12' })}
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{plan.title}</h2>
-                    <p className={`${idx === 0 ? "text-blue-600" : "text-green-600"} font-medium`}>{plan.subtitle}</p>
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 md:mb-2">{plan.title}</h2>
+                    <p className={`${idx === 0 ? "text-blue-600" : "text-green-600"} text-sm md:text-base font-medium`}>{plan.subtitle}</p>
                   </div>
                 </div>
 
                 {/* セクション */}
                 {plan.sections.map((section, sIdx) => (
-                  <div key={sIdx} className="mb-10 last:mb-0">
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className={`p-2 rounded-lg ${idx === 0 ? 'bg-blue-50 text-blue-500' : 'bg-green-50 text-green-500'}`}>
-                        {section.icon}
+                  <div key={sIdx} className="mb-8 md:mb-10 last:mb-0">
+                    <div className="flex items-center space-x-3 mb-4 md:mb-6">
+                      <div className={`p-1.5 md:p-2 rounded-lg ${idx === 0 ? 'bg-blue-50 text-blue-500' : 'bg-green-50 text-green-500'}`}>
+                        {React.cloneElement(section.icon, { className: 'w-5 h-5 md:w-6 md:h-6' })}
                       </div>
-                      <h3 className="font-bold text-lg text-gray-800">{section.title}</h3>
+                      <h3 className="font-bold text-base md:text-lg text-gray-800">{section.title}</h3>
                     </div>
                     
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       {section.points.map((point, pIdx) => (
                         <div 
                           key={pIdx} 
-                          className={`pl-6 border-l-2 hover:border-l-2 transition-colors duration-300 ${
+                          className={`pl-4 md:pl-6 border-l-2 hover:border-l-2 transition-colors duration-300 ${
                             idx === 0 
                               ? 'border-gray-100 hover:border-blue-500' 
                               : 'border-gray-100 hover:border-green-500'
                           }`}
                         >
-                          <div className="flex items-center space-x-3 mb-2">
-                            <CheckCircle2 className={`w-5 h-5 ${idx === 0 ? "text-blue-500" : "text-green-500"}`} />
-                            <h4 className="font-semibold text-gray-800">{point.title}</h4>
+                          <div className="flex items-center space-x-2 md:space-x-3 mb-1 md:mb-2">
+                            <CheckCircle2 className={`w-4 h-4 md:w-5 md:h-5 ${idx === 0 ? "text-blue-500" : "text-green-500"}`} />
+                            <h4 className="font-semibold text-sm md:text-base text-gray-800 text-left">{point.title}</h4>
                           </div>
-                          <p className="text-gray-600 ml-8 leading-relaxed">{point.description}</p>
+                          <p className="text-sm md:text-base text-gray-600 ml-6 md:ml-8 leading-relaxed text-left">{point.description}</p>
                         </div>
                       ))}
                     </div>

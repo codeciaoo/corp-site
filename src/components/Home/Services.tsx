@@ -12,7 +12,7 @@ const services = [
     icon: <Code className="h-6 w-6" />,
     title: "Web/モバイルアプリ開発",
     description:
-      "ECサイトから IoTデータ可視化、勤怠管理システム、生成AIを活用した安全管理システムまで、幅広い開発実績と最新技術の実装力を持っています",
+      "ECサイト、IoTデータ可視化、勤怠管理システム、生成AIを活用した安全管理システムの開発実績と最新技術の実装力",
     bulletPoints: [
       { id: "1", text: "ECサイト・業務システムの開発" },
       { id: "2", text: "IoTデータ可視化システム構築" },
@@ -21,20 +21,20 @@ const services = [
   },
   {
     icon: <Database className="h-6 w-6" />,
-    title: "Webサイトの開発/保守",
+    title: "生成AI開発/導入支援",
     description:
-      "従来型WordPressから高速なJamstack構成まで、Cloudflareなど最新技術を活用し、運用負荷の軽減と安定稼働を実現",
+      "OpenAIやGemini等の生成AIを活用したシステム開発から、RAGを用いた社内文書検索まで、最新のAI技術を活用したソリューションを提供",
     bulletPoints: [
-      { id: "1", text: "高速なJamstack構成の実装" },
-      { id: "2", text: "WordPress構築・カスタマイズ" },
-      { id: "3", text: "CDN活用による安定運用" },
+      { id: "1", text: "生成AIを活用したシステム開発" },
+      { id: "2", text: "RAGによる社内文書検索システム構築" },
+      { id: "3", text: "AIモデルのファインチューニング" },
     ],
   },
   {
     icon: <Cloud className="h-6 w-6" />,
     title: "クラウドインテグレーション",
     description:
-      "AWSなどのクラウドサービスの導入設計から運用まで対応し、セキュアで運用効率の高いクラウド環境と、リソース最適化によるムダのない利用料を実現",
+      "AWSなどのクラウド導入設計から運用まで対応し、セキュアで効率的なクラウド環境とリソース/コスト最適化を実現",
     bulletPoints: [
       { id: "1", text: "クラウド移行・設計支援" },
       { id: "2", text: "セキュリティ対策の実装" },
