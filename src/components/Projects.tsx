@@ -19,10 +19,12 @@ const Projects = ({ projects }: { projects: ProjectProps[] }) => {
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map(project => (
-            <Card
+            <a
+              href={project.href}
               key={project.href}
-              className="group overflow-hidden bg-white transition-all duration-300 hover:shadow-lg"
+              className="block no-underline"
             >
+              <Card className="group overflow-hidden bg-white transition-all duration-300 hover:shadow-lg">
               <div className="relative aspect-video w-full overflow-hidden">
                 <img
                   src={project.cover || "/placeholder.svg"}
@@ -44,16 +46,14 @@ const Projects = ({ projects }: { projects: ProjectProps[] }) => {
                       { year: "numeric", month: "short", day: "numeric" }
                     )}
                   </span>
-                  <a
-                    href={project.href}
-                    className="inline-flex items-center text-sm font-medium text-teal-600 transition-colors hover:text-teal-800"
-                  >
+                  <span className="inline-flex items-center text-sm font-medium text-teal-600">
                     詳細を見る
                     <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </a>
+                  </span>
                 </div>
               </div>
-            </Card>
+              </Card>
+            </a>
           ))}
         </div>
       </div>
