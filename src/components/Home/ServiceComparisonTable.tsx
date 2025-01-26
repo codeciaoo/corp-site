@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Lightbulb, Clock, Target, Users, CheckCircle2, Rocket, Shield, Coins } from 'lucide-react';
+import { Zap, Lightbulb, Target, CheckCircle2, Rocket, Shield, Coins } from 'lucide-react';
 
 const ServiceComparisonTable = () => {
   const plans = [
@@ -89,7 +89,7 @@ const ServiceComparisonTable = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {plans.map((plan, idx) => (
           <div key={idx} className={`${plan.bgColor} rounded-lg p-6`}>
             <div className="flex items-center justify-center space-x-3 mb-8">
