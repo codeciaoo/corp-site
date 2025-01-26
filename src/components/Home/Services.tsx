@@ -1,18 +1,15 @@
-import { Code, Database, Cloud, LineChart, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Code, Database, Cloud, LineChart } from "lucide-react";
 
 type ServiceCardProps = {
   icon: React.ReactNode;
   title: string;
   description: string;
   bulletPoints: { id: string; text: string }[];
-  id: string;
 };
 
 const services = [
   {
-    id: "software-development",
-    icon: <Code className="h-6 w-6 text-teal-600" />,
+    icon: <Code className="h-6 w-6" />,
     title: "Web/モバイルアプリ開発",
     description:
       "ECサイトから IoTデータ可視化、勤怠管理システム、生成AIを活用した安全管理システムまで、幅広い開発実績と最新技術の実装力を持っています",
@@ -23,8 +20,7 @@ const services = [
     ],
   },
   {
-    id: "legacy-modernization",
-    icon: <Database className="h-6 w-6 text-teal-600" />,
+    icon: <Database className="h-6 w-6" />,
     title: "Webサイトの開発/保守",
     description:
       "従来型WordPressから高速なJamstack構成まで、Cloudflareなど最新技術を活用し、運用負荷の軽減と安定稼働を実現",
@@ -35,8 +31,7 @@ const services = [
     ],
   },
   {
-    id: "cloud-solutions",
-    icon: <Cloud className="h-6 w-6 text-teal-600" />,
+    icon: <Cloud className="h-6 w-6" />,
     title: "クラウドインテグレーション",
     description:
       "AWSなどのクラウドサービスの導入設計から運用まで対応し、セキュアで運用効率の高いクラウド環境と、リソース最適化によるムダのない利用料を実現",
@@ -47,8 +42,7 @@ const services = [
     ],
   },
   {
-    id: "it-consulting",
-    icon: <LineChart className="h-6 w-6 text-teal-600" />,
+    icon: <LineChart className="h-6 w-6" />,
     title: "DXコンサルティング/CTO代行",
     description:
       "業務プロセスの可視化から技術戦略の立案、DevOpsの導入、開発体制の構築まで、企業のデジタル変革を現場目線で伴走支援",
@@ -65,75 +59,43 @@ function ServiceCard({
   title,
   description,
   bulletPoints,
-  id,
 }: ServiceCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   return (
-    <div className="group relative rounded-lg border border-teal-600/20 bg-white p-6 shadow-md transition-all duration-200 hover:shadow-lg">
-      <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600/10">
-          {icon}
-        </div>
-
-        <div>
-          {/* Default Content */}
-          <div
-            className={`transition-all duration-300 ${isExpanded ? "hidden" : "block"}`}
-          >
-            <h3 className="mb-1 text-xl font-semibold text-black">{title}</h3>
-            <p className="border-t border-gray-200 pt-3 text-sm text-gray-600">
-              {description}
-            </p>
+    <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-200 hover:border-teal-100 hover:shadow-lg">
+      <div className="relative z-10">
+        <div className="mb-6 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+            {icon}
           </div>
-
-          {/* Expanded Content */}
-          <div
-            className={`transition-all duration-300 ${isExpanded ? "block" : "hidden"}`}
-          >
-            <h3 className="mb-3 text-xl font-semibold text-black">{title}</h3>
-            <ul className="mb-4 space-y-2">
-              {bulletPoints.map(point => (
-                <li
-                  key={point.id}
-                  className="flex items-start gap-2 text-sm text-teal-600"
-                >
-                  <span className="shrink-0">•</span>
-                  <span>{point.text}</span>
-                </li>
-              ))}
-            </ul>
-            <a
-              href={`/services/${id}`}
-              className="inline-flex items-center text-sm text-teal-600 hover:text-teal-700"
-            >
-              詳しく見る
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </a>
-          </div>
+          <h3 className="text-xl font-bold text-gray-900">{title}</h3>
         </div>
+        <p className="mb-8 text-gray-600">{description}</p>
+        <ul className="space-y-4">
+          {bulletPoints.map(point => (
+            <li key={point.id} className="flex items-start gap-3">
+              <span className="mt-1.5 flex h-1.5 w-1.5 shrink-0 rounded-full bg-teal-500" />
+              <span className="text-sm text-gray-600">{point.text}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="absolute right-4 top-4 text-teal-600 hover:text-teal-700"
-      >
-        {isExpanded ? "−" : "+"}
-      </button>
+      <div className="absolute right-0 top-0 h-[200px] w-[200px] translate-x-[30%] translate-y-[-30%] rounded-full bg-gradient-to-br from-teal-50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
     </div>
   );
 }
 
 export default function Services() {
   return (
-    <div className="py-12">
-      <h2 className="mb-8 text-center text-3xl font-bold text-teal-600">
-        主要サービス
-      </h2>
-      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-        {services.map(service => (
-          <ServiceCard key={service.id} {...service} />
-        ))}
+    <div className="py-24">
+      <div className="container mx-auto px-4">
+        <h2 className="mb-16 text-center text-4xl font-bold text-teal-900">
+          主要サービス
+        </h2>
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
+          {services.map(service => (
+            <ServiceCard key={service.title} {...service} />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -5,21 +5,21 @@ const strengths = [
     icon: <Lightbulb className="h-6 w-6 text-teal-600" />,
     title: "経営課題解決のための戦略立案",
     description:
-      "大手コンサルティングファーム出身者による、業務プロセスの可視化・分析、ROI算出、KPI設計、データドリブンな意思決定支援まで、経営層の課題解決を包括的に支援",
+      "大手コンサルティングファーム出身者が、業務プロセスの可視化・分析、ROI算出など、システム開発を超えた経営戦略の立案と実行支援をサポート",
     illustration: "/img-strengths-1.webp",
   },
   {
     icon: <Cpu className="h-6 w-6 text-teal-600" />,
     title: "最新技術の活用",
     description:
-      "AWS/GCPを用いたクラウドインフラ構築、RAGシステムやAIエージェントの開発、TensorFlow/PyTorchでの機械学習モデル構築など、実績豊富な最新技術の実装経験",
+      "AWSやGCPを活用したクラウドインフラの構築や、生成AIやRAGを活用したシステムなど、最新技術を駆使した豊富な実績",
     illustration: "/img-strengths-2.webp",
   },
   {
     icon: <TrendingUp className="h-6 w-6 text-teal-600" />,
     title: "実践的なアプローチ",
     description:
-      "マイクロサービスアーキテクチャの設計、CI/CDパイプラインの構築、Infrastructure as Codeによる環境構築に加え、負荷試験によるパフォーマンス検証やセキュリティ診断まで、エンタープライズレベルの開発実績に基づく包括的なソリューション提供",
+      "マイクロサービス設計、CI/CD構築、IaCによるインフラ構築、負荷試験やセキュリティ診断など、エンタープライズレベルの包括的なソリューション提供",
     illustration: "/img-strengths-3.webp",
   },
 ];
@@ -51,7 +51,7 @@ function StrengthCard({
             </div>
             <h3 className="text-xl font-bold text-gray-900">{title}</h3>
           </div>
-          <p className="text-lg leading-relaxed text-gray-600">{description}</p>
+          <p className="leading-relaxed text-gray-600">{description}</p>
         </div>
         <div className="relative flex-1">
           <img
