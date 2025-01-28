@@ -1,9 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Services from "../components/Home/Services";
-import Strengths from "../components/Home/Strengths";
-import ServiceComparisonTable from "../components/Home/ServiceComparisonTable";
-import ContactFlow from "../components/Home/ContactFlow";
+import Services from "@/components/Home/Services";
+import Strengths from "@/components/Home/Strengths";
+import ServiceComparisonTable from "@/components/Home/ServiceComparisonTable";
+import Achievements from "@/components/Home/Achievements";
+import ContactFlow from "@/components/Home/ContactFlow";
 import HeroSection from "@/components/Home/Hero/HeroSection";
 import Solutions from "@/components/Home/Solutions/Solutions";
 
@@ -29,7 +30,7 @@ const sortedProjects = projects.sort(
   </Section>
 
   <Section bg="light" ariaLabel="実績">
-    <Projects
+    <Achievements
       client:idle
       projects={sortedProjects.map(project => ({
         title: project.data.title,

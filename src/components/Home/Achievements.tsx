@@ -1,101 +1,43 @@
-import { Building2, Globe, Factory, Server } from "lucide-react";
-import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 
-type AchievementCardProps = {
-  icon: React.ReactNode;
+interface ProjectProps {
+  href: string;
   title: string;
-  industry: string;
-  description: string;
+  summary: string;
+  publishedDate: Date;
+  cover?: string;
+  coverAlt?: string;
+}
+
+const Projects = ({ projects }: { projects: ProjectProps[] }) => {
+  return (
+    <div className="bg-gradient-to-b from-white to-gray-50 py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-teal-800 sm:mb-12 sm:text-4xl">
+          導入実績
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map(project => (
+            <a
+              href={project.href}
+              key={project.href}
+              className="block no-underline"
+            >
+              <Card className="group h-full bg-white p-6 transition-all duration-300 hover:shadow-lg">
+                <div className="flex h-full items-center justify-between">
+                  <h3 className="flex-1 text-xl font-semibold text-gray-900 group-hover:text-teal-600">
+                    {project.title}
+                  </h3>
+                  <ArrowRight className="ml-4 h-4 w-4 shrink-0 text-teal-600 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Card>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-const achievements = [
-  {
-    icon: <Building2 className="h-6 w-6 text-teal-600" />,
-    title: "基幹システムの刷新",
-    industry: "製造業",
-    description:
-      "老朽化した基幹システムをクラウドへ移行し、運用コストを40%削減。処理速度が3倍に向上し、業務効率が大幅に改善。",
-  },
-  {
-    icon: <Globe className="h-6 w-6 text-teal-600" />,
-    title: "営業支援システムの導入",
-    industry: "サービス業",
-    description:
-      "クラウドベースのCRMを導入し、営業活動の可視化を実現。商談成約率が25%向上し、売上げ拡大に貢献。",
-  },
-  {
-    icon: <Factory className="h-6 w-6 text-teal-600" />,
-    title: "工場IoT化プロジェクト",
-    industry: "製造業",
-    description:
-      "生産設備のIoT化により、リアルタイムでの稼働監視を実現。生産効率が20%向上し、不良品率を半減。",
-  },
-  {
-    icon: <Server className="h-6 w-6 text-teal-600" />,
-    title: "データ基盤の統合",
-    industry: "小売業",
-    description:
-      "バラバラだった社内データベースを統合し、データ分析基盤を構築。意思決定の迅速化と精度向上を実現。",
-  },
-];
-
-function AchievementCard({
-  icon,
-  title,
-  industry,
-  description,
-}: AchievementCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <div className="relative rounded-lg border border-teal-600/20 bg-white p-6 shadow-md transition-all duration-200 hover:shadow-lg">
-      <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600/10">
-          {icon}
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-teal-100 px-3 py-1 text-xs text-teal-600">
-              {industry}
-            </span>
-          </div>
-          <h3 className="mb-2 mt-2 text-xl font-semibold text-black">
-            {title}
-          </h3>
-          <p
-            className={`text-sm text-gray-600 transition-all duration-300 ${
-              isExpanded ? "line-clamp-none" : "line-clamp-2"
-            }`}
-          >
-            {description}
-          </p>
-        </div>
-      </div>
-
-      {description.length > 50 && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="absolute right-4 top-4 text-teal-600 hover:text-teal-700"
-        >
-          {isExpanded ? "−" : "+"}
-        </button>
-      )}
-    </div>
-  );
-}
-
-export default function Achievements() {
-  return (
-    <div className="py-12">
-      <h2 className="mb-8 text-center text-3xl font-bold text-teal-600">
-        導入実績
-      </h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {achievements.map((achievement, index) => (
-          <AchievementCard key={index} {...achievement} />
-        ))}
-      </div>
-    </div>
-  );
-}
+export default Projects;

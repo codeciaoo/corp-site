@@ -79,7 +79,7 @@ function StepCard({
 export default function ContactFlow() {
   return (
     <div className="py-12">
-      <h2 className="mb-12 text-center text-2xl font-bold text-teal-600 md:text-2xl text-[1.6rem]">
+      <h2 className="mb-12 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
         お問い合わせから開始までの流れ
       </h2>
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-3 lg:grid-cols-5">

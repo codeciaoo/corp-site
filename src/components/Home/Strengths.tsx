@@ -73,7 +73,9 @@ export default function Strengths() {
       </a>
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
-          <h2 className="mb-2 text-3xl font-bold">CodeCiaoの強み</h2>
+          <h2 className="mb-2 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
+            CodeCiaoの強み
+          </h2>
         </div>
         <div className="space-y-4">
           {strengths.map((strength, index) => (

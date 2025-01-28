@@ -88,7 +88,7 @@ export default function Services() {
   return (
     <div className="py-24">
       <div className="container mx-auto px-4">
-        <h2 className="mb-16 text-center text-4xl font-bold text-teal-900">
+        <h2 className="mb-16 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
           主要サービス
         </h2>
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
