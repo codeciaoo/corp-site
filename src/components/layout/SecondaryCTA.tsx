@@ -6,7 +6,8 @@ export default function SecondaryCTA() {
           クラウドとAIで事業成長を加速します
         </h2>
         <p className="mb-8 max-w-2xl text-base text-gray-600 lg:mx-auto lg:text-lg">
-          クラウド移行からAIソリューション開発まで、豊富な実績で貴社のDXを加速。<br />
+          クラウド移行からAIソリューション開発まで、豊富な実績で貴社のDXを加速。
+          <br />
           初回無料相談で具体的な改善提案をご提示します。
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">

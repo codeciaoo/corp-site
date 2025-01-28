@@ -1,12 +1,6 @@
-const Footer = () => {
-  const quickLinks = [
-    { name: "サービス", path: "/services" },
-    { name: "強み", path: "/strengths" },
-    { name: "実績", path: "/achievements" },
-    { name: "会社情報", path: "/company" },
-    { name: "お問い合わせ", path: "/contact" },
-  ];
+import navigation from "./navigation";
 
+const Footer = () => {
   return (
     <footer className="bg-gray-900 py-8 text-gray-300">
       <div className="container mx-auto px-4 md:px-6">
@@ -24,13 +18,13 @@ const Footer = () => {
               クイックリンク
             </h4>
             <ul className="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0">
-              {quickLinks.map(item => (
-                <li key={item.name}>
+              {navigation.map(nav => (
+                <li key={nav.name}>
                   <a
-                    href={item.path}
+                    href={nav.href}
                     className="text-base transition-colors hover:text-teal-400"
                   >
-                    {item.name}
+                    {nav.name}
                   </a>
                 </li>
               ))}
