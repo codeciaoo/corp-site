@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import MembersComponent from "../components/Members";
+import MembersComponent from "../components/Members/Members";
+import Section from "@/components/Section";
 ---
 
 <Layout title="メンバー紹介">
-  <MembersComponent client:load />
+  <Section bg="light">
+    <MembersComponent client:load />
+  </Section>
 </Layout>

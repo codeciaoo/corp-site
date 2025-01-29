@@ -12,7 +12,11 @@ import {
   SelectValue,
 } from "../ui/select";
 
-export default function ContactForm() {
+interface ContactFormProps {
+  home: boolean;
+}
+
+export default function ContactForm({ home }: ContactFormProps) {
   const [formData, setFormData] = useState({
     company: "",
     name: "",
@@ -39,7 +43,11 @@ export default function ContactForm() {
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.details || responseData.error || "通知の送信に失敗しました");
+        throw new Error(
+          responseData.details ||
+            responseData.error ||
+            "通知の送信に失敗しました"
+        );
       }
 
       // フォームをリセット
@@ -51,79 +59,103 @@ export default function ContactForm() {
         message: "",
       });
 
-      alert("お問い合わせありがとうございます。担当者より連絡させていただきます。");
+      alert(
+        "お問い合わせありがとうございます。担当者より連絡させていただきます。"
+      );
     } catch (error) {
       console.error("Error details:", error);
-      alert(`送信に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`);
+      alert(
+        `送信に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
 
   const handleServiceChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, service: value }));
+    setFormData(prev => ({ ...prev, service: value }));
   };
 
+  const bgColor = home ? "bg-gray-100" : "bg-white";
+  const labelClassName = home ? "" : "text-md text-teal-800";
+
   return (
-    <Card className="space-y-4 rounded-xl border-teal-600/20 bg-gray-100 p-4 shadow-xl md:space-y-6 md:rounded-2xl md:p-6 lg:p-8">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-teal-600 md:text-2xl">
-          無料相談を予約する
-        </h2>
-        <p className="text-xs text-gray-800 md:text-sm">
-          まずは気軽にご相談ください。会社それぞれの課題に合わせた最適なソリューションをご提案いたします。
-        </p>
-      </div>
-      <form className="space-y-4" onSubmit={handleSubmit}>
+    <Card
+      className={`space-y-4 rounded-xl border-teal-600/20 ${bgColor} p-4 shadow-2xl md:space-y-6 md:rounded-2xl md:p-6 lg:p-8`}
+    >
+      {home && (
         <div className="space-y-2">
-          <Label htmlFor="company">会社名</Label>
+          <h2 className="text-xl font-semibold text-teal-600 md:text-2xl">
+            無料相談を予約する
+          </h2>
+          <p className="text-xs text-gray-800 md:text-sm">
+            まずは気軽にご相談ください。会社それぞれの課題に合わせた最適なソリューションをご提案いたします。
+          </p>
+        </div>
+      )}
+      <form
+        className={home ? "space-y-4" : "space-y-6"}
+        onSubmit={handleSubmit}
+      >
+        <div className="space-y-2">
+          <Label htmlFor="company" className={labelClassName}>
+            会社名
+          </Label>
           <Input
             id="company"
             value={formData.company}
             onChange={handleChange}
             placeholder="株式会社Example"
-            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className={`border-teal-600/20 ${bgColor} transition-colors focus:border-teal-600 focus:ring-teal-600`}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="name">お名前</Label>
+          <Label htmlFor="name" className={labelClassName}>
+            お名前
+          </Label>
           <Input
             id="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="山田 太郎"
-            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className={`border-teal-600/20 ${bgColor} transition-colors focus:border-teal-600 focus:ring-teal-600`}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">メールアドレス</Label>
+          <Label htmlFor="email" className={labelClassName}>
+            メールアドレス
+          </Label>
           <Input
             id="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="taro.yamada@example.com"
-            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
+            className={`border-teal-600/20 ${bgColor} transition-colors focus:border-teal-600 focus:ring-teal-600`}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="service">ご興味のあるサービス</Label>
+          <Label htmlFor="service" className={labelClassName}>
+            ご興味のあるサービス
+          </Label>
           <Select value={formData.service} onValueChange={handleServiceChange}>
             <SelectTrigger
               id="service"
-              className="border-teal-600/20 bg-white shadow-sm transition-colors hover:bg-gray-50 focus:border-teal-600 focus:ring-teal-600"
+              className={`border-teal-600/20 ${bgColor} shadow-sm transition-colors hover:bg-gray-50 focus:border-teal-600 focus:ring-teal-600`}
             >
               <SelectValue placeholder="サービスを選択してください" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent className={bgColor}>
               <SelectItem value="ai">生成AI/RAG開発</SelectItem>
               <SelectItem value="cloud">クラウドインテグレーション</SelectItem>
               <SelectItem value="development">システム開発</SelectItem>
@@ -133,12 +165,14 @@ export default function ContactForm() {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="message">ご相談内容</Label>
+          <Label htmlFor="message" className={labelClassName}>
+            ご相談内容
+          </Label>
           <textarea
             id="message"
             value={formData.message}
             onChange={handleChange}
-            className="ring-offset-background placeholder:text-muted-foreground min-h-[80px] w-full rounded-md border border-teal-600/20 bg-white px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[100px]"
+            className={`ring-offset-background placeholder:text-muted-foreground min-h-[80px] w-full rounded-md border border-teal-600/20 ${bgColor} px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[100px]`}
             placeholder="現在の課題や目標についてお聞かせください"
             required
           />

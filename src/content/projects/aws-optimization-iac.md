@@ -4,15 +4,7 @@ summary: "複数の事業部で個別に運用されていたAWS環境を、Terr
 cover: "./mermaid.png"
 coverAlt: "System architecture diagram"
 publishedDate: 2024-03-20
-tags:
-  [
-    "AWS",
-    "Apple",
-    "Terraform",
-    "IaC",
-    "Cost Optimization",
-    "Operational Efficiency",
-  ]
+tags: ["AWS", "クラウド", "コスト最適化", "セキュリティ"]
 ---
 
 ## ご相談の背景

@@ -3,7 +3,7 @@ import type { ProjectProps } from "../Achievements/ProjectProps";
 
 const Projects = ({ projects }: { projects: ProjectProps[] }) => {
   return (
-    <div className="py-24">
+    <div className="min-h-screen py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-teal-800 sm:text-4xl">
           導入実績

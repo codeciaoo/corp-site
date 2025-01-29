@@ -20,6 +20,7 @@ const sortedProjects = projects.sort(
         cover: project.data.cover?.src,
         coverAlt: project.data.coverAlt,
         href: `/projects/${project.id}`,
+        tags: project.data.tags,
       }))}
     />
   </Section>

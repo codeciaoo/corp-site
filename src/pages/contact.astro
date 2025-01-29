@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ContactSection from "../components/Contact/ContactSection";
+import Section from "@/components/Section";
 ---
 
 <Layout title="お問い合わせ">
-  <ContactSection client:load />
+  <Section bg="light">
+    <ContactSection client:load />
+  </Section>
 </Layout>

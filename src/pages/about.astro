@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CompanyProfile from "../components/CompanyProfile";
+import Section from "../components/Section";
 ---
 
 <Layout title="会社概要" description="会社概要ページです。">
-  <CompanyProfile client:load />
+  <Section bg="light">
+    <CompanyProfile client:load />
+  </Section>
 </Layout>

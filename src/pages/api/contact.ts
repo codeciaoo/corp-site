@@ -14,11 +14,12 @@ export const OPTIONS: APIRoute = async () => {
 };
 
 export const POST: APIRoute = async ({ request }) => {
-  const SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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";
+  const SLACK_WEBHOOK_URL =
+    "https://hooks.slack.com/services/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";
 
   try {
     const formData = await request.json();
-    
+
     // Slackに通知を送信
     const response = await fetch(SLACK_WEBHOOK_URL, {
       method: "POST",
@@ -47,14 +48,17 @@ export const POST: APIRoute = async ({ request }) => {
       error: error instanceof Error ? error.message : String(error),
       webhookUrl: SLACK_WEBHOOK_URL ? "設定されています" : "未設定です",
     });
-    return new Response(JSON.stringify({ 
-      error: "Internal Server Error",
-      details: error instanceof Error ? error.message : String(error)
-    }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+        details: error instanceof Error ? error.message : String(error),
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 };

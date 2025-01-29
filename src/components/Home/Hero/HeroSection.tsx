@@ -1,6 +1,6 @@
-import ContactForm from "@/components/Contact/ContactForm";
 import HeroContent from "./HeroContent";
 import { AuroraBackground } from "@/components/ui/aurora-background";
+import ContactForm from "@/components/Contact/ContactForm";
 
 export default function HeroSection() {
   return (
@@ -12,7 +12,7 @@ export default function HeroSection() {
               <HeroContent />
             </div>
             <div className="hidden lg:col-span-5 lg:block">
-              <ContactForm />
+              <ContactForm home={true} />
             </div>
           </div>
         </div>

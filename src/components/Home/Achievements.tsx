@@ -14,7 +14,7 @@ const Projects = ({ projects }: { projects: ProjectProps[] }) => {
         // sm breakpoint
         setProjectsToShow(2);
       } else {
-        setProjectsToShow(1);
+        setProjectsToShow(2);
       }
     };
 

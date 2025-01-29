@@ -47,7 +47,7 @@ export default function Header({ pathname }: HeaderProps) {
               href={item.href}
               className={`text-md flex items-center transition-transform hover:scale-105 ${
                 currentPath === item.href
-                  ? "font-medium text-blue-600"
+                  ? "font-medium text-sky-600"
                   : "text-gray-700 hover:text-gray-900"
               }`}
             >
@@ -75,7 +75,7 @@ export default function Header({ pathname }: HeaderProps) {
                   href={item.href}
                   className={`text-md flex items-center transition-colors ${
                     currentPath === item.href
-                      ? "font-medium text-blue-600"
+                      ? "font-medium text-sky-600"
                       : "text-gray-700 hover:text-gray-900"
                   }`}
                   onClick={() => setIsOpen(false)}

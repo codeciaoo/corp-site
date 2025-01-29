@@ -4,7 +4,7 @@ summary: "建設業界向けに開発された包括的な業務管理システ�
 cover: "./mermaid.png"
 coverAlt: "Mermaid diagram for system architecture"
 publishedDate: 2024-01-19
-tags: []
+tags: ["業務効率化", "モバイル", "クラウド"]
 ---
 
 ## ご相談の背景
