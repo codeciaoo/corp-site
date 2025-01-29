@@ -14,9 +14,8 @@ const ServiceComparisonTable = () => {
     {
       title: "最速確実納品プラン",
       subtitle: "期限内の確実な納品をお約束",
-      icon: <Zap className="h-12 w-12 text-blue-600" />,
-      bgColor: "bg-white",
-      iconColor: "text-blue-500",
+      icon: <Zap className="h-12 w-12" />,
+      color: "text-sky-600",
       sections: [
         {
           title: "このようなニーズにお応えします",
@@ -55,9 +54,8 @@ const ServiceComparisonTable = () => {
     {
       title: "デジタル共創ラボプラン",
       subtitle: "事業成長の技術パートナー",
-      icon: <Lightbulb className="h-12 w-12 text-green-600" />,
-      bgColor: "bg-white",
-      iconColor: "text-green-500",
+      icon: <Lightbulb className="h-12 w-12" />,
+      color: "text-teal-600",
       sections: [
         {
           title: "このようなニーズにお応えします",
@@ -96,93 +94,77 @@ const ServiceComparisonTable = () => {
   ];
 
   return (
-    <div className="py-24">
-      <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="text-center text-3xl font-bold text-teal-800 sm:mb-4 sm:text-4xl">
-            ご支援イメージ
-          </h2>
-          <p className="text-sm text-gray-600 md:text-lg">
-            ご要望に合わせて最適なプランをご提案します
-          </p>
-        </div>
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
-          {plans.map((plan, idx) => (
-            <div
-              key={idx}
-              className={`${plan.bgColor} group relative overflow-hidden rounded-2xl border border-gray-100 p-4 shadow-lg transition-all duration-300 hover:shadow-xl md:p-8`}
-            >
-              {/* 装飾的な背景要素 */}
-              <div className="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 rounded-full bg-gradient-to-br from-gray-50 to-transparent opacity-50 transition-opacity duration-500 group-hover:opacity-100" />
+    <div className="container mx-auto px-4 py-24">
+      <div className="mb-16 text-center">
+        <h2 className="mb-4 text-center text-3xl font-bold text-teal-800 sm:text-4xl">
+          ご支援イメージ
+        </h2>
+        <p className="text-lg text-gray-600">
+          ご要望に合わせて最適なプランをご提案します
+        </p>
+      </div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
+        {plans.map((plan, idx) => (
+          <div
+            key={idx}
+            className="group relative overflow-hidden rounded-3xl bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-2xl"
+          >
+            <div className="relative">
+              <div className="mb-2 flex items-start space-x-4">
+                <div className={`rounded-2xl p-3 ${plan.color} bg-opacity-10`}>
+                  {React.cloneElement(plan.icon, {
+                    className: `w-12 h-12 ${plan.color}`,
+                  })}
+                </div>
+                <div>
+                  <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                    {plan.title}
+                  </h3>
+                  <p className={`text-base font-medium ${plan.color}`}>
+                    {plan.subtitle}
+                  </p>
+                </div>
+              </div>
+              <div className="mb-8 h-px w-full bg-gray-200" />
 
-              <div className="relative">
-                {/* ヘッダーセクション */}
-                <div className="mb-8 flex items-start space-x-4 md:mb-10">
-                  <div
-                    className={`rounded-xl p-2 md:p-3 ${idx === 0 ? "bg-blue-50" : "bg-green-50"} transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    {React.cloneElement(plan.icon, {
-                      className: "w-8 h-8 md:w-12 md:h-12",
-                    })}
-                  </div>
-                  <div>
-                    <h2 className="mb-1 text-xl font-bold text-gray-800 md:mb-2 md:text-2xl">
-                      {plan.title}
-                    </h2>
-                    <p
-                      className={`${idx === 0 ? "text-blue-600" : "text-green-600"} text-sm font-medium md:text-base`}
+              {plan.sections.map((section, sIdx) => (
+                <div key={sIdx} className="mb-8 last:mb-0">
+                  <div className="mb-4 flex items-center space-x-3">
+                    <div
+                      className={`rounded-xl p-2 ${plan.color} bg-opacity-10`}
                     >
-                      {plan.subtitle}
-                    </p>
+                      {React.cloneElement(section.icon, {
+                        className: `w-6 h-6 ${plan.color}`,
+                      })}
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-800">
+                      {section.title}
+                    </h4>
+                  </div>
+
+                  <div className="space-y-4">
+                    {section.points.map((point, pIdx) => (
+                      <div
+                        key={pIdx}
+                        className={`border-l-2 pl-6 transition-colors duration-300 hover:border-l-2 ${plan.color} border-opacity-50 hover:border-opacity-100`}
+                      >
+                        <div className="mb-2 flex items-center space-x-3">
+                          <CheckCircle2 className={`h-5 w-5 ${plan.color}`} />
+                          <h5 className="text-base font-semibold text-gray-800">
+                            {point.title}
+                          </h5>
+                        </div>
+                        <p className="ml-8 text-base leading-relaxed text-gray-600">
+                          {point.description}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {/* セクション */}
-                {plan.sections.map((section, sIdx) => (
-                  <div key={sIdx} className="mb-8 last:mb-0 md:mb-10">
-                    <div className="mb-4 flex items-center space-x-3 md:mb-6">
-                      <div
-                        className={`rounded-lg p-1.5 md:p-2 ${idx === 0 ? "bg-blue-50 text-blue-500" : "bg-green-50 text-green-500"}`}
-                      >
-                        {React.cloneElement(section.icon, {
-                          className: "w-5 h-5 md:w-6 md:h-6",
-                        })}
-                      </div>
-                      <h3 className="text-base font-bold text-gray-800 md:text-lg">
-                        {section.title}
-                      </h3>
-                    </div>
-
-                    <div className="space-y-4 md:space-y-6">
-                      {section.points.map((point, pIdx) => (
-                        <div
-                          key={pIdx}
-                          className={`border-l-2 pl-4 transition-colors duration-300 hover:border-l-2 md:pl-6 ${
-                            idx === 0
-                              ? "border-gray-100 hover:border-blue-500"
-                              : "border-gray-100 hover:border-green-500"
-                          }`}
-                        >
-                          <div className="mb-1 flex items-center space-x-2 md:mb-2 md:space-x-3">
-                            <CheckCircle2
-                              className={`h-4 w-4 md:h-5 md:w-5 ${idx === 0 ? "text-blue-500" : "text-green-500"}`}
-                            />
-                            <h4 className="text-left text-sm font-semibold text-gray-800 md:text-base">
-                              {point.title}
-                            </h4>
-                          </div>
-                          <p className="ml-6 text-left text-sm leading-relaxed text-gray-600 md:ml-8 md:text-base">
-                            {point.description}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

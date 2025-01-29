@@ -4,6 +4,7 @@ summary: "建設業界向けに開発された包括的な業務管理システ�
 cover: "./mermaid.png"
 coverAlt: "Mermaid diagram for system architecture"
 publishedDate: 2024-01-19
+tags: []
 ---
 
 ## ご相談の背景
@@ -48,6 +49,7 @@ publishedDate: 2024-01-19
 システムは以下の主要コンポーネントで構成されています：
 
 1. フロントエンド
+
    - ReactベースのSPAアプリケーション
    - Remixフレームワークを使用
    - Tailwind CSSによるレスポンシブデザイン
@@ -67,15 +69,18 @@ publishedDate: 2024-01-19
 本システムでは以下のAWSサービスを活用しています：
 
 1. AWS Lambda
+
    - サーバーレス関数によるバックエンド処理
    - イベント駆動型アーキテクチャ
    - 自動スケーリングと高可用性を実現
 
 2. Amazon Cognito
+
    - ユーザー認証と認可管理
    - 多要素認証のサポート
 
 3. Amazon S3
+
    - ファイルストレージ
    - 作業報告書の添付ファイル管理
 

@@ -4,6 +4,15 @@ summary: "複数の事業部で個別に運用されていたAWS環境を、Terr
 cover: "./mermaid.png"
 coverAlt: "System architecture diagram"
 publishedDate: 2024-03-20
+tags:
+  [
+    "AWS",
+    "Apple",
+    "Terraform",
+    "IaC",
+    "Cost Optimization",
+    "Operational Efficiency",
+  ]
 ---
 
 ## ご相談の背景
@@ -55,11 +64,13 @@ publishedDate: 2024-03-20
 本プロジェクトでは以下のような構成を採用しました：
 
 1. マルチアカウント戦略
+
    - AWS Organizations による階層型アカウント管理
    - 環境別（本番/検証/開発）アカウント分離
    - 共有サービス用アカウントの集約
 
 2. ネットワーク構成
+
    - Transit Gateway によるハブアンドスポーク型接続
    - AWS Network Firewall による集中型セキュリティ管理
    - Direct Connect による安定した専用線接続
@@ -78,18 +89,21 @@ publishedDate: 2024-03-20
 主要なTerraformモジュールとして以下を実装：
 
 1. Network Module
+
    - VPC
    - Subnet
    - Transit Gateway
    - Network Firewall
 
 2. Security Module
+
    - IAM Roles
    - Security Groups
    - KMS Keys
    - WAF Rules
 
 3. Monitoring Module
+
    - CloudWatch Alarms
    - SNS Topics
    - AWS Config Rules
@@ -106,11 +120,13 @@ publishedDate: 2024-03-20
 以下の施策により大幅なコスト削減を実現：
 
 1. コンピューティング最適化
+
    - Auto Scaling による動的なリソース調整
    - Graviton2/3 プロセッサーへの移行
    - コンテナ化による利用効率向上
 
 2. ストレージ最適化
+
    - S3 Intelligent-Tiering の活用
    - EBS gp3への移行
    - スナップショット世代管理の自動化
@@ -123,11 +139,13 @@ publishedDate: 2024-03-20
 ## 運用効率化の成果
 
 1. 障害対応プロセスの改善
+
    - インシデント対応フローの標準化
    - 自動復旧機能の導入による運用負荷の軽減
    - モニタリング体制の強化
 
 2. 変更管理の最適化
+
    - 環境構築プロセスの標準化
    - 承認フローの自動化による手続きの効率化
    - 変更履歴の可視化
@@ -135,4 +153,4 @@ publishedDate: 2024-03-20
 3. セキュリティ管理の強化
    - 脆弱性対応プロセスの確立
    - コンプライアンス状況の継続的なモニタリング
-   - セキュリティインシデントの予防的対策 
+   - セキュリティインシデントの予防的対策

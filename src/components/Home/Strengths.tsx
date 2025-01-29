@@ -38,27 +38,32 @@ function StrengthCard({
   isEven: boolean;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-white shadow-sm">
+    <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:shadow-md">
       <div
         className={`flex h-full flex-col md:flex-row ${
           isEven ? "md:flex-row-reverse" : ""
         }`}
       >
         <div className="flex h-full flex-[2] flex-col justify-center p-8">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600/10">
-              {icon}
+          <div className="mb-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600/10">
+                {icon}
+              </div>
+              <h3 className="pt-1 text-2xl font-bold text-gray-900">{title}</h3>
             </div>
-            <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+            <div className="mt-2 h-px w-full bg-gray-200" />
           </div>
-          <p className="leading-relaxed text-gray-600">{description}</p>
+          <p className="mb-6 leading-relaxed text-gray-600">{description}</p>
         </div>
+
         <div className="relative flex-1">
           <img
-            src={illustration}
+            src={illustration || "/placeholder.svg"}
             alt=""
-            className="h-full w-full object-cover md:h-48"
+            className="5 h-full w-full md:h-full"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
       </div>
     </div>

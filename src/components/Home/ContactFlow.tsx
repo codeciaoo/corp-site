@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrowRight } from "lucide-react";
 
 const steps = [
@@ -46,28 +45,26 @@ function StepCard({
   showArrow: boolean;
 }) {
   return (
-    <div className="relative rounded-lg border border-teal-600/20 bg-white p-6 shadow-md transition-all duration-200 hover:shadow-lg">
-      <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-600 text-lg font-bold text-white">
-          {number}
-        </div>
+    <div className="group relative rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl">
+      <div className="absolute -left-3 -top-3 flex h-12 w-12 items-center justify-center rounded-full bg-teal-600 text-xl font-bold text-white shadow-md transition-all duration-300 group-hover:scale-110">
+        {number}
+      </div>
+      <div className="mb-4 mt-6 flex items-center gap-3">
         <h3 className="text-lg font-bold text-teal-900">{title}</h3>
       </div>
-
       <p className="text-sm leading-relaxed text-gray-600">{description}</p>
-
       {showArrow && (
         <>
           {/* Desktop Arrow */}
-          <div className="absolute right-0 top-1/2 hidden -translate-y-1/2 translate-x-8 transform md:block">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600/10">
-              <ArrowRight className="h-4 w-4 text-teal-600" />
+          <div className="absolute -right-4 top-1/2 hidden -translate-y-1/2 md:block">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 group-hover:bg-teal-600 group-hover:text-white">
+              <ArrowRight className="h-4 w-4" />
             </div>
           </div>
           {/* Mobile Arrow */}
-          <div className="absolute bottom-0 left-1/2 block -translate-x-1/2 translate-y-8 transform md:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600/10">
-              <ArrowRight className="h-4 w-4 rotate-90 text-teal-600" />
+          <div className="absolute -bottom-4 left-1/2 block -translate-x-1/2 md:hidden">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 group-hover:bg-teal-600 group-hover:text-white">
+              <ArrowRight className="h-4 w-4 rotate-90" />
             </div>
           </div>
         </>
@@ -78,11 +75,11 @@ function StepCard({
 
 export default function ContactFlow() {
   return (
-    <div className="py-12">
-      <h2 className="mb-12 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
+    <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-teal-800 sm:text-4xl">
         お問い合わせから開始までの流れ
       </h2>
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:grid-cols-5">
         {steps.map((step, index) => (
           <StepCard
             key={index}

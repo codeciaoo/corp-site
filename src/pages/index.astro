@@ -38,6 +38,7 @@ const sortedProjects = projects.sort(
         cover: project.data.cover ? project.data.cover.src : undefined,
         coverAlt: project.data.coverAlt || "",
         href: `/projects/${project.id}`,
+        tags: project.data.tags,
       }))}
     />
     <!-- <Acheivements client:idle /> -->

@@ -41,8 +41,7 @@ const challenges: Challenge[] = [
         id: 1,
         icon: <Server className="h-5 w-5 text-teal-700" />,
         title: "クラウド初期構築",
-        description:
-          "要件分析からクラウド環境の設計・構築まで一貫してサポート",
+        description: "要件分析からクラウド環境の設計・構築まで一貫してサポート",
       },
       {
         id: 2,
@@ -158,31 +157,33 @@ export default function ChallengesSection() {
             </div>
             {activeChallenge === challenge.id && (
               <div className="border-t border-gray-200 p-4 sm:p-6">
-                <p className="mb-4 text-sm leading-relaxed text-gray-800 sm:text-base">
-                  {challenge.problem}
-                </p>
-                <h4 className="mb-4 text-lg font-semibold text-teal-900 sm:text-xl">
-                  解決策
-                </h4>
-                <div className="grid gap-4">
-                  {challenge.solutions.map(solution => (
-                    <div
-                      key={solution.id}
-                      className="rounded-xl bg-gray-50 p-4 shadow-md transition-all duration-200 hover:shadow-lg"
-                    >
-                      <div className="mb-3 flex items-center">
-                        <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-teal-100">
-                          {solution.icon}
+                <div className="flex h-full flex-col">
+                  <p className="mb-4 min-h-[4rem] text-sm leading-relaxed text-gray-800 sm:text-base">
+                    {challenge.problem}
+                  </p>
+                  <h4 className="mb-4 text-lg font-semibold text-teal-900 sm:text-xl">
+                    解決策
+                  </h4>
+                  <div className="grid gap-4">
+                    {challenge.solutions.map(solution => (
+                      <div
+                        key={solution.id}
+                        className="flex flex-col rounded-xl bg-gray-50 p-4 shadow-md transition-all duration-200 hover:shadow-lg"
+                      >
+                        <div className="mb-3 flex items-center">
+                          <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-teal-100">
+                            {solution.icon}
+                          </div>
+                          <h5 className="text-base font-semibold text-gray-900">
+                            {solution.title}
+                          </h5>
                         </div>
-                        <h5 className="text-base font-semibold text-gray-900">
-                          {solution.title}
-                        </h5>
+                        <p className="min-h-[3rem] text-sm text-gray-800">
+                          {solution.description}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-800">
-                        {solution.description}
-                      </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -205,20 +206,27 @@ export default function ChallengesSection() {
                 onClick={() => setActiveChallenge(challenge.id)}
               >
                 <div
-                  className={`relative rounded-2xl bg-white p-6 shadow-xl ${desktopActiveChallenge === challenge.id ? "ring-2 ring-teal-600 ring-offset-2" : "opacity-70 hover:opacity-100 hover:shadow-lg"}`}
+                  className={`relative h-full rounded-2xl bg-white p-6 shadow-xl ${
+                    desktopActiveChallenge === challenge.id
+                      ? "ring-2 ring-teal-600 ring-offset-2"
+                      : "opacity-70 hover:opacity-100 hover:shadow-lg"
+                  }`}
                 >
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
                     <div className="h-6 w-6 rotate-45 transform bg-white shadow-xl" />
                   </div>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-                    {challenge.icon}
+                  <div className="flex h-full flex-col">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
+                      {challenge.icon}
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold text-teal-900">
+                      "{challenge.quote}"
+                    </h3>
+                    <hr className="mb-4 border-gray-200" />
+                    <p className="min-h-[6rem] text-sm leading-relaxed text-gray-800">
+                      {challenge.problem}
+                    </p>
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-teal-900">
-                    "{challenge.quote}"
-                  </h3>
-                  <p className="mb-4 text-sm leading-relaxed text-gray-800">
-                    {challenge.problem}
-                  </p>
                 </div>
               </div>
             ))}
@@ -235,7 +243,7 @@ export default function ChallengesSection() {
                   solution => (
                     <div
                       key={solution.id}
-                      className="rounded-xl bg-white p-8 shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                      className="flex h-full flex-col rounded-xl bg-white p-8 shadow-md transition-all duration-200 hover:shadow-lg"
                     >
                       <div className="mb-4 flex items-center">
                         <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
@@ -245,7 +253,7 @@ export default function ChallengesSection() {
                           {solution.title}
                         </h4>
                       </div>
-                      <p className="text-sm text-gray-800">
+                      <p className="min-h-[4rem] text-sm text-gray-800">
                         {solution.description}
                       </p>
                     </div>

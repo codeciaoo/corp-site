@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
-import { BarChartIcon, Users2Icon, MailIcon } from "lucide-react";
+import { BarChartIcon, Users2Icon, MailIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const HeroContent: FC = () => {
@@ -21,7 +21,9 @@ const HeroContent: FC = () => {
             transition={{ duration: 0.6 }}
             className="leading-tight"
           >
-            クラウド ✖️ 生成AIで
+            クラウド
+            <span className="mx-2">×</span>
+            生成AI
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -41,8 +43,8 @@ const HeroContent: FC = () => {
         </div>
 
         <p className="max-w-2xl text-left text-sm text-gray-500 dark:text-gray-300 md:text-lg">
-        クラウドや生成AIを用いたWebシステムの開発経験や、
-        技術者が不足している企業様の課題解決を、企画から開発、運用までお手伝いします
+          クラウドや生成AIを用いたWebシステムの開発経験や、
+          技術者が不足している企業様の課題解決を、企画から開発、運用までお手伝いします
         </p>
       </div>
 

@@ -11,7 +11,11 @@ const Footer = () => {
                 CodeCiao
               </h3>
             </a>
-            <p className="text-sm">戦略と技術で、ビジネスの未来を創造する</p>
+            <p className="text-sm">
+              クラウド
+              <span className="mx-1">×</span>
+              生成AIで、ビジネスの未来を創造する
+            </p>
           </div>
           <div className="text-left md:text-left">
             <h4 className="mb-3 text-lg font-semibold text-white">
