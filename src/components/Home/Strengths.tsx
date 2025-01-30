@@ -1,3 +1,4 @@
+import type React from "react";
 import { Lightbulb, Cpu, TrendingUp } from "lucide-react";
 
 const strengths = [
@@ -24,44 +25,49 @@ const strengths = [
   },
 ];
 
+interface StrengthCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  illustration: string;
+  isEven: boolean;
+}
+
 function StrengthCard({
   icon,
   title,
   description,
   illustration,
   isEven,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  illustration: string;
-  isEven: boolean;
-}) {
+}: StrengthCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:shadow-md">
       <div
-        className={`flex h-full flex-col md:flex-row ${
-          isEven ? "md:flex-row-reverse" : ""
-        }`}
+        className={`flex flex-col ${isEven ? "md:flex-row-reverse" : "md:flex-row"}`}
       >
-        <div className="flex h-full flex-[2] flex-col justify-center p-8">
-          <div className="mb-6">
-            <div className="flex items-center gap-3">
+        <div className="flex flex-1 flex-col justify-center p-6 md:p-8">
+          <div className="mb-4 md:mb-6">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600/10">
                 {icon}
               </div>
-              <h3 className="pt-1 text-2xl font-bold text-gray-900">{title}</h3>
+              <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                {title}
+              </h3>
             </div>
             <div className="mt-2 h-px w-full bg-gray-200" />
           </div>
-          <p className="mb-6 leading-relaxed text-gray-600">{description}</p>
+          <p className="mb-4 text-sm leading-relaxed text-gray-600 sm:text-base md:mb-6">
+            {description}
+          </p>
         </div>
 
-        <div className="relative flex-1">
+        <div className="relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:w-2/5">
           <img
             src={illustration || "/placeholder.svg"}
             alt=""
-            className="5 h-full w-full md:h-full"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
@@ -72,17 +78,17 @@ function StrengthCard({
 
 export default function Strengths() {
   return (
-    <div className="py-16">
+    <div className="py-12 md:py-16">
       <a href="http://www.freepik.com" className="hidden">
         Designed by rawpixel.com / Freepik
       </a>
       <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="mb-2 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
+        <div className="mb-8 text-center md:mb-12">
+          <h2 className="text-2xl font-bold text-teal-800 sm:text-3xl md:text-4xl">
             CodeCiaoの強み
           </h2>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-6 md:space-y-8">
           {strengths.map((strength, index) => (
             <StrengthCard key={index} {...strength} isEven={index % 2 === 0} />
           ))}
