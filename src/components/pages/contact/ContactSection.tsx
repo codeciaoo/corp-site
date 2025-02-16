@@ -1,4 +1,4 @@
-import ContactForm from "@/components/Contact/ContactForm";
+import ContactForm from "@/components/pages/contact/ContactForm";
 import { motion } from "framer-motion";
 
 export default function ContactSection() {

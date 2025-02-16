@@ -1,6 +1,6 @@
 import HeroContent from "./HeroContent";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-import ContactForm from "@/components/Contact/ContactForm";
+import ContactForm from "@/components/pages/contact/ContactForm";
 
 export default function HeroSection() {
   return (

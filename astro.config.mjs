@@ -11,4 +11,12 @@ export default defineConfig({
     mode: 'directory'
   }),
   integrations: [react(), tailwind(), sitemap()],
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        quality: 80
+      }
+    }
+  },
 });
