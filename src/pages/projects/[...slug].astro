@@ -2,9 +2,9 @@
 export const prerender = true;
 
 import Layout from "@/layouts/Layout.astro";
-import ProjectRenderer from "@/components/Achievements/ProjectRenderer";
+import ProjectRenderer from "@/components/projects/ProjectRenderer";
 import { getCollection, render } from "astro:content";
-import Section from "@/components/Section";
+import Section from "@/components/shared/Section";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   return projects.map(project => ({

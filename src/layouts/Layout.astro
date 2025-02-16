@@ -1,7 +1,7 @@
 ---
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import SecondaryCTA from "../components/layout/SecondaryCTA";
+import Header from "@/components/shared/layout/Header";
+import Footer from "@/components/shared/layout/Footer";
+import SecondaryCTA from "@/components/shared/layout/SecondaryCTA";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 
 interface Props {
@@ -99,5 +99,5 @@ const { pathname } = Astro.url;
 </html>
 
 <style is:global>
-  @import "../styles/globals.css";
+  @import "@/styles/globals.css";
 </style>

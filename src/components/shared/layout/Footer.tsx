@@ -1,4 +1,4 @@
-import navigation from "./navigation";
+import navigation from "@/components/shared/layout/navigation";
 
 const Footer = () => {
   return (

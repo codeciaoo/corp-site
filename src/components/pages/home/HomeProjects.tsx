@@ -1,11 +1,11 @@
-import ProjectCard from "../Achievements/ProjectCard";
-import type { ProjectProps } from "../Achievements/ProjectProps";
+import ProjectCard from "@/components/projects/ProjectCard";
+import type { ProjectProps } from "@/components/projects/ProjectProps";
 import { useState, useEffect } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-const Projects = ({ projects }: { projects: ProjectProps[] }) => {
+const HomeProjects = ({ projects }: { projects: ProjectProps[] }) => {
   const [projectsToShow, setProjectsToShow] = useState(2);
 
   useEffect(() => {
@@ -76,4 +76,4 @@ const Projects = ({ projects }: { projects: ProjectProps[] }) => {
   );
 };
 
-export default Projects;
+export default HomeProjects;

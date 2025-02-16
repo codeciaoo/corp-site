@@ -1,14 +1,14 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Services from "@/components/Home/Services";
-import Strengths from "@/components/Home/Strengths";
-import ServiceComparisonTable from "@/components/Home/ServiceComparisonTable";
-import Achievements from "@/components/Home/Achievements";
-import ContactFlow from "@/components/Home/ContactFlow";
-import HeroSection from "@/components/Home/Hero/HeroSection";
-import Solutions from "@/components/Home/Solutions/Solutions";
+import Layout from "@/layouts/Layout.astro";
+import Services from "@/components/pages/home/Services";
+import Strengths from "@/components/pages/home/Strengths";
+import ServiceComparisonTable from "@/components/pages/home/ServiceComparisonTable";
+import HomeProjects from "@/components/pages/home/HomeProjects";
+import ContactFlow from "@/components/pages/home/ContactFlow";
+import HeroSection from "@/components/pages/home/Hero/HeroSection";
+import Solutions from "@/components/pages/home/Solutions/Solutions";
 
-import Section from "@/components/Section";
+import Section from "@/components/shared/Section";
 import { getCollection } from "astro:content";
 
 const projects = (await getCollection("projects")).slice(0, 3);
@@ -29,7 +29,7 @@ const sortedProjects = projects.sort(
   </Section>
 
   <Section bg="light" ariaLabel="実績">
-    <Achievements
+    <HomeProjects
       client:idle
       projects={sortedProjects.map(project => ({
         title: project.data.title,

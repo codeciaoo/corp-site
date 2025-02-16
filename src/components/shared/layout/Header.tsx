@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
-import navigation from "./navigation";
+import ThemeToggle from "@/components/shared/layout/ThemeToggle";
+import navigation from "@/components/shared/layout/navigation";
 
 interface HeaderProps {
   pathname: string;
