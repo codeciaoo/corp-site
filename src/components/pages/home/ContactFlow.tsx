@@ -56,7 +56,7 @@ function StepCard({
       {showArrow && (
         <>
           {/* Desktop Arrow */}
-          <div className="absolute -right-4 top-1/2 hidden -translate-y-1/2 md:block">
+          <div className="absolute -right-8 top-1/2 hidden -translate-y-1/2 md:block">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 group-hover:bg-teal-600 group-hover:text-white">
               <ArrowRight className="h-4 w-4" />
             </div>
