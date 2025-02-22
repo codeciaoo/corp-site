@@ -1,0 +1,227 @@
+# コンポーネント設計と実装の規約
+
+## 1. ディレクトリ構造とファイル配置
+
+```
+src/
+  ├── components/     # コンポーネント
+  │   ├── pages/      # ページ単位のコンポーネント
+  │   │   ├── home/   # ホームページ関連
+  │   │   │   ├── Hero/     # ヒーローセクション
+  │   │   │   ├── Solutions/# ソリューションセクション
+  │   │   │   └── ContactFlow/ # お問い合わせフロー
+  │   │   ├── about/  # 会社概要ページ関連
+  │   │   ├── contact/# お問い合わせページ関連
+  │   │   └── members/# メンバーページ関連
+  │   ├── projects/   # プロジェクト機能関連
+  │   ├── shared/     # 共通コンポーネント
+  │   │   ├── layout/ # レイアウト関連
+  │   │   │   ├── Header.tsx
+  │   │   │   ├── Footer.tsx
+  │   │   │   └── navigation.ts
+  │   │   └── Section.tsx  # 共通セクション
+  │   └── ui/         # 基本UIコンポーネント
+```
+
+## 2. コンポーネントの実装
+
+### Astroコンポーネント
+- ページレベルのコンポーネントはAstroで実装
+- SSRが必要な部分はAstroコンポーネントで対応
+- クライアントサイドのインタラクションが必要な場合のみReactを使用
+
+```astro
+---
+// Astroコンポーネントの例
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard';
+
+const projects = await getCollection('projects');
+---
+
+<Layout title="Projects">
+  <main>
+    {projects.map(project => (
+      <ProjectCard project={project} />
+    ))}
+  </main>
+</Layout>
+```
+
+### Reactコンポーネント
+- client:load や client:visible などのディレクティブを適切に使用
+- Propsは型定義を必ず指定
+- コンポーネントはできるだけ純粋関数として実装
+
+```tsx
+interface ProjectCardProps {
+  project: CollectionEntry<'projects'>;
+}
+
+export default function ProjectCard({ project }: ProjectCardProps) {
+  return (
+    <div className="card">
+      <h2>{project.data.title}</h2>
+      <p>{project.data.description}</p>
+    </div>
+  );
+}
+```
+
+## 3. UI/UXデザイン
+
+### デザインシステム
+- shadcn/uiのコンポーネントを優先的に使用
+- Tailwind CSSのユーティリティクラスを活用
+- 一貫性のあるデザインパターンの適用
+
+### レスポンシブデザインの基準
+- sm: 640px
+- md: 768px
+- lg: 1024px
+- xl: 1280px
+- 2xl: 1536px
+
+### アクセシビリティ対応
+- WAI-ARIAの適切な使用
+- キーボード操作の対応
+- 色のコントラスト比の確保
+
+```tsx
+// アクセシブルなボタンの例
+function AccessibleButton({ onClick, children }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 bg-blue-500 text-white rounded"
+      role="button"
+      aria-pressed="false"
+      tabIndex={0}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## 4. Content Collections
+
+### スキーマ定義
+
+```typescript
+import { z, defineCollection } from 'astro:content';
+
+const projects = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    tags: z.array(z.string()),
+    image: z.string().optional(),
+  }),
+});
+
+export const collections = {
+  projects,
+};
+```
+
+### Markdownファイルの構造
+
+```markdown
+---
+title: プロジェクトタイトル
+description: プロジェクトの説明
+date: 2024-01-01
+tags: [tag1, tag2]
+image: /path/to/image.jpg
+---
+
+# コンテンツ本文
+
+マークダウンコンテンツ...
+```
+
+## 5. コンポーネントの最適化
+
+### パフォーマンス
+- 不要な再レンダリングの防止
+- 画像の最適化
+- コードスプリッティング
+
+```tsx
+// メモ化の例
+const MemoizedComponent = React.memo(function Component({ data }: Props) {
+  return <div>{data}</div>;
+});
+```
+
+### バンドルサイズ
+- 必要なモジュールのみインポート
+- 動的インポートの活用
+- TreeShakingの活用
+
+```tsx
+// 動的インポートの例
+const DynamicComponent = lazy(() => import('./DynamicComponent'));
+```
+
+## 6. エラー処理とフォールバック
+
+### エラーバウンダリ
+```tsx
+class ErrorBoundary extends React.Component<Props, State> {
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>エラーが発生しました</div>;
+    }
+    return this.props.children;
+  }
+}
+```
+
+### ローディング状態
+```tsx
+function LoadingState() {
+  return (
+    <div role="status" aria-label="読み込み中">
+      <span className="loading-spinner" />
+    </div>
+  );
+}
+```
+
+## 7. テスト可能性
+
+### コンポーネントの分離
+- ロジックとUIの分離
+- テスト可能なインターフェースの提供
+- モック可能な依存関係
+
+### テストケースの考慮
+- 正常系と異常系のテスト
+- エッジケースの考慮
+- アクセシビリティテスト
+
+## 8. メンテナンス性
+
+### ドキュメント
+- コンポーネントの使用方法
+- Props の説明
+- 依存関係の明記
+
+### コードの整理
+- 適切な命名
+- 関心の分離
+- コメントの追加
+
+### バージョン管理
+- 破壊的変更の明記
+- 後方互換性の考慮
+- マイグレーションガイドの提供

@@ -1,0 +1,231 @@
+# Cloudflare関連の規約
+
+## 1. 環境制約の理解
+
+### 制約事項
+- Node.js固有のモジュールは使用不可（例：`fs`, `stream`, `http`）
+- ブラウザ固有のAPIはサーバーサイドで使用不可（例：`DOMParser`）
+- 外部依存は慎重に選択（Node.js依存がないことを確認）
+
+### 推奨される実装方法
+- Web標準APIの優先的な使用（例：`fetch`）
+- 軽量な実装の採用（最小限の依存関係）
+- 文字列操作による代替実装の検討
+
+### データ取得とパース
+```typescript
+// 推奨: Web標準のfetchを使用
+const response = await fetch(URL, {
+  headers: {
+    'Accept': 'application/json',
+    'User-Agent': 'CodeCiao API'
+  }
+});
+
+// 非推奨: Node.js依存のパッケージ
+import nodeFetch from 'node-fetch';  // ❌ Cloudflareで動作しない
+```
+
+## 2. Cloudflareデプロイ設定
+
+### astro.config.mjs
+```javascript
+import { defineConfig } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
+
+export default defineConfig({
+  site: "https://code-ciao.com",
+  output: 'server',
+  adapter: cloudflare({
+    mode: 'directory'
+  }),
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        quality: 80
+      }
+    }
+  },
+});
+```
+
+### wrangler.toml
+```toml
+name = "corp-site"
+compatibility_date = "2024-01-02"
+
+[build]
+command = "pnpm run build"
+
+[build.upload]
+format = "service-worker"
+
+[build.environment]
+NODE_VERSION = "18"
+
+[site]
+bucket = "./dist"
+```
+
+## 3. サーバーサイドAPI実装規約
+
+### APIエンドポイントの配置
+- APIエンドポイントは`src/pages/api/`に配置
+- CORSやセキュリティの考慮が必要な外部APIアクセスはサーバーサイドで実装
+- エラーハンドリングとキャッシュ戦略を必ず実装
+
+```typescript
+// APIエンドポイントの実装例
+export const GET: APIRoute = async () => {
+  try {
+    const response = await fetch(EXTERNAL_API_URL, {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'CodeCiao API'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      data: await response.json()
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+};
+```
+
+## 4. キャッシュ戦略
+
+### クライアントサイドキャッシュ
+```typescript
+interface Cache<T> {
+  data: T;
+  timestamp: number;
+}
+
+const CACHE_DURATION = 60 * 60 * 1000; // 1時間
+
+function getCachedData<T>(cache: Cache<T> | null): T | null {
+  if (cache && Date.now() - cache.timestamp < CACHE_DURATION) {
+    return cache.data;
+  }
+  return null;
+}
+```
+
+### Cloudflareキャッシュ
+```typescript
+// APIレスポンスのキャッシュ設定
+return new Response(JSON.stringify(data), {
+  headers: {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'public, max-age=3600',
+  },
+});
+```
+
+## 5. エラーハンドリング
+
+### エラーの種類に応じた対応
+- ネットワークエラー
+- API制限エラー
+- 認証エラー
+- バリデーションエラー
+
+### エラーレスポンス
+```typescript
+function createErrorResponse(error: Error, status: number = 500) {
+  return new Response(
+    JSON.stringify({
+      error: error.message,
+      status,
+    }),
+    {
+      status,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+}
+```
+
+## 6. デプロイ時の注意点
+
+### 1. 画像最適化
+- Cloudflareはsharpのサポートが限定的
+- ビルド時に画像を最適化する設定を使用
+- 動的な画像最適化は避ける
+
+### 2. Node.jsバージョン
+- Node.js 18以上を指定
+- package.jsonのenginesフィールドも更新
+
+### 3. ビルド設定
+- service-worker形式を使用
+- 適切なbuild.commandを指定
+- 必要な環境変数を設定
+
+## 7. パフォーマンス最適化
+
+### 1. アセット最適化
+- 画像の最適化
+- JavaScriptの最小化
+- CSSの最適化
+
+### 2. キャッシュ戦略
+- 静的アセットのキャッシュ
+- APIレスポンスのキャッシュ
+- ページキャッシュ
+
+### 3. エッジロケーション
+- Cloudflareのグローバルネットワークの活用
+- 適切なキャッシュヘッダーの設定
+- 地域に応じた最適化
+
+## 8. セキュリティ設定
+
+### 1. CORS設定
+```typescript
+export const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+```
+
+### 2. レート制限
+```typescript
+// レート制限の実装例
+const rateLimit = {
+  max: 100,
+  windowMs: 60 * 1000, // 1分
+};
+```
+
+### 3. セキュリティヘッダー
+```typescript
+const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+};

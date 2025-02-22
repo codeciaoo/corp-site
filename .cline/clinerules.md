@@ -1,0 +1,24 @@
+# Cline Rules
+
+このファイルは、プロジェクトの開発規約を定義します。
+各規約は機能別に分割され、以下のファイルにて管理されています。
+
+タスクに関係なく、最初に必ず以下は読んでください。
+
+- [.cline/rules/role_and_stack.clinerules](role_and_stack.clinerules)
+- [.cline/rules/coding_guidelines.clinerules](coding_guidelines.clinerules)
+- [.cline/rules/directory_structure.clinerules](directory_structure.clinerules)
+
+タスクの内容に応じて、他のファイルも確認してください。
+
+## ルールファイルの構成
+
+!include .cline/rules/role_and_stack.clinerules
+!include .cline/rules/coding_guidelines.clinerules
+!include .cline/rules/security_rules.clinerules
+!include .cline/rules/component_guidelines.clinerules
+!include .cline/rules/cloudflare_rules.clinerules
+!include .cline/rules/testing_guidelines.clinerules
+!include .cline/rules/directory_structure.clinerules
+!include .cline/rules/commit_rules.clinerules
+!include .cline/rules/pull_request_rules.clinerules

@@ -1,0 +1,276 @@
+# テスト実装の規約
+
+## 1. Storybook
+
+### 基本設定
+- すべてのUIコンポーネントにStorybookを実装
+- コンポーネントの各状態（variant）を網羅
+- インタラクションテストを含める
+- アクセシビリティテストを含める
+
+```typescript
+// Button.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
+
+const meta = {
+  title: 'UI/Button',
+  component: Button,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'ghost'],
+    },
+  },
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Primary Button',
+  },
+};
+
+// インタラクションテスト
+export const WithClick: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Click me',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+    await userEvent.click(button);
+  },
+};
+```
+
+## 2. Visual Regression Testing
+
+### テスト設定
+- Storybookと連携したVisual Regression Testingを実装
+- 各コンポーネントの見た目の変更を検知
+- レスポンシブデザインの検証
+
+```typescript
+// Button.test.ts
+describe('Button', () => {
+  it('has no visual regressions', async () => {
+    await expect(page).toHaveScreenshot('button.png');
+  });
+
+  it('matches responsive design specs', async () => {
+    // モバイル
+    await page.setViewportSize({ width: 375, height: 667 });
+    await expect(page).toHaveScreenshot('button-mobile.png');
+
+    // タブレット
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await expect(page).toHaveScreenshot('button-tablet.png');
+
+    // デスクトップ
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect(page).toHaveScreenshot('button-desktop.png');
+  });
+});
+```
+
+## 3. コンポーネントテスト
+
+### Testing Library
+- @testing-library/react を使用
+- コンポーネントの表示と基本的な操作をテスト
+- アクセシビリティのテストも含める
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import ProjectCard from './ProjectCard';
+
+describe('ProjectCard', () => {
+  it('renders project information correctly', () => {
+    const project = {
+      data: {
+        title: 'Test Project',
+        description: 'Test Description',
+      },
+    };
+
+    render(<ProjectCard project={project} />);
+    
+    expect(screen.getByText('Test Project')).toBeInTheDocument();
+    expect(screen.getByText('Test Description')).toBeInTheDocument();
+  });
+});
+```
+
+## 4. テストの仕組みと実装のベストプラクティス
+
+### 1. Storybookの動作の仕組み
+
+#### コンポーネントの分離環境
+- Viteベースの独立した開発環境
+- コンポーネントをisolationで表示・テスト
+- ホットリロードによる即時プレビュー
+
+#### アドオンの連携
+```typescript
+// .storybook/main.ts
+const config: StorybookConfig = {
+  framework: '@storybook/react-vite',
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-a11y',
+  ],
+};
+```
+
+#### プレビュー設定
+```typescript
+// .storybook/preview.ts
+const preview: Preview = {
+  parameters: {
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/,
+      },
+    },
+  },
+};
+```
+
+### 2. テストランナーの仕組み
+
+#### Playwrightの統合
+```typescript
+// .storybook/test-runner.ts
+import { TestRunnerConfig } from '@storybook/test-runner';
+import { injectAxe, checkA11y } from 'axe-playwright';
+
+const config: TestRunnerConfig = {
+  // ストーリーごとにブラウザインスタンスを起動
+  async preVisit(page) {
+    await injectAxe(page);
+  },
+  // テスト実行後のチェック
+  async postVisit(page) {
+    await checkA11y(page, '#storybook-root', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  },
+};
+```
+
+#### テストの実行フロー
+1. Storybookサーバーの起動
+2. 各ストーリーの読み込み
+3. インタラクションテストの実行
+4. アクセシビリティチェック
+5. スクリーンショットの比較
+6. レポート生成
+
+#### 並行テスト実行
+```bash
+# CI環境での並行実行
+pnpm concurrently -k -s first \
+  "pnpm storybook --ci" \
+  "pnpm test-storybook"
+```
+
+### 3. アクセシビリティテストの仕組み
+
+#### axe-playwrightの統合
+```typescript
+// アクセシビリティ違反の検出
+await checkA11y(page, '#storybook-root', {
+  axeOptions: {
+    runOnly: {
+      type: 'tag',
+      values: ['wcag2a', 'wcag2aa'],
+    },
+  },
+});
+```
+
+#### 自動チェック項目
+- WAI-ARIA属性の検証
+- キーボード操作の確認
+- カラーコントラスト
+- セマンティックHTML
+
+#### レポート生成
+```typescript
+// 詳細なレポートの生成
+detailedReportOptions: {
+  html: true,
+  includedImpacts: ['critical', 'serious'],
+}
+```
+
+### 4. テストファイルの構造とベストプラクティス
+
+#### コンポーネントごとのテストファイル構成
+```
+src/
+  └── components/
+      └── [Component]/
+          ├── Component.tsx          # 実装
+          ├── Component.stories.tsx  # Storybook
+          ├── Component.test.tsx     # ユニットテスト
+          └── __snapshots__/        # スナップショット
+```
+
+#### テスト実装の優先順位
+1. アクセシビリティテスト
+2. 基本機能テスト
+3. インタラクションテスト
+4. ビジュアルリグレッションテスト
+
+#### CI/CDパイプラインでのテスト実行
+```yaml
+test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+    - run: pnpm install
+    - run: pnpm build-storybook
+    - run: pnpm test-storybook:ci
+```
+
+#### テスト結果の保存
+```yaml
+- name: Upload test results
+  uses: actions/upload-artifact@v2
+  with:
+    name: storybook-test-results
+    path: |
+      ./__screenshots__
+      ./storybook-static
+```
+
+## 5. テストコマンド
+
+```bash
+# Storybookの起動
+pnpm storybook
+
+# テストの実行（別ターミナル）
+pnpm test-storybook --url http://localhost:6006
+
+# リンターの実行
+pnpm run lint
+
+# 型チェック
+pnpm run typecheck

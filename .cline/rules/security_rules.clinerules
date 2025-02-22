@@ -1,0 +1,140 @@
+# セキュリティ規約
+
+## 機密ファイル
+
+### 禁止事項
+
+以下のファイルの読み取りと変更を禁止：
+
+- .env ファイル
+- APIキー、トークン、認証情報を含むすべてのファイル
+- 個人情報を含むファイル
+- セキュリティ設定ファイル
+
+## セキュリティ対策
+
+### 1. 環境変数の管理
+
+- 機密情報は必ず環境変数として管理
+- 本番環境の環境変数は安全な方法で管理
+- 開発環境では .env.example を提供
+
+```bash
+# .env.example
+API_KEY=your_api_key_here
+DATABASE_URL=your_database_url
+```
+
+### 2. ソースコード管理
+
+- 機密ファイルを絶対にコミットしない
+- .gitignore に適切なパターンを追加
+- 誤ってコミットした機密情報は即座に削除
+
+```bash
+# .gitignore の例
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+```
+
+### 3. API セキュリティ
+
+- すべてのAPIリクエストにレート制限を実装
+- CORS設定を適切に行う
+- APIキーを適切に保護
+
+```typescript
+// APIエンドポイントでのセキュリティ実装例
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    // レート制限のチェック
+    if (isRateLimited(request)) {
+      return new Response(JSON.stringify({
+        error: 'Rate limit exceeded'
+      }), { status: 429 });
+    }
+
+    // 認証チェック
+    const authHeader = request.headers.get('Authorization');
+    if (!isValidAuth(authHeader)) {
+      return new Response(JSON.stringify({
+        error: 'Unauthorized'
+      }), { status: 401 });
+    }
+
+    // 以降の処理...
+  } catch (error) {
+    // エラーログは機密情報を含まないように注意
+    console.error('API Error:', error.message);
+    return new Response(JSON.stringify({
+      error: 'Internal Server Error'
+    }), { status: 500 });
+  }
+};
+```
+
+### 4. フロントエンドセキュリティ
+
+- XSS対策
+  - dangerouslySetInnerHTML の使用を避ける
+  - ユーザー入力の適切なサニタイズ
+- CSRF対策
+  - トークンの実装
+  - 適切なヘッダーの設定
+
+```typescript
+// XSS対策の例
+function sanitizeInput(input: string): string {
+  return input.replace(/[<>]/g, '');
+}
+
+// ユーザー入力の処理
+function handleUserInput(input: string) {
+  const sanitized = sanitizeInput(input);
+  // 以降の処理...
+}
+```
+
+### 5. エラーハンドリングとログ
+
+- 本番環境でのスタックトレース非表示
+- ログに機密情報を含めない
+- エラーメッセージは一般的な内容に留める
+
+```typescript
+// エラーハンドリングの例
+function handleError(error: Error) {
+  // 開発環境のみ詳細なエラー情報を表示
+  if (import.meta.env.DEV) {
+    console.error('Detailed error:', error);
+  } else {
+    // 本番環境では一般的なメッセージのみ
+    console.error('An error occurred');
+  }
+}
+```
+
+### 6. データ保護
+
+- 個人情報の適切な暗号化
+- セッション管理の適切な実装
+- データベースクエリのサニタイズ
+
+### 7. デプロイメントセキュリティ
+
+- 本番環境の環境変数の安全な管理
+- CI/CDパイプラインでのセキュリティチェック
+- 定期的なセキュリティ監査
+
+## セキュリティチェックリスト
+
+- [ ] 環境変数の適切な管理
+- [ ] gitignoreの設定確認
+- [ ] APIエンドポイントのセキュリティ確認
+- [ ] フロントエンドのセキュリティ対策
+- [ ] エラーハンドリングの確認
+- [ ] ログ出力の安全性確認
+- [ ] デプロイ設定の確認

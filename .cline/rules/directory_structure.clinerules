@@ -1,0 +1,211 @@
+# ディレクトリ構造のガイド
+
+## 1. 基本構造
+
+```
+src/
+  ├── components/     # コンポーネント
+  │   ├── pages/      # ページ単位のコンポーネント
+  │   │   ├── home/   # ホームページ関連
+  │   │   │   ├── Hero/     # ヒーローセクション
+  │   │   │   ├── Solutions/# ソリューションセクション
+  │   │   │   └── ContactFlow/ # お問い合わせフロー
+  │   │   ├── about/  # 会社概要ページ関連
+  │   │   ├── contact/# お問い合わせページ関連
+  │   │   └── members/# メンバーページ関連
+  │   ├── projects/   # プロジェクト機能関連
+  │   ├── shared/     # 共通コンポーネント
+  │   │   ├── layout/ # レイアウト関連
+  │   │   │   ├── Header.tsx
+  │   │   │   ├── Footer.tsx
+  │   │   │   └── navigation.ts
+  │   │   └── Section.tsx  # 共通セクション
+  │   └── ui/         # 基本UIコンポーネント
+  ├── content/       # コンテンツコレクション
+  │   ├── config.ts  # コレクション設定
+  │   └── projects/  # プロジェクト記事
+  ├── layouts/       # Astroレイアウト
+  ├── pages/         # ページコンポーネント
+  ├── styles/        # グローバルスタイル
+  └── lib/          # ユーティリティ
+```
+
+## 2. 各ディレクトリの役割
+
+### components/
+- UIコンポーネントの実装
+- 機能別のサブディレクトリ構成
+- 再利用可能なコンポーネント
+
+#### pages/
+- ページ固有のコンポーネント
+- 各ページのセクション
+- ページ特有の機能
+
+#### shared/
+- 複数のページで使用されるコンポーネント
+- レイアウト関連のコンポーネント
+- 共通のUI要素
+
+#### ui/
+- 基本的なUIコンポーネント
+- shadcn/uiコンポーネント
+- カスタムUIコンポーネント
+
+### content/
+- Astro Content Collections
+- Markdownコンテンツ
+- コレクション設定
+
+### layouts/
+- ページレイアウト
+- 共通のページ構造
+- メタデータ管理
+
+### pages/
+- ルーティング定義
+- ページコンポーネント
+- APIエンドポイント
+
+### styles/
+- グローバルスタイル
+- テーマ設定
+- カスタムTailwindスタイル
+
+### lib/
+- ユーティリティ関数
+- 共通ロジック
+- 型定義
+
+## 3. ファイル命名規則
+
+### コンポーネント
+- PascalCase
+- 機能を表す明確な名前
+- 拡張子は .tsx または .astro
+
+```
+Button.tsx
+ProjectCard.tsx
+HeroSection.astro
+```
+
+### ユーティリティ
+- camelCase
+- 機能を表す動詞から開始
+- 拡張子は .ts
+
+```
+formatDate.ts
+validateForm.ts
+parseMarkdown.ts
+```
+
+### スタイル
+- kebab-case
+- 目的や機能を表す名前
+- 拡張子は .css
+
+```
+global-styles.css
+markdown-content.css
+theme-variables.css
+```
+
+## 4. コンポーネントの構成
+
+### 単一コンポーネント
+```
+components/
+  └── Button/
+      ├── Button.tsx
+      ├── Button.test.tsx
+      └── Button.stories.tsx
+```
+
+### 複合コンポーネント
+```
+components/
+  └── ProjectCard/
+      ├── ProjectCard.tsx
+      ├── ProjectCard.test.tsx
+      ├── ProjectCard.stories.tsx
+      ├── ProjectCardImage.tsx
+      └── ProjectCardContent.tsx
+```
+
+### ページコンポーネント
+```
+pages/
+  └── projects/
+      ├── index.astro
+      ├── [slug].astro
+      └── api/
+          └── projects.ts
+```
+
+## 5. リファクタリングのガイドライン
+
+### 1. 機能ベースのディレクトリ構造への移行
+
+#### 移行の目的
+- 関連するコンポーネントのグループ化
+- コードの見つけやすさの向上
+- 依存関係の明確化
+- メンテナンス性の向上
+
+#### 移行手順
+
+1. 準備フェーズ
+   - 既存のStorybookテストの確認
+   - Visual Regression Testingの準備
+   - 移行計画の作成
+
+2. コンポーネントの移動
+   ```bash
+   # 例: Achievementsを適切な場所に移動
+   mkdir -p src/components/pages/home
+   mv src/components/Achievements/* src/components/pages/home/
+   ```
+
+3. インポートパスの更新
+   ```typescript
+   // Before
+   import { Achievements } from "../components/Achievements";
+   
+   // After
+   import { Achievements } from "components/pages/home/Achievements";
+   ```
+
+### 2. リファクタリング後の確認事項
+
+- [ ] すべてのStorybookテストが正常に動作
+- [ ] Visual Regression Testingでの差分がない
+- [ ] ビルドが正常に完了
+- [ ] 開発サーバーで全ページが正常に動作
+- [ ] TypeScriptの型エラーがない
+- [ ] ESLintの警告・エラーがない
+- [ ] アクセシビリティテストが通過
+- [ ] パフォーマンスの低下がない
+
+## 6. ベストプラクティス
+
+### 1. モジュール分割
+- 単一責任の原則に従う
+- 適切な粒度でのコンポーネント分割
+- 関連する機能のグループ化
+
+### 2. 依存関係
+- 循環依存を避ける
+- 明確な依存関係の方向性
+- 適切な抽象化レベル
+
+### 3. テスト容易性
+- テストしやすい構造
+- モックが容易な設計
+- 依存性の注入
+
+### 4. スケーラビリティ
+- 新機能の追加が容易
+- コードの再利用性
+- メンテナンス性の確保
