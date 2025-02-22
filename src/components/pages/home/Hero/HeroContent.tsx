@@ -23,7 +23,7 @@ const HeroContent: FC = () => {
           >
             クラウド
             <span className="mx-2">×</span>
-            生成AI
+            生成AIで
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -113,7 +113,7 @@ const HeroContent: FC = () => {
               className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-2"
             >
               <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-2xl">
-                200+
+                 50+
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm">
                 プロジェクト実績
