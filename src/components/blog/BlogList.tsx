@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { BlogPost } from '../../lib/blog/rss';
+import type { RSSItem } from '../../lib/blog/rssParser';
 import { BlogCard } from './BlogCard';
 
 export function BlogList() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<RSSItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -11,14 +11,16 @@ export function BlogList() {
     async function loadPosts() {
       try {
         const response = await fetch('/api/rss');
-        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
+        const data = await response.json();
         if (!data.success) {
           throw new Error(data.error || 'Failed to fetch blog posts');
         }
         
-        const fetchedPosts = data.posts;
-        setPosts(fetchedPosts);
+        setPosts(data.posts);
         setError(null);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
