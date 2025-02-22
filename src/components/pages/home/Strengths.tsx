@@ -4,9 +4,9 @@ import { Lightbulb, Cpu, TrendingUp } from "lucide-react";
 const strengths = [
   {
     icon: <Lightbulb className="h-6 w-6 text-teal-600" />,
-    title: "経営課題解決のための戦略立案",
+    title: "堅実なプロジェクト管理",
     description:
-      "大手コンサルティングファーム出身者が、業務プロセスの可視化・分析、ROI算出など、システム開発を超えた経営戦略の立案と実行支援をサポート",
+      "大手コンサルティングファームでの経験や、大規模プロジェクトのマネジメント実績を持つメンバーが、ウォーターフォールやスクラム開発を使い分け、確実なプロジェクト運営を実現",
     illustration: "/img-strengths-1.webp",
   },
   {

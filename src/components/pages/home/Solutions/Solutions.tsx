@@ -31,29 +31,29 @@ interface Challenge {
 const challenges: Challenge[] = [
   {
     id: 1,
-    icon: <Cloud className="h-6 w-6 text-teal-700" />,
-    quote: "クラウド移行のメリットやコストがわかりません...",
-    title: "クラウド移行支援",
+    icon: <Settings className="h-6 w-6 text-teal-700" />,
+    quote: "IT人材不足で開発が進まない...",
+    title: "リソース不足対策",
     problem:
-      "クラウド移行の方法やメリット、コストの見通しが不透明で、具体的にどう進めればよいのか悩んでいます。また、移行後の運用体制にも不安があります。",
+      "IT人材の確保が困難で、開発案件の遅延や品質低下が発生しています。また、既存チームの負荷が高まり、新規プロジェクトへの着手が困難な状況です。",
     solutions: [
       {
         id: 1,
-        icon: <Server className="h-5 w-5 text-teal-700" />,
-        title: "クラウド初期構築",
-        description: "要件分析からクラウド環境の設計・構築まで一貫してサポート",
+        icon: <Gauge className="h-5 w-5 text-teal-700" />,
+        title: "開発支援サービス",
+        description: "即戦力エンジニアが最短2週間で参画可能。開発チームの増強を実現し、プロジェクトの遅延リスクを解消",
       },
       {
         id: 2,
-        icon: <Database className="h-5 w-5 text-teal-700" />,
-        title: "コスト最適化",
-        description: "クラウドリソースの効率的な利用とコスト管理の実現",
+        icon: <Code className="h-5 w-5 text-teal-700" />,
+        title: "コンサルティング",
+        description: "現場の課題に応じた技術支援を提供。アーキテクチャ設計から実装まで、既存チームの成長をサポート",
       },
       {
         id: 3,
-        icon: <Shield className="h-5 w-5 text-teal-700" />,
-        title: "インフラ自動化",
-        description: "運用効率を高めるインフラ自動化の導入支援",
+        icon: <Database className="h-5 w-5 text-teal-700" />,
+        title: "開発プロセス改善",
+        description: "CI/CD導入やテスト自動化により、開発効率を最大50%改善。チームの負荷を大幅に軽減",
       },
     ],
   },
@@ -69,47 +69,47 @@ const challenges: Challenge[] = [
         id: 1,
         icon: <Bot className="h-5 w-5 text-teal-700" />,
         title: "RAGシステム開発",
-        description: "社内文書を活用した検索強化型の生成AIシステムの開発",
+        description: "社内文書やナレッジを活用したAIチャットボットを1ヶ月で構築。問い合わせ対応時間を大幅に削減",
       },
       {
         id: 2,
         icon: <Code className="h-5 w-5 text-teal-700" />,
         title: "生成AIシステム開発",
-        description: "業務特化型の生成AIアプリケーション開発",
+        description: "OpenAI・Gemini・Anthropicなど最新のAI技術を活用し。セキュリティを確保しながら業務効率を改善",
       },
       {
         id: 3,
         icon: <Shield className="h-5 w-5 text-teal-700" />,
         title: "AI活用コンサルティング",
-        description: "生成AI活用の戦略立案から実装までの包括的支援",
+        description: "貴社の業務分析から具体的なAI活用プランを提案。ROIを重視した実装ロードマップを策定",
       },
     ],
   },
   {
     id: 3,
-    icon: <Settings className="h-6 w-6 text-teal-700" />,
-    quote: "IT人材不足で開発が進まない...",
-    title: "リソース不足対策",
+    icon: <Cloud className="h-6 w-6 text-teal-700" />,
+    quote: "クラウド移行のメリットやコストがわかりません...",
+    title: "クラウド移行支援",
     problem:
-      "IT人材の確保が困難で、開発案件の遅延や品質低下が発生しています。また、既存チームの負荷が高まり、新規プロジェクトへの着手が困難な状況です。",
+      "クラウド移行の方法やメリット、コストの見通しが不透明で、具体的にどう進めればよいのか悩んでいます。また、移行後の運用体制にも不安があります。",
     solutions: [
       {
         id: 1,
-        icon: <Gauge className="h-5 w-5 text-teal-700" />,
-        title: "開発支援サービス",
-        description: "経験豊富な開発チームによる技術支援とナレッジ移転",
+        icon: <Server className="h-5 w-5 text-teal-700" />,
+        title: "クラウド初期構築",
+        description: "AWS・Azureなど、最適なクラウドを選定。システム規模に応じた段階的な移行で、ダウンタイムを最小限に抑える",
       },
       {
         id: 2,
-        icon: <Code className="h-5 w-5 text-teal-700" />,
-        title: "技術支援・コンサルティング",
-        description: "アーキテクチャ設計から実装までの技術支援と知見共有",
+        icon: <Database className="h-5 w-5 text-teal-700" />,
+        title: "コスト最適化",
+        description: "オートスケーリングやリザーブドインスタンスの活用、サーバーレスアーキテクチャやリソース構成の最適化で、平均30%のコスト削減を実現",
       },
       {
         id: 3,
-        icon: <Database className="h-5 w-5 text-teal-700" />,
-        title: "開発プロセス改善",
-        description: "開発効率を高めるプロセスとツールの導入支援",
+        icon: <Shield className="h-5 w-5 text-teal-700" />,
+        title: "インフラ自動化",
+        description: "CDK・Terraform・Ansibleでインフラをコード化。運用の効率化と障害対応の迅速化を実現",
       },
     ],
   },
@@ -144,7 +144,7 @@ export default function ChallengesSection() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-teal-900 sm:text-xl">
-                    "{challenge.quote}"
+                    {challenge.quote}
                   </h3>
                   <p className="mt-1 text-sm text-gray-600 sm:text-base"></p>
                 </div>
@@ -220,7 +220,7 @@ export default function ChallengesSection() {
                       {challenge.icon}
                     </div>
                     <h3 className="mb-2 text-xl font-bold text-teal-900">
-                      "{challenge.quote}"
+                      {challenge.quote}
                     </h3>
                     <hr className="mb-4 border-gray-200" />
                     <p className="min-h-[6rem] text-sm leading-relaxed text-gray-800">
