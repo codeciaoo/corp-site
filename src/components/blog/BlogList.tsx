@@ -34,9 +34,20 @@ export function BlogList() {
     loadPosts();
   }, []);
 
+  const pageLayout = (content: React.ReactNode) => (
+    <div className="min-h-screen py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-teal-800 sm:text-4xl">
+          技術ブログ
+        </h2>
+        {content}
+      </div>
+    </div>
+  );
+
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    return pageLayout(
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="rounded-lg border border-border/40 bg-card p-6">
@@ -64,8 +75,8 @@ export function BlogList() {
   }
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px] px-4">
+    return pageLayout(
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-lg text-red-500 text-center">
           <p className="mb-2">{error}</p>
           <p className="text-sm opacity-75">詳細はコンソールをご確認ください。</p>
@@ -75,7 +86,7 @@ export function BlogList() {
   }
 
   if (posts.length === 0) {
-    return (
+    return pageLayout(
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-lg text-muted-foreground">
           記事がありません。
@@ -84,8 +95,8 @@ export function BlogList() {
     );
   }
 
-  return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+  return pageLayout(
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
         <BlogCard key={post.link} post={post} />
       ))}

@@ -12,13 +12,15 @@ const Section = ({
   children,
   ariaLabel,
   bg = "white",
+  className,
 }: {
   children: ReactNode;
   ariaLabel?: string;
   bg?: BgColor;
+  className?: string;
 }) => (
   <section
-    className={`w-full border border-teal-600/10 ${bgColors[bg]}`}
+    className={`w-full border border-teal-600/10 ${bgColors[bg]} ${className || ''}`}
     aria-label={ariaLabel}
   >
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
