@@ -225,3 +225,114 @@ function LoadingState() {
 - 破壊的変更の明記
 - 後方互換性の考慮
 - マイグレーションガイドの提供
+
+## 9. フレームワークの混在（Astro + React）
+
+### コンポーネントの選択基準
+
+#### Astroコンポーネントの使用
+- 静的なページコンポーネント
+- SEO重視のページ
+- データフェッチが主な処理のページ
+- ビルド時に完結する処理
+
+#### Reactコンポーネントの使用
+- インタラクティブなUI要素
+- 状態管理が必要な部分
+- クライアントサイドでの動的な処理が必要な部分
+- 再利用性の高いUI部品
+
+### 属性名の規則
+
+#### Astroコンポーネント/HTML要素
+```astro
+<div class="container">
+  <h1 class="title">タイトル</h1>
+</div>
+```
+
+#### Reactコンポーネント
+```tsx
+<Button className="primary">
+  クリック
+</Button>
+```
+
+### 型安全性の確保
+
+#### コンポーネントのProps定義
+```typescript
+// Astroコンポーネント
+interface Props {
+  title: string;
+  description?: string;
+}
+
+// Reactコンポーネント
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}
+```
+
+### エラー防止のベストプラクティス
+
+1. **実装の確認**
+   - コンポーネントの実装元（Astro/React）を確認
+   - 適切な属性名（class/className）を使用
+   - 必要なPropsを確認
+
+2. **型チェック**
+   - TSの型エラーを注意深く確認
+   - Props interfaceの定義を確認
+   - 必要に応じて型アサーションを使用
+
+3. **コンポーネントの責務**
+   - 単一の責務を持つように設計
+   - フレームワークの特性を活かした実装
+   - 適切な粒度での分割
+
+### トラブルシューティング
+
+#### よくある問題と解決策
+
+1. **属性名の不一致**
+   ```diff
+   - <AstroComponent className="container">
+   + <AstroComponent class="container">
+   ```
+
+2. **型エラー**
+   ```typescript
+   // 解決策: 適切な型定義の追加
+   interface Props {
+     children: React.ReactNode;
+   }
+   ```
+
+3. **フレームワークの混在による問題**
+   - コンポーネントの責務を明確に分離
+   - 適切なフレームワークの選択
+   - インターフェースの統一
+
+### 保守性の向上
+
+1. **命名規則**
+   - `.astro`ファイル: Astroコンポーネント
+   - `.tsx`ファイル: Reactコンポーネント
+   - 明確な命名による識別
+
+2. **ディレクトリ構造**
+   ```
+   src/
+     ├── components/
+     │   ├── astro/    # Astroコンポーネント
+     │   └── react/    # Reactコンポーネント
+     └── pages/        # Astroページコンポーネント
+   ```
+
+3. **ドキュメント**
+   - フレームワークの選択理由
+   - コンポーネントの使用方法
+   - 注意点の明記

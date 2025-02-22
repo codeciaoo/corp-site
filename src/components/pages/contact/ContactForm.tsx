@@ -25,9 +25,16 @@ export default function ContactForm({ home }: ContactFormProps) {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [agreedToPrivacyPolicy, setAgreedToPrivacyPolicy] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!agreedToPrivacyPolicy) {
+      alert("個人情報保護方針への同意が必要です。");
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
@@ -75,8 +82,14 @@ export default function ContactForm({ home }: ContactFormProps) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
+    if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
+      if (e.target.id === "privacyPolicy") {
+        setAgreedToPrivacyPolicy(e.target.checked);
+      }
+    } else {
+      const { id, value } = e.target;
+      setFormData(prev => ({ ...prev, [id]: value }));
+    }
   };
 
   const handleServiceChange = (value: string) => {
@@ -177,15 +190,42 @@ export default function ContactForm({ home }: ContactFormProps) {
             required
           />
         </div>
-        <Button
-          type="submit"
-          className="w-full bg-teal-600 text-sm text-white transition-colors hover:bg-[#008080] md:text-base"
-          size="lg"
-          disabled={isSubmitting}
-        >
-          <SendIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-          {isSubmitting ? "送信中..." : "無料相談を申し込む"}
-        </Button>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="privacyPolicy"
+              checked={agreedToPrivacyPolicy}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-teal-600/20 text-teal-600 focus:ring-teal-600"
+              required
+            />
+            <Label
+              htmlFor="privacyPolicy"
+              className="text-sm text-gray-600"
+            >
+              <a
+                href="/privacy-policy"
+                className="text-teal-600 hover:text-teal-800 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                個人情報保護方針
+              </a>
+              に同意する
+            </Label>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-teal-600 text-sm text-white transition-colors hover:bg-[#008080] disabled:bg-gray-400 md:text-base"
+            size="lg"
+            disabled={isSubmitting || !agreedToPrivacyPolicy}
+          >
+            <SendIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+            {isSubmitting ? "送信中..." : "無料相談を申し込む"}
+          </Button>
+        </div>
       </form>
       <div className="border-t border-teal-600/20 pt-4 md:pt-6">
         <div className="text-muted-foreground flex flex-col items-start justify-between gap-2 text-xs sm:flex-row sm:items-center sm:gap-0 md:text-sm">
