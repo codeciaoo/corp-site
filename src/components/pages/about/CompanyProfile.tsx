@@ -20,6 +20,13 @@ const CompanyProfile = () => {
           <p className="text-medium leading-relaxed text-gray-700">
             CodeCiaoは、最新のWeb技術とクラウドソリューションを駆使し、企業のデジタル変革を実現する技術パートナーです。OpenAIやGeminiなどの生成AI技術を活用した業務効率化システムやRAGによる社内文書検索システムの開発実績、AWSクラウドインフラの専門知識を活かしたECサイトから業務システム、IoTプラットフォームまで、幅広い開発実績を持つテクノロジーカンパニーです。
           </p>
+          <a
+            href="/projects"
+            className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-teal-50 p-4 text-base font-medium text-teal-600 transition-colors hover:bg-teal-100 hover:text-teal-700"
+          >
+            開発実績を見る
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </a>
         </CardContent>
       </Card>
 
@@ -108,6 +115,15 @@ const CompanyProfile = () => {
                         ))}
                       </div>
                     ))}
+                    <div className="-ml-32 mt-8">
+                      <a
+                        href="/projects"
+                        className="inline-flex w-full items-center justify-center rounded-lg bg-teal-50 p-4 text-base font-medium text-teal-600 transition-colors hover:bg-teal-100 hover:text-teal-700"
+                      >
+                        開発実績を見る
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </a>
+                    </div>
                   </div>
                 ),
               },

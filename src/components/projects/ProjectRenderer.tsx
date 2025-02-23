@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { ClipboardList, CheckCircle2, FileText, ArrowRight } from "lucide-react";
+import { AlertCircle, CheckCircle2, FileText, ArrowRight } from "lucide-react";
 
 interface ProjectRendererProps {
   children: React.ReactNode;
@@ -13,6 +13,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
 }) => {
   const sections = React.useMemo(() => {
     const result = {
+      basicInfo: [] as React.ReactNode[],
       background: [] as React.ReactNode[],
       result: [] as React.ReactNode[],
       others: [] as React.ReactNode[],
@@ -37,7 +38,11 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
         // セクションの内容を取得
         const content = section.substring(section.indexOf('</h2>') + 5);
 
-        if (sectionTitle === 'ご相談の背景') {
+        if (sectionTitle === 'お客様の情報' || sectionTitle === 'プロジェクト概要' || sectionTitle === 'CodeCiaoの役割') {
+          result.basicInfo.push(
+            <div key={`basicInfo-${index}`} dangerouslySetInnerHTML={{ __html: `<h2>${sectionTitle}</h2>${content}` }} />
+          );
+        } else if (sectionTitle === 'ご相談の背景') {
           result.background.push(
             <div key={`background-${index}`} dangerouslySetInnerHTML={{ __html: content }} />
           );
@@ -75,6 +80,39 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
 
         {/* メインコンテンツ */}
         <div className="space-y-8">
+          {/* プロジェクト基本情報 */}
+          {sections.basicInfo.length > 0 && (
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-white p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+              <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-blue-100/50 transition-transform duration-300 group-hover:scale-110" />
+              <div className="relative">
+                <div className="mb-0.5">
+                  <div className="mb-0 inline-flex items-center gap-2 rounded-full bg-blue-100/80 px-4 py-1 backdrop-blur">
+                    <FileText className="h-4 w-4 text-blue-700" />
+                    <span className="text-sm font-medium text-blue-900">プロジェクト基本情報</span>
+                  </div>
+                </div>
+                <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-blue-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 max-w-none">
+                  {sections.basicInfo.map((section, index) => {
+                    if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
+                      return (
+                        <div 
+                          key={`basicInfo-${index}`} 
+                          dangerouslySetInnerHTML={{ 
+                            __html: section.props.dangerouslySetInnerHTML.__html.replace(
+                              /<li>/g, 
+                              '<li><span class="absolute left-0 text-blue-500">•</span>'
+                            )
+                          }} 
+                        />
+                      );
+                    }
+                    return section;
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 背景と結果のグリッド */}
           {(sections.background.length > 0 || sections.result.length > 0) && (
             <div className="relative grid grid-cols-1 gap-16 md:grid-cols-2">
@@ -91,12 +129,12 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                   <div className="relative">
                     <div className="mb-8">
                       <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-red-100/80 px-4 py-1 backdrop-blur">
-                        <ClipboardList className="h-4 w-4 text-red-700" />
+                        <AlertCircle className="h-4 w-4 text-red-700" />
                         <span className="text-sm font-medium text-red-900">課題の背景</span>
                       </div>
                       <h2 className="text-2xl font-bold text-red-800">ご相談の背景</h2>
                     </div>
-                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-8">
+                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6">
                       <div dangerouslySetInnerHTML={{ 
                         __html: sections.background.map(section => {
                           if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
@@ -120,7 +158,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       </div>
                       <h2 className="text-2xl font-bold text-teal-800">取り組みの結果</h2>
                     </div>
-                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-8">
+                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6">
                       <div dangerouslySetInnerHTML={{ 
                         __html: sections.result.map(section => {
                           if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
@@ -148,7 +186,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       <span className="text-sm font-medium text-slate-900">プロジェクト詳細</span>
                     </div>
                   </div>
-                  <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-slate-700 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-slate-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-8 max-w-none">
+                  <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-slate-700 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-slate-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 max-w-none">
                     <div dangerouslySetInnerHTML={{ 
                       __html: sections.others.map(section => {
                         if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
