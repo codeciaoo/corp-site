@@ -74,7 +74,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     
     // セクションタイトルが表示されていることを確認
-    const title = canvas.getByText('導入実績');
+    const title = canvas.getByText('開発実績');
     await expect(title).toBeInTheDocument();
     
     // すべてのプロジェクトカードが表示されていることを確認
@@ -100,7 +100,7 @@ export const Empty: Story = {
     const canvas = within(canvasElement);
     
     // セクションタイトルは表示されていることを確認
-    const title = canvas.getByText('導入実績');
+    const title = canvas.getByText('開発実績');
     await expect(title).toBeInTheDocument();
     
     // プロジェクトカードが表示されていないことを確認
