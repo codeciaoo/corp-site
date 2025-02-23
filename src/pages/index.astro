@@ -11,10 +11,13 @@ import Solutions from "@/components/pages/home/Solutions/Solutions";
 import Section from "@/components/shared/Section";
 import { getCollection } from "astro:content";
 
-const projects = (await getCollection("projects")).slice(0, 3);
-const sortedProjects = projects.sort(
+// 全プロジェクトを取得してから日付でソート
+const allProjects = await getCollection("projects");
+const sortedProjects = allProjects.sort(
   (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
 );
+// ソート済みのプロジェクトから最新3件を取得
+const latestProjects = sortedProjects.slice(0, 3);
 ---
 
 <Layout>
@@ -31,7 +34,7 @@ const sortedProjects = projects.sort(
   <Section bg="light" ariaLabel="実績">
     <HomeProjects
       client:idle
-      projects={sortedProjects.map(project => ({
+      projects={latestProjects.map(project => ({
         title: project.data.title,
         summary: project.data.summary,
         publishedDate: project.data.publishedDate,

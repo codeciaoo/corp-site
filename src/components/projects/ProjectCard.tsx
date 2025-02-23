@@ -38,9 +38,11 @@ const ProjectCard = ({
       <Card className="relative flex h-full flex-col overflow-hidden bg-white transition-all duration-300 hover:shadow-2xl" role="article">
         <div className="absolute -right-12 -top-12 h-24 w-24 rotate-45 bg-gradient-to-br from-teal-400/80 to-teal-600/80 transition-all duration-300 group-hover:scale-150" aria-hidden="true" />
         <div className="relative flex h-full flex-col p-6" data-testid="project-cover">
-          <div className="mb-4 flex items-center space-x-2">
-            <Tag className="h-4 w-4 text-teal-600" aria-hidden="true" />
-            {project.tags && makeTags(project.tags)}
+          <div className="mb-4 h-[120px] flex items-start space-x-2">
+            <Tag className="h-4 w-4 mt-1 flex-shrink-0 text-teal-600" aria-hidden="true" />
+            <div className="flex-1">
+              {project.tags && makeTags(project.tags)}
+            </div>
           </div>
           <div className="flex-grow">
             <h3 

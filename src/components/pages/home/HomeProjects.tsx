@@ -29,14 +29,14 @@ const HomeProjects = ({ projects }: { projects: ProjectProps[] }) => {
     return () => window.removeEventListener("resize", updateProjectCount);
   }, []);
 
-  const projectCards = (projectsToShow: ProjectProps[]) => (
+  const projectCards = (projectsToDisplay: ProjectProps[]) => (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {projectsToShow.map((project, index) => (
+      {projectsToDisplay.map((project, index) => (
         <ProjectCard
           withoutSummary={true}
           project={project}
           index={index}
-          key={index}
+          key={project.title}
         />
       ))}
     </div>
