@@ -62,7 +62,7 @@ function StepCard({
             </div>
           </div>
           {/* Mobile Arrow */}
-          <div className="absolute -bottom-4 left-1/2 block -translate-x-1/2 md:hidden">
+          <div className="absolute -bottom-8 left-1/2 block -translate-x-1/2 md:hidden">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 group-hover:bg-teal-600 group-hover:text-white">
               <ArrowRight className="h-4 w-4 rotate-90" />
             </div>
