@@ -76,8 +76,8 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
     <article className={cn("mx-auto max-w-6xl px-2 md:px-4 py-12", className)}>
       <div className="space-y-16">
         {/* プロジェクトの概要セクション */}
-        <div className="text-center">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
             {React.Children.map(children, child => {
               if (React.isValidElement(child)) {
                 const htmlContent = child.props?.value?.toString() || '';
