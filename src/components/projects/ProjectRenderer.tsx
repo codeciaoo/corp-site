@@ -145,11 +145,14 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       </div>
                       <h2 className="text-2xl font-bold text-red-800">ご相談の背景</h2>
                     </div>
-                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 [&_table]:table-wrapper">
+                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-7 [&_table]:table-wrapper">
                       <div dangerouslySetInnerHTML={{ 
                         __html: sections.background.map(section => {
                           if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
-                            return section.props.dangerouslySetInnerHTML.__html.replace(/<li>/g, '<li><span class="absolute left-0 text-red-500">❌</span>');
+                            return section.props.dangerouslySetInnerHTML.__html.replace(
+                              /<li>/g, 
+                              '<li><span class="absolute left-0 flex items-center justify-center top-1"><span class="animate-in fade-in slide-in-from-left-1 duration-300"><svg class="h-5 w-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span></span>'
+                            );
                           }
                           return '';
                         })[0] || ''
@@ -169,11 +172,14 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       </div>
                       <h2 className="text-2xl font-bold text-teal-800">取り組みの結果</h2>
                     </div>
-                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6">
+                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-7">
                       <div dangerouslySetInnerHTML={{ 
                         __html: sections.result.map(section => {
                           if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
-                            return section.props.dangerouslySetInnerHTML.__html.replace(/<li>/g, '<li><span class="absolute left-0 text-teal-500">✅</span>');
+                            return section.props.dangerouslySetInnerHTML.__html.replace(
+                              /<li>/g, 
+                              '<li><span class="absolute left-0 flex items-center justify-center top-1"><span class="animate-in fade-in slide-in-from-left-1 duration-300"><svg class="h-5 w-5 text-teal-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13.5l2.5 2.5L16 9"/></svg></span></span>'
+                            );
                           }
                           return '';
                         })[0] || ''
