@@ -67,66 +67,6 @@ const CompanyProfile = () => {
                   </div>
                 ),
               },
-              {
-                label: "事業内容",
-                value: (
-                  <div className="space-y-6">
-                    {[
-                      {
-                        title: "Web/モバイルアプリ開発",
-                        items: [
-                          "ECサイト・業務システムの開発実績",
-                          "IoTデータ可視化システムの構築実績",
-                          "生成AIを活用した安全管理システムの開発実績"
-                        ]
-                      },
-                      {
-                        title: "生成AI開発/導入支援",
-                        items: [
-                          "OpenAI・Geminiを活用したシステム開発",
-                          "RAGによる社内文書検索システムの構築",
-                          "AIモデルのファインチューニング支援"
-                        ]
-                      },
-                      {
-                        title: "クラウドインテグレーション",
-                        items: [
-                          "AWS環境の設計・構築・運用",
-                          "セキュリティ対策の実装",
-                          "クラウドリソース/コストの最適化"
-                        ]
-                      },
-                      {
-                        title: "DX推進支援・CTO支援サービス",
-                        items: [
-                          "技術戦略の立案支援",
-                          "DevOps導入・体制構築",
-                          "DX推進のための組織改革支援"
-                        ]
-                      }
-                    ].map((service, index) => (
-                      <div key={index}>
-                        <h4 className="mb-3 text-base font-medium text-teal-700">{service.title}</h4>
-                        {service.items.map((item, itemIndex) => (
-                          <div key={itemIndex} className="flex items-center space-x-2 ml-4 mb-2">
-                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-teal-400"></span>
-                            <span className="text-sm text-gray-600">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                    <div className="-ml-32 mt-8">
-                      <a
-                        href="/projects"
-                        className="inline-flex w-full items-center justify-center rounded-lg bg-teal-50 p-4 text-base font-medium text-teal-600 transition-colors hover:bg-teal-100 hover:text-teal-700"
-                      >
-                        開発実績を見る
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </a>
-                    </div>
-                  </div>
-                ),
-              },
             ].map((item, index) => (
               <div
                 key={index}
@@ -138,6 +78,68 @@ const CompanyProfile = () => {
                 <div className="flex-1">{item.value}</div>
               </div>
             ))}
+
+            {/* 事業内容を別セクションとして配置 */}
+            <div className="py-6">
+              <h3 className="mb-6 font-medium text-gray-600">事業内容</h3>
+              <div className="grid gap-6 sm:grid-cols-2">
+                {[
+                  {
+                    title: "Web/モバイルアプリ開発",
+                    items: [
+                      "ECサイト・業務システムの開発実績",
+                      "IoTデータ可視化システムの構築実績",
+                      "生成AIを活用した安全管理システムの開発実績"
+                    ]
+                  },
+                  {
+                    title: "生成AI開発/導入支援",
+                    items: [
+                      "OpenAI・Geminiを活用したシステム開発",
+                      "RAGによる社内文書検索システムの構築",
+                      "AIモデルのファインチューニング支援"
+                    ]
+                  },
+                  {
+                    title: "クラウドインテグレーション",
+                    items: [
+                      "AWS環境の設計・構築・運用",
+                      "セキュリティ対策の実装",
+                      "クラウドリソース/コストの最適化"
+                    ]
+                  },
+                  {
+                    title: "DX推進支援・CTO支援サービス",
+                    items: [
+                      "技術戦略の立案支援",
+                      "DevOps導入・体制構築",
+                      "DX推進のための組織改革支援"
+                    ]
+                  }
+                ].map((service, index) => (
+                  <div key={index} className="rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
+                    <h4 className="mb-4 text-lg font-medium text-teal-700">{service.title}</h4>
+                    <div className="space-y-3">
+                      {service.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="flex items-start space-x-3">
+                          <span className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal-400"></span>
+                          <span className="text-gray-600">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8">
+                <a
+                  href="/projects"
+                  className="inline-flex w-full items-center justify-center rounded-lg bg-teal-50 p-4 text-base font-medium text-teal-600 transition-colors hover:bg-teal-100 hover:text-teal-700"
+                >
+                  開発実績を見る
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

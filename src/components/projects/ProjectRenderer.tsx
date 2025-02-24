@@ -24,7 +24,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
 
       // StaticHtmlコンポーネントからHTML文字列を取得
       const htmlContent = child.props?.value?.toString() || '';
-
+      
       // h2タグでコンテンツを分割
       const h2Sections = htmlContent.split(/<h2[^>]*>/);
       
@@ -51,8 +51,19 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
             <div key={`result-${index}`} dangerouslySetInnerHTML={{ __html: content }} />
           );
         } else {
+          // テーブルを含むコンテンツを処理
+          const processedContent = content.replace(
+            /<table([^>]*)>/g,
+            '<div class="table-wrapper"><table$1>'
+          ).replace(
+            /<\/table>/g,
+            '</table></div>'
+          );
+
           result.others.push(
-            <div key={`others-${index}`} dangerouslySetInnerHTML={{ __html: `<h2>${sectionTitle}</h2>${content}` }} />
+            <div key={`others-${index}`} dangerouslySetInnerHTML={{ 
+              __html: `<h2>${sectionTitle}</h2>${processedContent}`
+            }} />
           );
         }
       });

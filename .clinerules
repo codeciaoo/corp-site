@@ -10,6 +10,12 @@
 - [.cline/rules/role_and_stack.clinerules](role_and_stack.clinerules)
 - [.cline/rules/coding_guidelines.clinerules](coding_guidelines.clinerules)
 - [.cline/rules/directory_structure.clinerules](directory_structure.clinerules)
+- [.cline/rules/debugging_best_practices.clinerules](debugging_best_practices.clinerules)
+- [.cline/rules/component_guidelines.clinerules](component_guidelines.clinerules)
+- [.cline/rules/cloudflare_rules.clinerules](cloudflare_rules.clinerules)
+- [.cline/rules/testing_guidelines.clinerules](testing_guidelines.clinerules)
+- [.cline/rules/commit_rules.clinerules](commit_rules.clinerules)
+- [.cline/rules/pull_request_rules.clinerules](pull_request_rules.clinerules)
 
 タスクの内容に応じて、他のファイルも確認してください。
 
@@ -18,6 +24,7 @@
 !include .cline/rules/role_and_stack.clinerules
 !include .cline/rules/coding_guidelines.clinerules
 !include .cline/rules/security_rules.clinerules
+!include .cline/rules/debugging_best_practices.clinerules
 !include .cline/rules/component_guidelines.clinerules
 !include .cline/rules/cloudflare_rules.clinerules
 !include .cline/rules/testing_guidelines.clinerules
