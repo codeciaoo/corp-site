@@ -62,7 +62,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
   }, [children]);
 
   return (
-    <article className={cn("mx-auto max-w-6xl px-4 py-12", className)}>
+    <article className={cn("mx-auto max-w-6xl px-2 md:px-4 py-12", className)}>
       <div className="space-y-16">
         {/* プロジェクトの概要セクション */}
         <div className="text-center">
@@ -82,7 +82,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
         <div className="space-y-8">
           {/* プロジェクト基本情報 */}
           {sections.basicInfo.length > 0 && (
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-white p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
               <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-blue-100/50 transition-transform duration-300 group-hover:scale-110" />
               <div className="relative">
                 <div className="mb-0.5">
@@ -91,7 +91,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                     <span className="text-sm font-medium text-blue-900">プロジェクト基本情報</span>
                   </div>
                 </div>
-                <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-blue-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 max-w-none">
+                  <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-blue-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-4 md:pl-6 max-w-none [&_table]:table-wrapper">
                   {sections.basicInfo.map((section, index) => {
                     if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
                       return (
@@ -124,7 +124,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
               </div>
               
               {sections.background.length > 0 && (
-                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-white p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
                   <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-red-100/50 transition-transform duration-300 group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-8">
@@ -134,7 +134,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       </div>
                       <h2 className="text-2xl font-bold text-red-800">ご相談の背景</h2>
                     </div>
-                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6">
+                    <div className="prose prose-slate max-w-none [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 [&_table]:table-wrapper">
                       <div dangerouslySetInnerHTML={{ 
                         __html: sections.background.map(section => {
                           if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
@@ -148,7 +148,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                 </div>
               )}
               {sections.result.length > 0 && (
-                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-teal-50 to-white p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-teal-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
                   <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-teal-100/50 transition-transform duration-300 group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-8">
@@ -177,7 +177,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
           {/* その他のセクション */}
           {sections.others.length > 0 && (
             <div className="space-y-12">
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-50 to-white p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
                 <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-slate-100/50 transition-transform duration-300 group-hover:scale-110" />
                 <div className="relative">
                   <div className="mb-0">
@@ -186,7 +186,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                       <span className="text-sm font-medium text-slate-900">プロジェクト詳細</span>
                     </div>
                   </div>
-                  <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-slate-700 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-slate-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 max-w-none">
+                  <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-slate-700 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-slate-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-6 max-w-none [&_table]:table-wrapper">
                     <div dangerouslySetInnerHTML={{ 
                       __html: sections.others.map(section => {
                         if (React.isValidElement(section) && section.props?.dangerouslySetInnerHTML?.__html) {
