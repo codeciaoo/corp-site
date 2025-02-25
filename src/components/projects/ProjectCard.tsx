@@ -31,7 +31,6 @@ const ProjectCard = ({
   return (
     <a
       href={project.href}
-      key={project.href}
       className="group block no-underline transform transition-all duration-300 hover:scale-[1.02]"
       aria-labelledby={titleId}
     >

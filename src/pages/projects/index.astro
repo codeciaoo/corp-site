@@ -10,9 +10,10 @@ const sortedProjects = projects.sort(
 );
 ---
 
-<Layout>
+<Layout title="開発実績 | CodeCiao" description="CodeCiaoの開発・技術支援の実績のご紹介">
   <Section bg="light">
     <ProjectList
+      client:load
       projects={sortedProjects.map(project => ({
         title: project.data.title,
         summary: project.data.summary,
@@ -22,6 +23,7 @@ const sortedProjects = projects.sort(
         href: `/projects/${project.id}`,
         tags: project.data.tags,
       }))}
+      itemsPerPage={15}
     />
   </Section>
 </Layout>
