@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { Button } from "@/components/ui/button";
+
+const title = "ページが見つかりません | 404エラー";
+const description = "お探しのページは存在しないか、移動した可能性があります。";
+---
+
+<Layout title={title} description={description}>
+  <AuroraBackground className="py-20 md:py-32" client:load>
+    <div class="container mx-auto px-4 text-center">
+      <div class="mb-8 text-9xl font-bold text-teal-600">404</div>
+      
+      <h1 class="mb-4 text-3xl font-bold md:text-4xl">
+        ページが見つかりません
+      </h1>
+      
+      <p class="mx-auto mb-8 max-w-md text-lg text-gray-600 dark:text-gray-300">
+        お探しのページは存在しないか、移動した可能性があります。
+        URLが正しいかご確認ください。
+      </p>
+      
+      <div class="flex justify-center space-x-4">
+        <a href="/" class="inline-block">
+          <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
+            ホームに戻る
+          </Button>
+        </a>
+      </div>
+      
+      <div class="mt-16 flex justify-center">
+        <img 
+          src="/corp_logo.webp" 
+          alt="CodeCiao" 
+          class="h-12 opacity-70 transition-opacity hover:opacity-100" 
+        />
+      </div>
+    </div>
+  </AuroraBackground>
+</Layout>
