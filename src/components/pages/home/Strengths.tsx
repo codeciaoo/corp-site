@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { Lightbulb, Cpu, TrendingUp } from "lucide-react";
 
 const strengths = [
@@ -47,11 +47,13 @@ function StrengthCard({
       >
         <div className="flex flex-1 flex-col justify-center p-6 md:p-8">
           <div className="mb-4 md:mb-6">
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600/10">
-                {icon}
+            <div className="flex flex-row items-center gap-3">
+              <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-teal-600/10">
+                {React.cloneElement(icon as React.ReactElement, {
+                  className: "h-5 w-5 md:h-6 md:w-6 text-teal-600"
+                })}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+              <h3 className="text-lg md:text-xl font-bold text-gray-900 lg:text-2xl">
                 {title}
               </h3>
             </div>

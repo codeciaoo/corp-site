@@ -77,7 +77,7 @@ export default function ContactFlow() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-teal-800 sm:text-4xl">
-        お問い合わせから開始までの流れ
+        お問い合わせから<br className="md:hidden" />開始までの流れ
       </h2>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:grid-cols-5">
         {steps.map((step, index) => (

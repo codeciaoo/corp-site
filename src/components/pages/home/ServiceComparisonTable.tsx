@@ -99,8 +99,8 @@ const ServiceComparisonTable = () => {
         <h2 className="mb-4 text-center text-3xl font-bold text-teal-800 sm:text-4xl">
           ご支援イメージ
         </h2>
-        <p className="text-lg text-gray-600">
-          ご要望に合わせて最適なプランをご提案します
+        <p className="text-base md:text-lg text-gray-600">
+          ご要望に合わせて最適なプランを提案します
         </p>
       </div>
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
@@ -110,17 +110,17 @@ const ServiceComparisonTable = () => {
             className="group relative overflow-hidden rounded-3xl bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-2xl"
           >
             <div className="relative">
-              <div className="mb-2 flex items-start space-x-4">
-                <div className={`rounded-2xl p-3 ${plan.color} bg-opacity-10`}>
+              <div className="mb-2 flex items-start space-x-2 md:space-x-4">
+                <div className={`rounded-2xl p-2 md:p-3 ${plan.color} bg-opacity-10`}>
                   {React.cloneElement(plan.icon, {
-                    className: `w-12 h-12 ${plan.color}`,
+                    className: `w-8 h-8 md:w-12 md:h-12 ${plan.color}`,
                   })}
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                  <h3 className="mb-2 text-lg md:text-2xl font-bold text-gray-900">
                     {plan.title}
                   </h3>
-                  <p className={`text-base font-medium ${plan.color}`}>
+                  <p className={`text-sm md:text-base font-medium ${plan.color}`}>
                     {plan.subtitle}
                   </p>
                 </div>
@@ -131,13 +131,13 @@ const ServiceComparisonTable = () => {
                 <div key={sIdx} className="mb-8 last:mb-0">
                   <div className="mb-4 flex items-center space-x-3">
                     <div
-                      className={`rounded-xl p-2 ${plan.color} bg-opacity-10`}
+                      className={`rounded-xl p-1.5 md:p-2 ${plan.color} bg-opacity-10`}
                     >
                       {React.cloneElement(section.icon, {
-                        className: `w-6 h-6 ${plan.color}`,
+                        className: `w-5 h-5 md:w-6 md:h-6 ${plan.color}`,
                       })}
                     </div>
-                    <h4 className="text-lg font-bold text-gray-800">
+                    <h4 className="text-base md:text-lg font-bold text-gray-800">
                       {section.title}
                     </h4>
                   </div>
@@ -149,12 +149,12 @@ const ServiceComparisonTable = () => {
                         className={`border-l-2 pl-6 transition-colors duration-300 hover:border-l-2 ${plan.color} border-opacity-50 hover:border-opacity-100`}
                       >
                         <div className="mb-2 flex items-center space-x-3">
-                          <CheckCircle2 className={`h-5 w-5 ${plan.color}`} />
-                          <h5 className="text-base font-semibold text-gray-800">
+                          <CheckCircle2 className={`h-4 w-4 md:h-5 md:w-5 ${plan.color}`} />
+                          <h5 className="text-sm md:text-base font-semibold text-gray-800">
                             {point.title}
                           </h5>
                         </div>
-                        <p className="ml-8 text-base leading-relaxed text-gray-600">
+                        <p className="ml-6 md:ml-8 text-xs md:text-base leading-relaxed text-gray-600">
                           {point.description}
                         </p>
                       </div>

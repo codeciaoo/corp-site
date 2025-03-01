@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Cloud,
   Settings,
@@ -10,7 +11,6 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { useState } from "react";
 
 interface Solution {
   id: number;
@@ -125,7 +125,7 @@ export default function ChallengesSection() {
 
   return (
     <div className="mx-auto max-w-7xl py-8 sm:px-6 sm:py-16">
-      <h2 className="mb-8 text-center text-3xl font-bold text-teal-800 sm:mb-12 sm:text-4xl">
+      <h2 className="mb-8 text-center text-[1.6rem] font-bold text-teal-800 sm:mb-12 sm:text-4xl">
         <span className="whitespace-nowrap">こんな悩み</span>
         <span className="whitespace-nowrap">ありませんか？</span>
       </h2>
@@ -139,11 +139,13 @@ export default function ChallengesSection() {
               onClick={() => toggleChallenge(challenge.id)}
             >
               <div className="flex items-center space-x-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 sm:h-12 sm:w-12">
-                  {challenge.icon}
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 sm:h-12 sm:w-12">
+                  {React.cloneElement(challenge.icon as React.ReactElement, {
+                    className: "h-4 w-4 sm:h-6 sm:w-6 text-teal-700"
+                  })}
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-teal-900 sm:text-xl">
+                  <h3 className="text-[15px] font-bold text-teal-900 sm:text-xl">
                     {challenge.quote}
                   </h3>
                   <p className="mt-1 text-sm text-gray-600 sm:text-base"></p>
