@@ -76,8 +76,8 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
     <article className={cn("mx-auto max-w-6xl px-2 md:px-4 py-12", className)}>
       <div className="space-y-16">
         {/* プロジェクトの概要セクション */}
-        <div className="mx-auto max-w-3xl">
-          <h1 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
+        <div className="mx-auto max-w-full text-center">
+          <h1 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl text-center">
             {React.Children.map(children, child => {
               if (React.isValidElement(child)) {
                 const htmlContent = child.props?.value?.toString() || '';
@@ -126,7 +126,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
 
           {/* 背景と結果のグリッド */}
           {(sections.background.length > 0 || sections.result.length > 0) && (
-            <div className="relative grid grid-cols-1 gap-16 md:grid-cols-2">
+            <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
               {/* 背景から結果への矢印（md以上の画面幅でのみ表示） */}
               <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform md:block">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-teal-50 shadow-lg">
@@ -135,7 +135,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
               </div>
               
               {sections.background.length > 0 && (
-                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl h-full">
                   <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-red-100/50 transition-transform duration-300 group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-8">
@@ -162,7 +162,7 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
                 </div>
               )}
               {sections.result.length > 0 && (
-                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-teal-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl">
+                <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-teal-50 to-white p-6 md:p-12 shadow-lg transition-all duration-300 hover:shadow-xl h-full">
                   <div className="absolute -right-8 -top-8 h-32 w-32 rotate-12 bg-teal-100/50 transition-transform duration-300 group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-8">
