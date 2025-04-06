@@ -40,3 +40,4 @@ dist
 
 .astro
 *storybook.log
+.qodo

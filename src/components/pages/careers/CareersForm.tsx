@@ -19,6 +19,7 @@ export default function CareersForm() {
     email: "",
     position: "",
     experience: "",
+    githubUrl: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +62,7 @@ export default function CareersForm() {
         email: "",
         position: "",
         experience: "",
+        githubUrl: "",
         message: "",
       });
 
@@ -180,8 +182,22 @@ export default function CareersForm() {
           </Select>
         </div>
         <div className="space-y-2">
+          <Label htmlFor="githubUrl" className="text-md text-teal-800">
+            GitHub URL（任意）
+          </Label>
+          <Input
+            id="githubUrl"
+            type="url"
+            value={formData.githubUrl}
+            onChange={handleChange}
+            placeholder="https://github.com/yourusername"
+            className="border-teal-600/20 bg-white transition-colors focus:border-teal-600 focus:ring-teal-600"
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="message" className="text-md text-teal-800">
-            自己PR
+            自己PR（任意）
           </Label>
           <textarea
             id="message"
@@ -189,7 +205,6 @@ export default function CareersForm() {
             onChange={handleChange}
             className="ring-offset-background placeholder:text-muted-foreground min-h-[120px] w-full rounded-md border border-teal-600/20 bg-white px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[150px]"
             placeholder="あなたのスキルや経験、志望動機などをお書きください"
-            required
           />
         </div>
         <div className="space-y-4">
