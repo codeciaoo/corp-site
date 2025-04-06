@@ -59,11 +59,18 @@ interface StrengthCardProps {
 const CountUp = ({ end, duration = 2, unit = "" }: { end: number; duration?: number; unit?: string }) => {
   const nodeRef = useRef<HTMLSpanElement>(null);
   const [count, setCount] = React.useState(0);
-  const inView = useInView(nodeRef, { once: true, margin: "-100px" });
-  
+  // Set initial state to end value to ensure it's visible even without animation
+  React.useEffect(() => {
+    setCount(end);
+  }, [end]);
+
+  // Use a more mobile-friendly threshold and margin
+  const inView = useInView(nodeRef, { once: true, margin: "0px", threshold: 0.1 });
+
   useEffect(() => {
+    // Skip animation if not in view
     if (!inView) return;
-    
+
     let startTimestamp: number | null = null;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -73,12 +80,12 @@ const CountUp = ({ end, duration = 2, unit = "" }: { end: number; duration?: num
         window.requestAnimationFrame(step);
       }
     };
-    
+
     window.requestAnimationFrame(step);
   }, [end, duration, inView]);
-  
+
   return (
-    <span ref={nodeRef} className="font-bold text-teal-600">
+    <span ref={nodeRef} className="font-bold text-teal-600 whitespace-nowrap">
       {count}{unit}
     </span>
   );
@@ -95,13 +102,13 @@ function StrengthCard({
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true, margin: "-100px" });
   const controls = useAnimation();
-  
+
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
     }
   }, [controls, isInView]);
-  
+
   const cardVariants = {
     hidden: { y: 50, opacity: 0 },
     visible: {
@@ -113,7 +120,7 @@ function StrengthCard({
       }
     }
   };
-  
+
   return (
     <motion.div
       ref={cardRef}
@@ -128,11 +135,11 @@ function StrengthCard({
         >
           <CardContent className="flex flex-1 flex-col justify-center p-6 md:p-8">
             <div className="mb-4 md:mb-6">
-              <motion.div 
+              <motion.div
                 className="flex flex-row items-center gap-3"
                 whileHover={{ x: isEven ? -5 : 5 }}
               >
-                <motion.div 
+                <motion.div
                   className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 to-teal-600"
                   whileHover={{ scale: 1.05, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -150,15 +157,17 @@ function StrengthCard({
             <p className="mb-6 text-sm leading-relaxed text-gray-600 sm:text-base">
               {description}
             </p>
-            
+
             {/* Stats display with count-up animation */}
             <div className="grid grid-cols-2 gap-4 mt-2">
               {stats.map((stat, idx) => (
                 <div key={idx} className="p-3 bg-gradient-to-br from-teal-50 to-white rounded-xl border border-teal-100 transition-all hover:shadow-md">
-                  <div className="text-xl md:text-2xl font-bold">
-                    <CountUp end={stat.value} unit={stat.unit} />
+                  <div className="flex justify-center">
+                    <div className="text-xl md:text-2xl font-bold overflow-visible whitespace-nowrap">
+                      <CountUp end={stat.value} unit={stat.unit} />
+                    </div>
                   </div>
-                  <div className="text-xs md:text-sm text-gray-500">{stat.label}</div>
+                  <div className="text-xs md:text-sm text-gray-500 text-center">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -185,28 +194,28 @@ export default function Strengths() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const controls = useAnimation();
-  
+
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
     }
   }, [controls, isInView]);
-  
+
   return (
     <div className="py-20 md:py-24" ref={sectionRef}>
       <a href="http://www.freepik.com" className="hidden">
         Designed by rawpixel.com / Freepik
       </a>
       <div className="container mx-auto px-4">
-        <motion.div 
+        <motion.div
           className="mb-12 text-center md:mb-16"
           initial={{ opacity: 0, y: -20 }}
           animate={controls}
           variants={{
-            visible: { 
-              opacity: 1, 
+            visible: {
+              opacity: 1,
               y: 0,
-              transition: { duration: 0.6 } 
+              transition: { duration: 0.6 }
             }
           }}
         >
@@ -217,13 +226,13 @@ export default function Strengths() {
             エンタープライズレベルの品質と先進的な技術で、お客様のビジネス課題を解決します
           </p>
         </motion.div>
-        
+
         <div className="space-y-8 md:space-y-12">
           {strengths.map((strength, index) => (
-            <StrengthCard 
-              key={index} 
-              {...strength} 
-              isEven={index % 2 === 0} 
+            <StrengthCard
+              key={index}
+              {...strength}
+              isEven={index % 2 === 0}
             />
           ))}
         </div>
