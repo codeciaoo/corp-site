@@ -4,7 +4,7 @@ summary: "建設現場向けの統合管理システムを開発。Remix/Nest.js
 cover: "./mermaid.png"
 coverAlt: "Mermaid diagram for system architecture"
 publishedDate: 2024-09-26
-tags: ["Remix", "Nest.js", "TypeScript", "PWA", "AWS Amplify", "CI/CD", "建設DX", "モバイルアプリ", "クラウドネイティブ", "オフラインファースト"]
+tags: ["Remix", "TypeScript", "PWA", "AWS Amplify", "CI/CD", "モバイルアプリ", "クラウドネイティブ"]
 ---
 
 # 建設現場DXプラットフォームの開発

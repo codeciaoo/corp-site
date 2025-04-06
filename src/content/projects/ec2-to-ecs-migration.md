@@ -4,7 +4,7 @@ summary: "不動産ポータルサイトのインフラ基盤を、EC2からECS�
 cover: "./mermaid.png"
 coverAlt: "Mermaid diagram for system architecture"
 publishedDate: 2024-04-19
-tags: ["AWS", "ECS", "コンテナ化", "CI/CD", "インフラ自動化", "DevOps", "クラウドマイグレーション", "セキュリティ", "コスト最適化", "ブルーグリーンデプロイ"]
+tags: ["AWS", "ECS", "コンテナ化", "CI/CD", "インフラ自動化", "コスト最適化"]
 ---
 
 # EC2からECSへのコンテナ化移行プロジェクト

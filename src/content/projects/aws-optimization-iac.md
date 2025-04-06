@@ -4,7 +4,7 @@ summary: "Account Factory for Terraform（AFT）を活用し、複数事業部�
 cover: "./mermaid.png"
 coverAlt: "System architecture diagram"
 publishedDate: 2024-11-30
-tags: ["AWS", "Terraform", "IaC", "AFT", "AWS Organizations", "SSO", "コスト最適化", "セキュリティ", "クラウドガバナンス", "自動化"]
+tags: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "コスト最適化", "クラウドガバナンス"]
 ---
 
 # AWSインフラのコスト最適化とIaC化プロジェクト
