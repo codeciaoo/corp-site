@@ -8,16 +8,30 @@ import ProjectBackground from "./ProjectBackground";
 import ProjectResult from "./ProjectResult";
 import ProjectDetail from "./ProjectDetail";
 
+interface ProjectMetadata {
+  title: string;
+  tags?: string[];
+  publishedDate: string;
+  summary?: string;
+}
+
 interface ProjectRendererProps {
   children: React.ReactNode;
   className?: string;
+  metadata?: ProjectMetadata;
+  'client:load'?: boolean;
+  'client:visible'?: boolean;
+  'client:media'?: string;
+  'client:only'?: boolean | string;
 }
 
 const ProjectRenderer: React.FC<ProjectRendererProps> = ({
   children,
   className,
+  metadata,
 }) => {
-  const title = React.useMemo(() => {
+  // fallback to extracting title from content if metadata is not provided
+  const extractedTitle = React.useMemo(() => {
     let projectTitle = "";
     React.Children.forEach(children, child => {
       if (React.isValidElement(child)) {
@@ -31,6 +45,9 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
     });
     return projectTitle;
   }, [children]);
+  
+  // Use metadata title if available, otherwise use extracted title
+  const title = metadata?.title || extractedTitle;
 
   const extractedSections = React.useMemo(() => {
     let allSections: ProjectSectionProps[] = [];
@@ -57,7 +74,12 @@ const ProjectRenderer: React.FC<ProjectRendererProps> = ({
     <article className={cn("mx-auto max-w-6xl px-2 md:px-4 py-12", className)}>
       <div className="space-y-16">
         {/* プロジェクトヘッダー */}
-        <ProjectHeader title={title} />
+        <ProjectHeader 
+          title={title} 
+          tags={metadata?.tags} 
+          publishedDate={metadata?.publishedDate}
+          summary={metadata?.summary}
+        />
 
         {/* メインコンテンツ */}
         <div className="space-y-8">

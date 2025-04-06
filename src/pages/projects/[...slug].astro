@@ -5,6 +5,7 @@ import Layout from "@/layouts/Layout.astro";
 import ProjectRenderer from "@/components/projects/ProjectRenderer";
 import { getCollection, render } from "astro:content";
 import Section from "@/components/shared/Section";
+
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   return projects.map(project => ({
@@ -12,14 +13,36 @@ export async function getStaticPaths() {
     props: { project },
   }));
 }
+
 const { project } = Astro.props;
 const { Content } = await render(project);
+
+// メタデータの準備
+const { title, tags, publishedDate, summary } = project.data;
+
+// 日付をフォーマット（date-fnsの代わりにシンプルな方法で実装）
+const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}年${month}月${day}日`;
+};
+
+const formattedDate = formatDate(publishedDate);
+const metadata = {
+  title,
+  tags,
+  publishedDate: formattedDate,
+  summary
+};
 ---
 
-<Layout>
-  <Section bg="light" ariaLabel={project.data.title}>
-    <ProjectRenderer>
-      <Content />
-    </ProjectRenderer>
+<Layout title={`${title} | CodeCiao株式会社`} description={summary}>
+  <Section bg="light" ariaLabel={title}>
+    <div class="container mx-auto px-4 md:px-6 py-8 md:py-12">
+      <ProjectRenderer metadata={metadata} client:load>
+        <Content />
+      </ProjectRenderer>
+    </div>
   </Section>
 </Layout>
