@@ -75,10 +75,13 @@ function StepCard({
 
 export default function ContactFlow() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-      <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-teal-800 sm:text-4xl">
-        お問い合わせから<br className="md:hidden" />開始までの流れ
-      </h2>
+    <div className="py-20 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-center text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent sm:text-4xl">
+            お問い合わせから<br className="md:hidden" />開始までの流れ
+          </h2>
+        </div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:grid-cols-5">
         {steps.map((step, index) => (
           <StepCard
@@ -87,6 +90,7 @@ export default function ContactFlow() {
             showArrow={index < steps.length - 1}
           />
         ))}
+      </div>
       </div>
     </div>
   );

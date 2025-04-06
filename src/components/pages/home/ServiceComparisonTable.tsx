@@ -94,9 +94,10 @@ const ServiceComparisonTable = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="py-20 md:py-24">
+      <div className="container mx-auto px-4">
       <div className="mb-16 text-center">
-        <h2 className="mb-4 text-center text-3xl font-bold text-teal-800 sm:text-4xl">
+        <h2 className="mb-4 text-center text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent sm:text-4xl">
           ご支援イメージ
         </h2>
         <p className="text-base md:text-lg text-gray-600">
@@ -165,6 +166,7 @@ const ServiceComparisonTable = () => {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

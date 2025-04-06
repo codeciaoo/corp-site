@@ -6,4 +6,6 @@ export interface ProjectProps {
   tags?: string[];
   cover?: string;
   coverAlt?: string;
+  caseStudyUrl?: string; // URL to detailed case study
+  demoUrl?: string; // URL to live demo if available
 }

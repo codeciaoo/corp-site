@@ -236,7 +236,7 @@ const CareersPage = () => {
               CodeCiao と共に未来を創る
             </h1>
             <p className="mx-auto mb-5 max-w-2xl text-base text-gray-600 dark:text-gray-300">
-              最新のAI技術とWeb開発を駆使して、革新的なソリューションを生み出す仲間を募集しています
+              最新のAI技術とWeb開発を駆使して、<br></br>革新的なソリューションを生み出す仲間を募集しています
             </p>
             <Button
               className="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-2 text-white hover:from-teal-700 hover:to-teal-600"
