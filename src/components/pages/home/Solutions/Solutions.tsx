@@ -9,8 +9,11 @@ import {
   Code,
   Gauge,
   ChevronDown,
-  ChevronUp,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { ScrollReveal } from "../../../ui/scroll-reveal";
+import { AnimatedIcon } from "../../../ui/animated-icon";
+import { SolutionCard } from "../../../ui/solution-card";
 
 interface Solution {
   id: number;
@@ -118,6 +121,30 @@ const challenges: Challenge[] = [
 export default function ChallengesSection() {
   const [activeChallenge, setActiveChallenge] = useState<number>(0);
   const desktopActiveChallenge = activeChallenge > 0 ? activeChallenge : 1;
+  
+  // Animation variants for staggered children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24,
+      },
+    },
+  };
 
   const toggleChallenge = (id: number) => {
     setActiveChallenge(id === activeChallenge ? 0 : id);
@@ -125,146 +152,219 @@ export default function ChallengesSection() {
 
   return (
     <div className="mx-auto max-w-7xl py-8 sm:px-6 sm:py-16">
-      <h2 className="mb-8 text-center text-[1.6rem] font-bold text-teal-800 sm:mb-12 sm:text-4xl">
-        <span className="whitespace-nowrap">こんな悩み</span>
-        <span className="whitespace-nowrap">ありませんか？</span>
-      </h2>
+      <ScrollReveal animation="fade" delay={0.2}>
+        <h2 className="mb-8 text-center text-[1.6rem] font-bold text-teal-800 sm:mb-12 sm:text-4xl">
+          <span className="whitespace-nowrap">こんな悩み</span>
+          <span className="whitespace-nowrap">ありませんか？</span>
+        </h2>
+      </ScrollReveal>
 
       {/* Mobile layout (default) */}
-      <div className="space-y-6 md:hidden">
-        {challenges.map(challenge => (
-          <div key={challenge.id} className="rounded-2xl bg-white shadow-xl">
-            <div
-              className="flex cursor-pointer items-center justify-between p-4 sm:p-6"
-              onClick={() => toggleChallenge(challenge.id)}
+      <ScrollReveal animation="slide-up" delay={0.4} className="space-y-6 md:hidden">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-6"
+        >
+          {challenges.map(challenge => (
+            <motion.div 
+              key={challenge.id} 
+              variants={itemVariants}
+              className="rounded-2xl bg-white shadow-xl overflow-hidden"
+              whileHover={{
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+              }}
             >
-              <div className="flex items-center space-x-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 sm:h-12 sm:w-12">
-                  {React.cloneElement(challenge.icon as React.ReactElement, {
-                    className: "h-4 w-4 sm:h-6 sm:w-6 text-teal-700"
-                  })}
-                </div>
-                <div>
-                  <h3 className="text-[15px] font-bold text-teal-900 sm:text-xl">
-                    {challenge.quote}
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-600 sm:text-base"></p>
-                </div>
-              </div>
-              {activeChallenge === challenge.id ? (
-                <ChevronUp className="h-6 w-6 text-teal-700" />
-              ) : (
-                <ChevronDown className="h-6 w-6 text-teal-700" />
-              )}
-            </div>
-            {activeChallenge === challenge.id && (
-              <div className="border-t border-gray-200 p-4 sm:p-6">
-                <div className="flex h-full flex-col">
-                  <p className="mb-4 min-h-[4rem] text-sm leading-relaxed text-gray-800 sm:text-base">
-                    {challenge.problem}
-                  </p>
-                  <h4 className="mb-4 text-lg font-semibold text-teal-900 sm:text-xl">
-                    解決策
-                  </h4>
-                  <div className="grid gap-4">
-                    {challenge.solutions.map(solution => (
-                      <div
-                        key={solution.id}
-                        className="flex flex-col rounded-xl bg-gray-50 p-4 shadow-md transition-all duration-200 hover:shadow-lg"
-                      >
-                        <div className="mb-3 flex items-center">
-                          <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-teal-100">
-                            {solution.icon}
-                          </div>
-                          <h5 className="text-base font-semibold text-gray-900">
-                            {solution.title}
-                          </h5>
-                        </div>
-                        <p className="min-h-[3rem] text-sm text-gray-800">
-                          {solution.description}
-                        </p>
-                      </div>
-                    ))}
+              <div
+                className="flex cursor-pointer items-center justify-between p-4 sm:p-6 bg-gradient-to-r from-teal-50 to-teal-100/40"
+                onClick={() => toggleChallenge(challenge.id)}
+              >
+                <div className="flex items-center space-x-3">
+                  <AnimatedIcon 
+                    icon={challenge.icon} 
+                    size="sm" 
+                    hover={true}
+                    className="sm:h-12 sm:w-12"
+                  />
+                  <div>
+                    <h3 className="text-[15px] font-bold text-teal-900 sm:text-xl">
+                      {challenge.quote}
+                    </h3>
                   </div>
                 </div>
+                <motion.div
+                  animate={{ rotate: activeChallenge === challenge.id ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown className="h-6 w-6 text-teal-700" />
+                </motion.div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+              {activeChallenge === challenge.id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="border-t border-gray-200 p-4 sm:p-6 bg-white"
+                >
+                  <div className="flex h-full flex-col">
+                    <p className="mb-4 min-h-[4rem] text-sm leading-relaxed text-gray-800 sm:text-base">
+                      {challenge.problem}
+                    </p>
+                    <h4 className="mb-4 text-lg font-semibold text-teal-900 sm:text-xl">
+                      解決策
+                    </h4>
+                    <motion.div 
+                      className="grid gap-4"
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      {challenge.solutions.map((solution, index) => (
+                        <motion.div
+                          key={solution.id}
+                          variants={itemVariants}
+                          whileHover={{ scale: 1.03, y: -4 }}
+                          className="flex flex-col rounded-xl bg-gradient-to-r from-gray-50 to-gray-100/70 p-4 shadow-md transition-all duration-200 hover:shadow-xl"
+                        >
+                          <div className="mb-3 flex items-center">
+                            <AnimatedIcon 
+                              icon={solution.icon}
+                              size="sm"
+                              pulse={index === 0}
+                              className="mr-3"
+                            />
+                            <h5 className="text-base font-semibold text-gray-900">
+                              {solution.title}
+                            </h5>
+                          </div>
+                          <p className="min-h-[5rem] text-sm text-gray-800">
+                            {solution.description}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </ScrollReveal>
 
       {/* Desktop layout */}
       <div className="hidden md:block">
-        <div className="relative">
-          <div className="grid grid-cols-3 gap-6">
+        <ScrollReveal animation="fade" className="relative">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-3 gap-6"
+          >
             {challenges.map(challenge => (
-              <div
+              <motion.div
                 key={challenge.id}
-                className={`relative cursor-pointer transition-all duration-300 ${
-                  desktopActiveChallenge === challenge.id
-                    ? "scale-105 transform"
-                    : ""
-                }`}
+                variants={itemVariants}
+                whileHover={{
+                  scale: 1.03,
+                  transition: { duration: 0.2 }
+                }}
+                className="relative cursor-pointer"
                 onClick={() => setActiveChallenge(challenge.id)}
               >
                 <div
-                  className={`relative h-full rounded-2xl bg-white p-6 shadow-xl ${
+                  className={`relative h-full rounded-2xl bg-gradient-to-b from-white to-teal-50/30 p-6 shadow-xl transition-all duration-300 ${
                     desktopActiveChallenge === challenge.id
-                      ? "ring-2 ring-teal-600 ring-offset-2"
-                      : "opacity-70 hover:opacity-100 hover:shadow-lg"
+                      ? "ring-2 ring-teal-600 ring-offset-2 scale-105"
+                      : "opacity-85 hover:opacity-100 hover:shadow-lg"
                   }`}
                 >
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
-                    <div className="h-6 w-6 rotate-45 transform bg-white shadow-xl" />
-                  </div>
+                  {desktopActiveChallenge === challenge.id && (
+                    <motion.div 
+                      className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    >
+                      <div className="h-6 w-6 rotate-45 transform bg-gradient-to-br from-teal-50 to-white shadow-xl" />
+                    </motion.div>
+                  )}
                   <div className="flex h-full flex-col">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-                      {challenge.icon}
-                    </div>
-                    <h3 className="mb-2 text-xl font-bold text-teal-900">
+                    <AnimatedIcon 
+                      icon={challenge.icon}
+                      size="lg"
+                      pulse={desktopActiveChallenge === challenge.id}
+                      backgroundClassName="bg-gradient-to-br from-teal-100 to-teal-50"
+                      className="mb-4"
+                    />
+                    <motion.h3 
+                      className="mb-2 text-xl font-bold text-teal-900"
+                      animate={{ color: desktopActiveChallenge === challenge.id ? "#0f766e" : "#134e4a" }}
+                    >
                       {challenge.quote}
-                    </h3>
+                    </motion.h3>
                     <hr className="mb-4 border-gray-200" />
                     <p className="min-h-[6rem] text-sm leading-relaxed text-gray-800">
                       {challenge.problem}
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="mt-12">
-            <div className="rounded-3xl bg-gray-100 p-8">
-              <h3 className="mb-6 text-2xl font-bold text-teal-900">
-                {challenges[desktopActiveChallenge - 1].title}
-                の解決策
-              </h3>
-              <div className="grid grid-cols-3 gap-8">
+          <ScrollReveal animation="slide-up" delay={0.3} className="mt-12">
+            <motion.div 
+              className="rounded-3xl bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 p-8 shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.h3 
+                className="mb-6 text-2xl font-bold text-teal-900"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <motion.span
+                  key={desktopActiveChallenge}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {challenges[desktopActiveChallenge - 1].title}
+                  の解決策
+                </motion.span>
+              </motion.h3>
+              <motion.div 
+                className="grid grid-cols-3 gap-8 items-stretch"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 {challenges[desktopActiveChallenge - 1].solutions.map(
-                  solution => (
-                    <div
-                      key={solution.id}
-                      className="flex h-full flex-col rounded-xl bg-white p-8 shadow-md transition-all duration-200 hover:shadow-lg"
+                  (solution, index) => (
+                    <motion.div
+                      key={`${desktopActiveChallenge}-${solution.id}`}
+                      variants={itemVariants}
+                      custom={index}
+                      layout
+                      className="h-full"
                     >
-                      <div className="mb-4 flex items-center">
-                        <div className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
-                          {solution.icon}
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">
-                          {solution.title}
-                        </h4>
-                      </div>
-                      <p className="min-h-[4rem] text-sm text-gray-800">
-                        {solution.description}
-                      </p>
-                    </div>
+                      <SolutionCard
+                        icon={solution.icon}
+                        title={solution.title}
+                        description={solution.description}
+                        className="bg-gradient-to-br from-white to-teal-50/20 h-full"
+                      />
+                    </motion.div>
                   )
                 )}
-              </div>
-            </div>
-          </div>
-        </div>
+              </motion.div>
+            </motion.div>
+          </ScrollReveal>
+        </ScrollReveal>
       </div>
     </div>
   );

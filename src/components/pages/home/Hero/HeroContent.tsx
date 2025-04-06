@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
-import { BarChartIcon, Users2Icon, MailIcon, XIcon } from "lucide-react";
+import { BarChartIcon, Users2Icon, MailIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const HeroContent: FC = () => {
@@ -93,42 +93,59 @@ const HeroContent: FC = () => {
       </div>
 
       <div className="border-t border-[#009a9a]/20 pt-6 dark:border-teal-500/20 md:pt-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
-          <div className="hidden -space-x-4 md:flex">
-            {[1, 2, 3].map(i => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.3 }}
-                className="h-10 w-10 rounded-full border-2 border-white bg-[#009a9a] shadow-lg dark:border-gray-900 dark:bg-teal-500 md:h-12 md:w-12"
-              />
-            ))}
-          </div>
-          <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-col sm:gap-1">
+        <div className="w-full overflow-hidden">
+          <div className="flex flex-wrap justify-between w-full gap-y-6 md:flex-nowrap md:gap-2">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.35 }}
-              className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="flex flex-col items-center text-center w-1/2 md:w-1/4"
             >
-              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-2xl">
-                 50+
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-3xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-4xl">
+                50+
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm">
+              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm mt-1">
                 プロジェクト実績
               </span>
             </motion.div>
+            
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.55 }}
-              className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-col items-center text-center w-1/2 md:w-1/4"
             >
-              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-2xl">
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-3xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-4xl">
+                10+
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm mt-1">
+                AI連携実績
+              </span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="flex flex-col items-center text-center w-1/2 md:w-1/4"
+            >
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-3xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-4xl">
+                100%
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm mt-1">
+                プロジェクト完遂率
+              </span>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="flex flex-col items-center text-center w-1/2 md:w-1/4"
+            >
+              <span className="bg-gradient-to-r from-[#009a9a] to-indigo-500 bg-clip-text text-3xl font-bold text-transparent dark:from-teal-400 dark:to-indigo-400 md:text-4xl">
                 98%
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm">
+              <span className="text-xs text-gray-500 dark:text-gray-300 md:text-sm mt-1">
                 顧客満足度
               </span>
             </motion.div>

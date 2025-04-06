@@ -120,10 +120,10 @@ const PositionAccordion: React.FC<PositionAccordionProps> = ({ position }) => {
   }, [isOpen]);
 
   return (
-    <div 
+    <div
       className={`overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-500 ${isOpen ? 'shadow-lg' : 'hover:shadow-md'}`}
     >
-      <div 
+      <div
         className={`flex cursor-pointer items-center justify-between p-6 ${isOpen ? 'bg-gray-50' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -139,7 +139,7 @@ const PositionAccordion: React.FC<PositionAccordionProps> = ({ position }) => {
         <ChevronDown className={`h-6 w-6 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
-      <div 
+      <div
         ref={contentRef}
         style={{ maxHeight: contentHeight ? `${contentHeight}px` : '0px' }}
         className="transition-all duration-500 ease-in-out"
@@ -187,7 +187,7 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ end, label }) => {
           const duration = 2000; // 2 seconds
           const step = 16; // for 60fps
           const increment = Math.max(1, Math.floor((end * step) / duration));
-          
+
           const timer = setInterval(() => {
             start += increment;
             if (start > end) {
@@ -197,7 +197,7 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ end, label }) => {
               setCount(start);
             }
           }, step);
-          
+
           return () => clearInterval(timer);
         }
       },
@@ -238,7 +238,7 @@ const CareersPage = () => {
             <p className="mx-auto mb-5 max-w-2xl text-base text-gray-600 dark:text-gray-300">
               最新のAI技術とWeb開発を駆使して、革新的なソリューションを生み出す仲間を募集しています
             </p>
-            <Button 
+            <Button
               className="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-2 text-white hover:from-teal-700 hover:to-teal-600"
               onClick={() => {
                 const formElement = document.getElementById('careers-form');
@@ -284,8 +284,8 @@ const CareersPage = () => {
 
         {/* Company Culture Tab */}
         <div className={`transition-opacity duration-500 ${activeTab === 'culture' ? 'opacity-100' : 'hidden opacity-0'}`}>
-          <div className="mx-auto max-w-4xl">
-            <Card className="mb-10 overflow-hidden bg-white shadow-xl">
+          <div className="mx-auto max-w-6xl">
+            <Card className="mb-20 overflow-hidden bg-white shadow-xl">
               <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-teal-50 to-blue-50 px-6 py-6">
                 <CardTitle className="text-center text-2xl font-bold text-teal-800">
                   CodeCiaoで働く
@@ -297,11 +297,11 @@ const CareersPage = () => {
                   私たちは、生成AI・クラウド・Web技術を駆使して、お客様のビジネスに革新的なソリューションを提供しています。
                   フラットな組織文化の中で、メンバー一人一人が主体的に考え、行動できる環境を大切にしています。
                 </p>
-                
+
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {COMPANY_VALUES.map((value: CompanyValue, index: number) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className="group flex flex-col items-center rounded-lg border border-gray-200 p-6 text-center transition-all hover:border-teal-400 hover:shadow-md"
                     >
                       <div className="mb-4 rounded-full bg-teal-100 p-3 text-teal-600 transition-all group-hover:bg-teal-600 group-hover:text-white">
@@ -315,31 +315,38 @@ const CareersPage = () => {
               </CardContent>
             </Card>
 
-            {/* Timeline for Application Process */}
-            <div className="mb-10">
+            {/* Application Process Flow */}
+            <div className="mb-10 mt-20 w-full max-w-7xl mx-auto pt-10 border-t border-gray-100">
               <h2 className="mb-8 text-center text-2xl font-bold text-teal-800">
                 採用フロー
               </h2>
-              <div className="relative">
-                {/* Timeline line */}
-                <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-teal-200"></div>
-                
-                {/* Timeline items */}
+              <div className="flex flex-col md:flex-row justify-between items-stretch gap-10 w-full px-4 relative">
+                {/* Desktop Arrows */}
+                {APPLICATION_STEPS.slice(0, -1).map((_, index) => (
+                  <div key={`arrow-${index}`} className="absolute hidden md:flex items-center justify-center" style={{ left: `calc(${33.33 * (index + 1)}%)`, top: '50%', transform: 'translateY(-50%) translateX(-50%)' }}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 hover:bg-teal-600 hover:text-white z-10">
+                      <ArrowRight className="h-5 w-5" />
+                    </div>
+                  </div>
+                ))}
+
                 {APPLICATION_STEPS.map((step: ApplicationStep, index: number) => (
-                  <div key={index} className="relative mb-8">
-                    <div className={`flex items-center ${index % 2 === 0 ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`w-1/2 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}`}>
-                        <div className="inline-block rounded-lg bg-white p-6 shadow-md transition-all hover:shadow-lg">
-                          <h3 className="mb-2 text-lg font-semibold text-teal-700">{step.title}</h3>
-                          <p className="text-gray-600">{step.description}</p>
+                  <div key={index} className="group relative rounded-2xl bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-xl w-full md:flex-1">
+                    <div className="absolute -left-3 -top-3 flex h-12 w-12 items-center justify-center rounded-full bg-teal-600 text-xl font-bold text-white shadow-md transition-all duration-300 group-hover:scale-110">
+                      {index + 1}
+                    </div>
+                    <div className="mb-4 mt-6 flex items-center gap-3">
+                      <h3 className="text-xl font-bold text-teal-900">{step.title}</h3>
+                    </div>
+                    <p className="text-base leading-relaxed text-gray-600">{step.description}</p>
+                    {/* Mobile Arrow (only for mobile) */}
+                    {index < APPLICATION_STEPS.length - 1 && (
+                      <div className="absolute -bottom-10 left-1/2 block -translate-x-1/2 md:hidden">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 text-teal-600 transition-all duration-300 group-hover:bg-teal-600 group-hover:text-white">
+                          <ArrowRight className="h-5 w-5 rotate-90" />
                         </div>
                       </div>
-                      
-                      {/* Timeline dot */}
-                      <div className="absolute left-1/2 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full bg-teal-600 text-white shadow">
-                        <span className="text-xs font-bold">{index + 1}</span>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>
