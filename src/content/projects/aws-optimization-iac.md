@@ -4,17 +4,20 @@ summary: "Account Factory for Terraform（AFT）を活用し、複数事業部�
 cover: "./mermaid.png"
 coverAlt: "System architecture diagram"
 publishedDate: 2024-11-30
-tags: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "コスト最適化", "クラウドガバナンス"]
+tags: ["コスト最適化", "クラウドガバナンス", "インフラ自動化"]
+tech_stacks: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "GitHub Actions", "CI/CD", "CloudWatch", "S3", "Lambda"]
 ---
 
 # AWSインフラのコスト最適化とIaC化プロジェクト
 
 ## お客様の情報
+
 - **業界：** 通信
 - **企業規模：** 従業員数 50-100名
 - **事業内容：** 通信サービスの提供
 
 ## プロジェクト概要
+
 - **期間：** 3ヶ月
 - **弊社側の体制**：PM 1名、エンジニア 1名
 - **開発スタイル：** アジャイル開発（スクラム）
@@ -22,12 +25,15 @@ tags: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "コスト最適�
 - **範囲：** AWS環境全体の最適化とIaC化
 
 ## CodeCiaoの役割
+
 弊社は、お客様の複雑なAWS運用課題を根本から解決すべく、以下の領域で全面的なサポートを提供しました：
+
 - **AWSアカウント統合管理：** AFT（Account Factory for Terraform）を活用し、アカウント作成・管理の自動化と環境ごとの明確な分離を実現
 - **コスト最適化と運用効率改善：** 全体のリソース利用状況を一元管理し、不正なリソース作成の防止とコスト削減施策を展開
 - **セキュリティと監査の強化：** 自動脆弱性スキャンやCI/CD内のセキュリティ検証により、安心して運用可能な体制を構築
 
 ## ご相談の背景
+
 お客様は、急速に拡大するAWS利用に伴い、以下のような問題に直面していました：
 
 - **煩雑なアカウント管理と属人的な運用：**
@@ -46,6 +52,7 @@ tags: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "コスト最適�
   - より迅速かつ正確な運用への要求
 
 ## 取り組みの結果
+
 弊社は自動化技術と統合管理システムを活用し、以下の成果を実現しました：
 
 - **自動アカウント作成と環境分離による運用効率の向上：**
@@ -64,6 +71,7 @@ tags: ["AWS", "Terraform", "IaC", "AWS Organizations", "SSO", "コスト最適�
   - 結果：セキュリティ強化と運用効率の大幅な改善
 
 ## プロジェクト詳細
+
 弊社は、次のプロセスを通じてお客様の課題を解決し、安定かつ効率的なAWS環境の運用体制を構築しました。
 
 1. **要求分析と現状評価フェーズ：**  

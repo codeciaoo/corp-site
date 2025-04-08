@@ -11,6 +11,7 @@ const projects = defineCollection({
       coverAlt: z.string().optional(),
       publishedDate: z.date(),
       tags: z.array(z.string()).optional(),
+      tech_stacks: z.array(z.string()).optional(),
     }),
 });
 

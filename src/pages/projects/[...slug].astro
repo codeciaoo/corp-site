@@ -18,7 +18,7 @@ const { project } = Astro.props;
 const { Content } = await render(project);
 
 // メタデータの準備
-const { title, tags, publishedDate, summary } = project.data;
+const { title, tags, publishedDate, summary, tech_stacks } = project.data;
 
 // 日付をフォーマット（date-fnsの代わりにシンプルな方法で実装）
 const formatDate = (date: Date) => {
@@ -33,7 +33,8 @@ const metadata = {
   title,
   tags,
   publishedDate: formattedDate,
-  summary
+  summary,
+  tech_stacks
 };
 ---
 

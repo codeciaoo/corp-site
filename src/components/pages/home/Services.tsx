@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Code, Bot, Cloud, LineChart, ChevronRight, ExternalLink } from "lucide-react";
+import { Code, Bot, Cloud, LineChart } from "lucide-react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type ServiceCardProps = {
@@ -9,7 +8,6 @@ type ServiceCardProps = {
   title: string;
   description: string;
   bulletPoints: { id: string; text: React.ReactNode }[];
-  learnMoreUrl?: string;
   index: number;
 };
 
@@ -26,7 +24,6 @@ const services = [
       { id: "4", text: <span className="text-sm md:text-base">レスポンシブなモバイル対応UI</span> },
       { id: "5", text: <span className="text-sm md:text-base">高パフォーマンスな実装</span> },
     ],
-    learnMoreUrl: "/services/web-development",
   },
   {
     icon: <Bot className="h-7 w-7" />,
@@ -40,7 +37,6 @@ const services = [
       { id: "4", text: <span className="text-sm md:text-base">AIワークフロー自動化</span> },
       { id: "5", text: <span className="text-sm md:text-base">ビジネスプロセスへの統合支援</span> },
     ],
-    learnMoreUrl: "/services/ai-development",
   },
   {
     icon: <Cloud className="h-7 w-7" />,
@@ -54,7 +50,6 @@ const services = [
       { id: "4", text: <span className="text-sm md:text-base">自動スケーリング構成</span> },
       { id: "5", text: <span className="text-sm md:text-base">マルチリージョン展開支援</span> },
     ],
-    learnMoreUrl: "/services/cloud-services",
   },
   {
     icon: <LineChart className="h-7 w-7" />,
@@ -68,11 +63,10 @@ const services = [
       { id: "4", text: <span className="text-sm md:text-base">プロダクト開発プロセス改善</span> },
       { id: "5", text: <span className="text-sm md:text-base">テックスタックの最適化提案</span> },
     ],
-    learnMoreUrl: "/services/dx-consulting",
   },
 ];
 
-const ServiceCard = ({ icon, title, description, bulletPoints, learnMoreUrl, index }: ServiceCardProps) => {
+const ServiceCard = ({ icon, title, description, bulletPoints, index }: ServiceCardProps) => {
   return (
     <motion.div 
       className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-teal-50/30 p-8 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
@@ -118,20 +112,7 @@ const ServiceCard = ({ icon, title, description, bulletPoints, learnMoreUrl, ind
           ))}
         </ul>
         
-        {learnMoreUrl && (
-          <motion.div 
-            className="text-right"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.3 + index * 0.1 }}
-            viewport={{ once: true }}
-          >
-            <a href={learnMoreUrl} className="inline-flex items-center gap-1 text-sm font-medium text-teal-600 transition-all hover:text-teal-700 hover:gap-2">
-              詳細を見る
-              <ChevronRight className="h-4 w-4" />
-            </a>
-          </motion.div>
-        )}
+
       </div>
     </motion.div>
   );
@@ -211,29 +192,7 @@ export default function Services() {
           ))}
         </div>
         
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={controls}
-          variants={{
-            visible: { 
-              opacity: 1, 
-              y: 0,
-              transition: { duration: 0.5, delay: 0.6 } 
-            }
-          }}
-        >
-          <a href="/services">
-            <Button
-              variant="outline"
-              size="lg"
-              className="text-md border-teal-600 bg-white text-teal-600 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-teal-50 hover:-translate-y-0.5"
-            >
-              サービス一覧
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          </a>
-        </motion.div>
+
       </div>
     </div>
   );
