@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import TechStackIcon from "./TechStackIcon";
 
 export interface TechInfo {
   name: string;
@@ -68,9 +69,11 @@ const TechStackDisplay: React.FC<TechStackDisplayProps> = ({
               )}
               onClick={() => setSelectedTech(tech.name === selectedTech?.name ? null : tech)}
             >
-              {tech.icon && (
-                <span className="text-blue-600">{tech.icon}</span>
-              )}
+              <TechStackIcon 
+                tech={tech.name} 
+                className="text-blue-600" 
+                size={18}
+              />
               <span>{tech.name}</span>
               {tech.description && (
                 <Info className="h-4 w-4 text-gray-400" />

@@ -4,7 +4,7 @@ description: "RAGと生成AIを組み合わせた高度な検索システムに�
 summary: "製造業のお客様向けに、RAGと生成AIを活用した安全管理システムを開発。ハイブリッド検索とクロスエンコーダーによる高精度な情報抽出と、LLMによる状況に応じた安全アドバイスの提供により、現場の安全性を大幅に向上。"
 publishedDate: 2024-12-20
 tags: ["生成AI", "RAG", "安全管理", "製造業", "ハイブリッド検索", "ナレッジマネジメント", "POC", "業務効率化"]
-tech_stacks: ["OpenAI", "FastAPI", "Python", "Langchain", "Chroma", "Hugging Face", "PyTorch", "Sentence Transformers", "React", "TypeScript", "Docker"]
+tech_stacks: ["Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain", "Hugging Face", "PyTorch"]
 ---
 
 # 製造業向け安全管理システムPOC

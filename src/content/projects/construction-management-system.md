@@ -5,7 +5,7 @@ cover: "./mermaid.png"
 coverAlt: "Mermaid diagram for system architecture"
 publishedDate: 2024-09-26
 tags: ["モバイルアプリ", "クラウドネイティブ", "オフライン対応"]
-tech_stacks: ["Remix", "Nest.js", "React", "TypeScript", "PWA", "Service Worker", "AWS Amplify", "DynamoDB", "Lambda", "AppSync", "GraphQL", "GitHub Actions", "Jest", "Cypress", "Hugging Face", "AWS Comprehend"]
+tech_stacks: ["Next.js", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify", "DynamoDB", "Lambda", "GitHub Actions", "Jest", "Playwright"]
 ---
 
 # 建設現場DXプラットフォームの開発
