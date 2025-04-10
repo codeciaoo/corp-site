@@ -27,7 +27,7 @@ const ProjectBasicInfo: React.FC<ProjectSectionProps> = ({
             <span className="text-sm font-medium text-blue-900">{config.label}</span>
           </div>
         </div>
-        <div className="prose prose-slate prose-headings:text-lg prose-headings:font-semibold prose-headings:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1 prose-h2:pt-0 prose-p:text-slate-600 prose-strong:text-blue-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-4 md:pl-6 max-w-none [&_table]:table-wrapper">
+        <div className="prose prose-slate prose-headings:text-base prose-headings:font-semibold prose-headings:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1 prose-h2:pt-0 prose-h2:text-base prose-h2:font-semibold prose-p:text-slate-600 prose-strong:text-blue-700 prose-ul:space-y-1 [&_ul]:list-none [&_ul]:pl-0 [&_li]:relative [&_li]:pl-4 md:pl-6 max-w-none [&_table]:table-wrapper">
           <div dangerouslySetInnerHTML={{ __html: enhancedContent }} />
         </div>
       </div>

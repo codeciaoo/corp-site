@@ -103,14 +103,14 @@ const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({
           
           {summary && (
             <div className="space-y-3">
-              <h3 className="text-lg font-medium text-gray-800">概要</h3>
+              <h3 className="text-base font-semibold text-blue-700 border-b border-blue-200 pb-1">概要</h3>
               <p className="text-gray-600">{summary}</p>
             </div>
           )}
           
           {content && (
             <div 
-              className="prose prose-blue max-w-none"
+              className="prose prose-blue max-w-none prose-h2:text-base prose-h2:font-semibold prose-h2:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1"
               dangerouslySetInnerHTML={{ __html: content }} 
             />
           )}
