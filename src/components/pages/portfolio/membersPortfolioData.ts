@@ -390,9 +390,11 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "エンジニア",
           details: [
-            "Pinconeの設定及び、Pinconeへのデータ格納",
-            "ユーザーからの質問をEmbeddings APIに送信し、Vectorを受け取り処理",
-            "WebアプリケーションのVercelへのホスティング"
+            "PineconeとOpenAI Embeddings APIを組み合わせたベクトル検索システムの設計・実装、動画メタデータの効率的なインデクシング処理の開発",
+            "自然言語クエリの最適化処理とPythonバックエンドでの類似度スコアリングアルゴリズムの実装、検索精度向上のための調整",
+            "SvelteKitとTypeScriptによるフロントエンド実装、Prisma ORM/PostgreSQLでの動画メタデータとユーザー履歴の永続化処理",
+            "OpenAI TTSを活用した検索結果の音声フィードバック機能の実装、UXを向上させるためのストリーミングレスポンス処理の最適化",
+            "Vercelを用いたCI/CDパイプラインの構築とServerless Functionsによるバックエンド処理の最適化、本番環境のパフォーマンス監視と改善"
           ]
         },
         industry: "業界：通信",
@@ -400,7 +402,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         technologies: [
           "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma",
           "Pinecone", "OpenAI API", "OpenAI TTS", "langchain", "Vercel",
-          "GitHub", "Notion"
+          "GitHub", "Notion", "Serverless Functions", "Redis"
         ]
       },
       {
@@ -410,15 +412,17 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "エンジニア",
           details: [
-            "クライアント調整/MTGの進行",
-            "要件定義から実装、テスト、リリースまでを実施",
-            "アプリ/プラグインのインストールや利用マニュアルを作成"
+            "ReactとTypeScriptを使用したKintoneプラグインの設計・実装、SMS APIとの連携による顧客向けメッセージ送信機能の開発",
+            "Kintone REST API Client/Webpack/Babelを使用したモジュール構成とビルドパイプラインの構築",
+            "Kintoneレコード情報の取得・加工ロジックとSMS APIエラーハンドリングの実装、送信履歴の自動保存機能の開発",
+            "ユーザー側の操作性を考慮したUIデザイン設計とステータス管理機能の実装、ReactカスタムHooksによる状態管理の最適化",
+            "クライアント環境でのE2Eテスト実施とプラグイン導入マニュアル、管理者向け設定ガイドの作成"
           ]
         },
         industry: "業界：通信",
         scale: "開発チーム1名、全体3名",
         technologies: [
-          "Kintone", "React", "TypeScript"
+          "Kintone", "React", "TypeScript", "Webpack", "REST API", "SMS API", "Jest", "ESLint"
         ]
       },
       {
