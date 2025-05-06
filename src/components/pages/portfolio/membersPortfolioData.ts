@@ -229,6 +229,27 @@ export const memberPortfolios: MemberPortfolio[] = [
     projectsTable: [
       {
         id: "project1",
+        period: "2024年4月～2024年8月",
+        projectContent: "AI搭載コールセンター向けCRMプラットフォームの開発",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "NestJS＋GraphQL＋Prismaを用いたCXM／Assist各マイクロサービスの設計・実装",
+            "音声認識API連携→自動文字起こし→AI要約・VOC生成パイプラインにカスタムプロンプト管理を導入",
+            "Next.js＋TypeScriptフロントエンドで要約UI／AIチャットサイドバーを開発、Apollo Client／Zustandで状態管理",
+            "zod＋i18n対応の共通ライブラリを作成し、OpenAI（または独自AI基盤）へのプロンプト送信ロジックを抽象化",
+            "プロジェクト全体の進捗管理と機能設計"
+          ]
+        },
+        industry: "業界：ITサービス",
+        scale: "開発チーム6名、全体10名",
+        technologies: [
+          "NestJS", "GraphQL", "Prisma", "Next.js", "TypeScript", "OpenAI API", 
+          "Apollo Client", "Zustand", "zod", "Docker", "AWS"
+        ]
+      },
+      {
+        id: "project2",
         period: "2024年3月～2024年7月",
         projectContent: "業務管理システムのアプリ・インフラ構築",
         role: {
