@@ -273,7 +273,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project2",
+        id: "project3",
         period: "2024年1月～2024年5月",
         projectContent: "RAG・生成AI活用による製造現場の安全管理システム開発",
         role: {
@@ -294,7 +294,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project3",
+        id: "project4",
         period: "2024年5月～2024年8月",
         projectContent: "建設現場DXプラットフォームの開発",
         role: {
@@ -316,29 +316,29 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project4",
+        id: "project5",
         period: "2023年9月～2023年12月",
         projectContent: "EC2からECSへの移行プロジェクト",
         role: {
           position: "PM兼エンジニア",
           details: [
-            "不動産ポータルサイトのEC2からECSへのインフラ基盤移行",
-            "CI/CDパイプラインの自動化による運用効率化",
-            "ブルーグリーンデプロイの導入でダウンタイムを最小化",
-            "コンテナセキュリティ強化と自動脆弱性スキャンの導入",
-            "プロジェクト全体のスケジュール管理とクライアント折衝",
-            "移行計画の立案から実装、運用改善までを担当"
+            "不動産ポータルサイトのEC2(t3.large×6台)からECS Fargateへのインフラ基盤移行",
+            "AWS CloudFormationとCDKを組み合わせたIaCによる環境構築の自動化",
+            "CodePipeline/CodeBuild/CodeDeployによるCI/CDパイプラインの構築",
+            "ALBとRoute53を活用したブルーグリーンデプロイの導入によりダウンタイムを30分→5分に短縮",
+            "ECRとAquaSecurityによるコンテナイメージの脆弱性スキャンの自動化と対策フロー確立",
+            "CloudWatchとDatadogによる詳細なメトリクス監視とアラート体制の構築"
           ]
         },
         industry: "業界：不動産",
         scale: "開発チーム2名、全体2名",
         technologies: [
-          "AWS", "ECS", "EC2", "Docker", "CodePipeline", "CodeBuild", 
-          "CodeDeploy", "Route53", "ECR", "CloudWatch", "IAM", "ALB"
+          "AWS", "ECS", "Fargate", "EC2", "Docker", "CloudFormation", "CDK", "CodePipeline", "CodeBuild", 
+          "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "AquaSecurity", "IAM", "ALB"
         ]
       },
       {
-        id: "project5",
+        id: "project6",
         period: "2023年8月～2023年11月",
         projectContent: "AWS環境の統合管理基盤構築プロジェクト",
         role: {
@@ -359,7 +359,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project6",
+        id: "project7",
         period: "2023年11月～2024年6月",
         projectContent: "不動産会社/金融機関向け登記情報システムの開発",
         role: {
@@ -384,7 +384,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project7",
+        id: "project8",
         period: "2024年1月～2024年4月",
         projectContent: "自然言語で入力→動画をレコメンドしてくれるシステムの開発",
         role: {
@@ -404,7 +404,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project8",
+        id: "project9",
         period: "2023年6月～2023年9月",
         projectContent: "Kintone上のCRMからSMS送信するためのプラグイン開発",
         role: {
@@ -422,7 +422,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project9",
+        id: "project10",
         period: "2023年7月～2023年10月",
         projectContent: "建設現場向け進捗管理アプリのPoC開発",
         role: {
@@ -445,7 +445,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project10",
+        id: "project11",
         period: "2022年9月～2023年8月",
         projectContent: "ビデオプレゼンサービスの立ち上げ",
         role: {
@@ -469,7 +469,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project11",
+        id: "project12",
         period: "2022年9月～2023年8月",
         projectContent: "動画サービスシステムのリプレイス支援及びweb開発における開発フローを教育支援",
         role: {
@@ -492,7 +492,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project12",
+        id: "project13",
         period: "2022年4月～2024年3月",
         projectContent: "RCS（SMSの次世代技術）を用いたB2C配信システムの開発/保守",
         role: {
@@ -517,7 +517,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
-        id: "project13",
+        id: "project14",
         period: "2017年4月～2022年3月",
         projectContent: "会社員時代の経歴（ベイカレントコンサルティングに所属）",
         role: {
