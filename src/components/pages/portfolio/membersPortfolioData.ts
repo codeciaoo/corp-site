@@ -102,7 +102,7 @@ export const memberPortfolios: MemberPortfolio[] = [
 
     // 拡張情報
     slug: "tahara",
-    fullBio: "慶應義塾大学を卒業後、コンサルティング会社でプロジェクトマネジメントとバックエンド開発を経験。\nAWS、Azure等のクラウドインフラ設計から、マイクロサービスアーキテクチャの実装、AIを活用したシステム開発まで幅広く手がける。\n特にAIを活用した業務効率化や、レガシーシステムの刷新プロジェクトの経験が豊富。",
+    fullBio: "慶應義塾大学卒業後、大手コンサルティング企業でPMO・アーキテクト職を経て、クラウドインフラ設計・構築のスペシャリストへ。AWS/GCPでのKubernetesクラスタ管理と生成AIシステム開発に強み。金融・通信業界向けマイクロサービスアーキテクチャの実装やRAG/LLMを活用した業務効率化、レガシーシステムのクラウドネイティブ移行まで、幅広いエンタープライズ案件を牽引した実績を持つ。",
 
     contactInfo: {
       linkedin: "https://linkedin.com/in/tsubasa-tahara",
