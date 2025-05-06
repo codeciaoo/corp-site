@@ -130,6 +130,8 @@ export const memberPortfolios: MemberPortfolio[] = [
         category: "クラウド/インフラ",
         skills: [
           { name: "AWS", level: 5, years: 6 },
+          { name: "AWS CDK", level: 4, years: 4 },
+          { name: "GCP", level: 3, years: 2 },
           { name: "Azure", level: 3, years: 2 },
           { name: "Terraform", level: 4, years: 4 },
           { name: "Docker", level: 4, years: 5 },
@@ -153,6 +155,8 @@ export const memberPortfolios: MemberPortfolio[] = [
         skills: [
           { name: "LangChain", level: 4, years: 2 },
           { name: "OpenAI", level: 5, years: 2 },
+          { name: "Gemini", level: 4, years: 1 },
+          { name: "Hugging Face", level: 3, years: 1 },
           { name: "RAGシステム構築", level: 4, years: 2 },
         ]
       },
@@ -163,9 +167,11 @@ export const memberPortfolios: MemberPortfolio[] = [
           { name: "Django", level: 5, years: 5 },
           { name: "FastAPI", level: 5, years: 5 },
           { name: "Node.js", level: 4, years: 4 },
+          { name: "Express", level: 4, years: 4 },
           { name: "TypeScript", level: 4, years: 4 },
-          { name: "DynamoDB", level: 4, years: 3 },
+          { name: "MySQL", level: 4, years: 5 },
           { name: "PostgreSQL", level: 4, years: 6 },
+          { name: "DynamoDB", level: 4, years: 3 },
         ]
       },
     ],
