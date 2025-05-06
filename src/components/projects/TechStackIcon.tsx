@@ -44,9 +44,11 @@ import {
 } from "react-icons/si";
 
 // AWS専用アイコンが不足しているものは AWSアイコン + サービス名 で対応
-import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks } from "react-icons/fa";
+import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt } from "react-icons/fa";
 import { VscCode } from "react-icons/vsc";
 import { IoCloudOutline } from "react-icons/io5";
+import { SiMicrosoftazure, SiRemix } from "react-icons/si";
+import { BsKanban } from "react-icons/bs";
 
 // キー(小文字)とアイコンコンポーネントのマッピング
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -63,6 +65,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   angular: SiAngular,
   svelte: SiSvelte,
   astro: SiAstro,
+  remix: SiRemix,
   tailwind: SiTailwindcss,
   tailwindcss: SiTailwindcss,
   
@@ -167,7 +170,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
   aft: FaAws,
   
   // 他のクラウドサービス
-  azure: FaQuestion, // Azureのアイコンは現在対応していない
+  azure: SiMicrosoftazure,
+  "microsoft azure": SiMicrosoftazure,
   firebase: SiFirebase,
   gcp: SiGooglecloud,
   "google cloud": SiGooglecloud,
@@ -253,6 +257,23 @@ const ICON_MAP: Record<string, React.ElementType> = {
   pwa: SiPwa,
   "progressive web app": SiPwa,
   
+  // プロジェクトマネジメント関連
+  "ウォーターフォール開発": FaProjectDiagram,
+  "waterfall": FaProjectDiagram,
+  "waterfall development": FaProjectDiagram,
+  "アジャイル/スクラム": BsKanban,
+  "アジャイル": BsKanban,
+  "スクラム": BsKanban,
+  "agile": BsKanban,
+  "scrum": BsKanban,
+  "agile/scrum": BsKanban,
+  "要件定義": FaClipboardList,
+  "requirements": FaClipboardList,
+  "requirements definition": FaClipboardList,
+  "セキュリティ管理": FaShieldAlt,
+  "security management": FaShieldAlt,
+  "security": FaShieldAlt,
+  
   // 汎用アイコン（特定のアイコンがない場合）
   iac: FaServer,
   "infrastructure as code": FaServer,
@@ -261,7 +282,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
   database: FaDatabase,
   cloud: IoCloudOutline,
   sso: FaAws,  // AWS SSOのアイコン
-  "single sign-on": FaAws
+  "single sign-on": FaAws,
+  "aws cdk": FaGitAlt,
+  cdk: FaGitAlt
 };
 
 interface TechStackIconProps {
