@@ -44,10 +44,9 @@ import {
 } from "react-icons/si";
 
 // AWS専用アイコンが不足しているものは AWSアイコン + サービス名 で対応
-import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt } from "react-icons/fa";
+import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt, FaWindows, FaCode } from "react-icons/fa";
 import { VscCode } from "react-icons/vsc";
 import { IoCloudOutline } from "react-icons/io5";
-import { SiMicrosoftazure, SiRemix } from "react-icons/si";
 import { BsKanban } from "react-icons/bs";
 
 // キー(小文字)とアイコンコンポーネントのマッピング
@@ -65,7 +64,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   angular: SiAngular,
   svelte: SiSvelte,
   astro: SiAstro,
-  remix: SiRemix,
+  remix: FaCode,
   tailwind: SiTailwindcss,
   tailwindcss: SiTailwindcss,
   
@@ -170,8 +169,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
   aft: FaAws,
   
   // 他のクラウドサービス
-  azure: SiMicrosoftazure,
-  "microsoft azure": SiMicrosoftazure,
+  azure: FaWindows,
+  "microsoft azure": FaWindows,
   firebase: SiFirebase,
   gcp: SiGooglecloud,
   "google cloud": SiGooglecloud,
