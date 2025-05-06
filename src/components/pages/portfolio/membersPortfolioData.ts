@@ -110,10 +110,10 @@ export const memberPortfolios: MemberPortfolio[] = [
     },
     // 所属組織ロゴ
     organizationLogos: [
-      { src: "/logos/keio-univ.svg", alt: "慶應義塾大学" },
-      { src: "/logos/baycurrent.svg", alt: "ベイカレントコンサルティング" },
-      { src: "/logos/livepass.svg", alt: "livepass株式会社" },
-      { src: "/corp_logo.png", alt: "CodeCiao株式会社" }
+      { src: "/keio.png", alt: "慶應義塾大学" },
+      { src: "/baycurrent.png", alt: "ベイカレントコンサルティング" },
+      { src: "/livepass.png", alt: "livepass株式会社" },
+      { src: "/corp_logo.png", alt: "CodeCiao株式会社" },
     ],
 
     detailedSkills: [
@@ -221,6 +221,92 @@ export const memberPortfolios: MemberPortfolio[] = [
     projectsTable: [
       {
         id: "project1",
+        period: "2024年1月～2024年5月",
+        projectContent: "RAG・生成AI活用による製造現場の安全管理システム開発",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "製造業のお客様向けにRAGと生成AIを活用した安全管理システムのPOC開発",
+            "ハイブリッド検索（ベクトル＋キーワード）による検索精度の向上",
+            "クロスエンコーダーとLLMリランキングを組み合わせた高精度な情報抽出システムの実装",
+            "生成AIによる現場状況に応じた安全アドバイスの提供",
+            "プロジェクト全体の進捗管理とクライアントコミュニケーション"
+          ]
+        },
+        industry: "業界：製造",
+        scale: "開発チーム2名、全体2名",
+        technologies: [
+          "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain", 
+          "Hugging Face", "PyTorch"
+        ]
+      },
+      {
+        id: "project2",
+        period: "2024年5月～2024年8月",
+        projectContent: "建設現場DXプラットフォームの開発",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "建設現場向け統合管理システムの開発",
+            "Remix/Nest.jsによる管理者向けWebアプリケーションの設計・開発",
+            "Service Worker活用のPWAアプリによるオフライン対応機能の実現",
+            "AWS Amplifyでの展開とCI/CD基盤の整備",
+            "自動テスト基盤の構築と運用効率化の実現",
+            "クライアントとのコミュニケーションとプロジェクト推進"
+          ]
+        },
+        industry: "業界：建設",
+        scale: "開発チーム5名、全体5名",
+        technologies: [
+          "Next.js", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify", 
+          "DynamoDB", "Lambda", "GitHub Actions", "Jest", "Playwright"
+        ]
+      },
+      {
+        id: "project3",
+        period: "2023年9月～2023年12月",
+        projectContent: "EC2からECSへの移行プロジェクト",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "不動産ポータルサイトのEC2からECSへのインフラ基盤移行",
+            "CI/CDパイプラインの自動化による運用効率化",
+            "ブルーグリーンデプロイの導入でダウンタイムを最小化",
+            "コンテナセキュリティ強化と自動脆弱性スキャンの導入",
+            "プロジェクト全体のスケジュール管理とクライアント折衝",
+            "移行計画の立案から実装、運用改善までを担当"
+          ]
+        },
+        industry: "業界：不動産",
+        scale: "開発チーム2名、全体2名",
+        technologies: [
+          "AWS", "ECS", "EC2", "Docker", "CodePipeline", "CodeBuild", 
+          "CodeDeploy", "Route53", "ECR", "CloudWatch", "IAM", "ALB"
+        ]
+      },
+      {
+        id: "project4",
+        period: "2023年8月～2023年11月",
+        projectContent: "AWS環境の統合管理基盤構築プロジェクト",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "Account Factory for Terraform（AFT）を活用した複数事業部のAWS環境統合管理",
+            "アカウント作成の自動化と環境分離によるリスク低減",
+            "不正リソース作成防止とコスト最適化の仕組み構築",
+            "SSOによる認証統合とセキュリティ強化の実現",
+            "自動脆弱性スキャンやCI/CD内のセキュリティ検証体制の整備"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム2名、全体2名",
+        technologies: [
+          "AWS", "Terraform", "IaC", "AWS Organizations", "SSO", 
+          "GitHub Actions", "CI/CD", "CloudWatch", "S3", "Lambda"
+        ]
+      },
+      {
+        id: "project5",
         period: "2023年11月～2024年6月",
         projectContent: "不動産会社/金融機関向け登記情報システムの開発",
         role: {
@@ -271,7 +357,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "エンジニア",
           details: [
-            "クライアント調整/MTGの運行",
+            "クライアント調整/MTGの進行",
             "要件定義から実装、テスト、リリースまでを実施",
             "アプリ/プラグインのインストールや利用マニュアルを作成"
           ]
@@ -280,6 +366,129 @@ export const memberPortfolios: MemberPortfolio[] = [
         scale: "開発チーム1名、全体3名",
         technologies: [
           "Kintone", "React", "TypeScript"
+        ]
+      },
+      {
+        id: "project4",
+        period: "2023年7月～2023年10月",
+        projectContent: "建設現場向け進捗管理アプリのPoC開発",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "クライアント調整/全体MTGの進行",
+            "要件定義書の作成(業務一覧/業務フロー/機能一覧)",
+            "設計書の作成(採用技術の選定/ER図/テーブル定義)",
+            "ブランチ運用やAWS運用方法などをまとめた開発プロセスドキュメントを作成し、先方社員へ教育支援を実施",
+            "Vue/Nuxt.js/MUIを使って、ユーザー作成、作業現場作成、日報入力フォームの画面を作成",
+            "Node.js/TypeSctiptを使って各種APIを作成",
+            "AWS CDKを使ってインフラを構築"
+          ]
+        },
+        industry: "業界：建設",
+        scale: "開発チーム4名、全体6名",
+        technologies: [
+          "Vue.js", "Nuxt.js", "TypeScript", "Node.js", "MySQL", "Prisma",
+          "AWS", "GitHub", "Notion", "Teams"
+        ]
+      },
+      {
+        id: "project5",
+        period: "2022年9月～2023年8月",
+        projectContent: "ビデオプレゼンサービスの立ち上げ",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "インサイドセールス経験者へのヒアリング",
+            "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
+            "ユーザーストーリー作成及び開発issueの発行",
+            "ユーザーヒアリングとプロダクト改善",
+            "デザインへのフィードバック",
+            "開発の進捗管理",
+            "AWS SAMを用いたインフラ構築",
+            "Ruby on Railsを使って視聴レポートを確認できる管理画面を作成"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム5名、全体10名",
+        technologies: [
+          "React", "TypeScript", "Ruby on Rails", "MySQL",
+          "AWS", "GitHub", "Figma", "Notion", "Slack"
+        ]
+      },
+      {
+        id: "project6",
+        period: "2022年9月～2023年8月",
+        projectContent: "動画サービスシステムのリプレイス支援及びweb開発における開発フローを教育支援",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "As-is/To-beのインフラ構成図作成",
+            "スケジュール作成及び進捗管理",
+            "git/githubの利用方法の教育及び、ブランチ運用やAWS運用の各種ガイドラインを作成",
+            "開発issueの発行/アサイン/進捗管理",
+            "IaC GeneratorやAWS Consoleから既存リソースの詳細設定を把握",
+            "AWS CDKを使ってECS/Fargateベースの新環境の構築及びCICDパイプラインを構築",
+            "Sentryの導入及びslack/githubへの通知設定の自動化や、活用方法をコンサルティング"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム4名、全体6名",
+        technologies: [
+          "JavaScript", "PHP", "Laravel", "MySQL",
+          "AWS", "GitHub", "Notion", "Slack"
+        ]
+      },
+      {
+        id: "project7",
+        period: "2022年4月～2024年3月",
+        projectContent: "RCS（SMSの次世代技術）を用いたB2C配信システムの開発/保守",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "既存ライセンス保守及び新機能の検討/開発",
+            "ユーザー企業との週次MTG及び課題や開発要望の取りまとめ",
+            "見積もり/契約締結",
+            "開発issueの発行/アサイン/進捗管理",
+            "CloudFormationを用いたインフラ構築",
+            "Cloudwatch, Datadogを用いてメトリクス/ログの監視や、アラート発生時の対応マニュアル、週次の棚卸会など運用の定着まで実現",
+            "K6, JMeter, ZAPを用いてAPIの負荷試験や脆弱性試験を実施し、結果を分析して開発エンジニアへフィードバック",
+            "Python/Django/PostgreSQLのEOL対応及びリリースを実施"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム10名、全体50名",
+        technologies: [
+          "Python", "Django", "Java", "Spring Boot", "Nginx", "Tomcat",
+          "PostgreSQL", "Redis", "AWS", "GitHub", "Circle CI",
+          "Figma", "Notion", "Slack"
+        ]
+      },
+      {
+        id: "project8",
+        period: "2017年4月～2022年3月",
+        projectContent: "会社員時代の経歴（ベイカレントコンサルティングに所属）",
+        role: {
+          position: "コンサルタント/PMO/ITアーキテクト",
+          details: [
+            "XX payの立ち上げPJのPMO支援やBPR支援",
+            "クレジットカード基幹システムリプレイスのPMO支援",
+            "保険代理店の営業DX支援",
+            "経済産業省主導の診断システムAI化と、医療情報を秘匿化して管理する技術の検討WGのPMO支援",
+            "社内コミュニケーションアプリの事業立案及び開発支援",
+            "PM/PMO業務",
+            "業務一覧/業務フロー/機能一覧/ER図/システム構成図など各種プロジェクト資料の作成",
+            "ベンダーコントロール",
+            "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
+            "ユーザーストーリー作成",
+            "バックエンド及びインフラ開発/監視の導入"
+          ]
+        },
+        industry: "業界：金融/医療/通信",
+        scale: "チーム3-10名、全体1000名",
+        technologies: [
+          "Word", "Excel", "PowerPoint", "Outlook", "Slack",
+          "Java", "Spring Boot", "Nginx", "Tomcat",
+          "PostgreSQL", "Redis", "AWS"
         ]
       }
     ],
