@@ -135,7 +135,13 @@ export const memberPortfolios: MemberPortfolio[] = [
           { name: "Azure", level: 3, years: 2 },
           { name: "Terraform", level: 4, years: 4 },
           { name: "Docker", level: 4, years: 5 },
-          { name: "Kubernetes", level: 3, years: 3 },
+          { name: "Kubernetes", level: 4, years: 3 },
+          { name: "Istio", level: 4, years: 2 },
+          { name: "ArgoCD", level: 4, years: 2 },
+          { name: "GitOps", level: 4, years: 2 },
+          { name: "Prometheus", level: 4, years: 3 },
+          { name: "Grafana", level: 4, years: 3 },
+          { name: "Elasticsearch", level: 3, years: 2 },
         ]
       },
       {
@@ -227,6 +233,28 @@ export const memberPortfolios: MemberPortfolio[] = [
 
     // 添付画像のテーブルデータを構造化
     projectsTable: [
+      {
+        id: "project0",
+        period: "2024年1月～2024年6月",
+        projectContent: "Kubernetesベースのマルチテナントクラウドネイティブ基盤構築",
+        role: {
+          position: "クラウドアーキテクト兼エンジニア",
+          details: [
+            "Terraformモジュール設計によるマルチクラウド環境(GCP/AWS)でのIaC実装と複数環境(開発/ステージング/本番)の一元管理体制の確立",
+            "GoogleのGKEとAWSのEKSにおけるKubernetesクラスタ設計・運用、Istioを用いたサービスメッシュアーキテクチャによるゼロトラスト実現",
+            "ArgoCDとGitHub Actionsを組み合わせたGitOpsデプロイパイプラインの構築およびSealed Secretsによる機密情報保護の実装",
+            "EKS環境でのElasticsearch/Kibana/Fluentdによる分散ログ収集基盤とPrometheus/Grafanaによる監視体制の整備",
+            "マルチテナント型エンタープライズ知識検索サービスのコンテナ化と自動スケーリング、マイクロサービス間通信の最適化設計"
+          ]
+        },
+        industry: "業界：ITサービス/SaaS",
+        scale: "開発チーム4名、全体8名",
+        technologies: [
+          "Kubernetes", "GKE", "EKS", "Terraform", "Istio", "ArgoCD", "Sealed Secrets", 
+          "Elasticsearch", "Kibana", "Fluentd", "Prometheus", "Grafana", "GitOps", 
+          "Docker", "AWS", "GCP", "GitHub Actions"
+        ]
+      },
       {
         id: "project1",
         period: "2024年4月～2024年8月",
