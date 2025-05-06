@@ -44,10 +44,11 @@ import {
 } from "react-icons/si";
 
 // AWS専用アイコンが不足しているものは AWSアイコン + サービス名 で対応
-import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt, FaWindows, FaCode } from "react-icons/fa";
+import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt, FaWindows, FaCode, FaTasks, FaSitemap, FaUserCog, FaTools, FaTerminal } from "react-icons/fa";
 import { VscCode } from "react-icons/vsc";
 import { IoCloudOutline } from "react-icons/io5";
-import { BsKanban } from "react-icons/bs";
+import { BsKanban, BsCodeSlash } from "react-icons/bs";
+import { GrMysql } from "react-icons/gr";
 
 // キー(小文字)とアイコンコンポーネントのマッピング
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -94,6 +95,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
   node: SiNodedotjs,
   nodejs: SiNodedotjs,
   "node.js": SiNodedotjs,
+  "バックエンド開発": FaTerminal,
+  "backend development": FaTerminal,
+  "backend": FaTerminal,
   express: SiExpress,
   expressjs: SiExpress,
   "express.js": SiExpress,
@@ -108,6 +112,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   springboot: SiSpring,
   rails: SiRubyonrails,
   rubyonrails: SiRubyonrails,
+  "ruby on rails": SiRubyonrails,
   laravel: SiLaravel,
   dotnet: SiDotnet,
   ".net": SiDotnet,
@@ -257,6 +262,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "progressive web app": SiPwa,
   
   // プロジェクトマネジメント関連
+  "プロジェクトマネジメント": FaSitemap,
+  "project management": FaSitemap,
   "ウォーターフォール開発": FaProjectDiagram,
   "waterfall": FaProjectDiagram,
   "waterfall development": FaProjectDiagram,

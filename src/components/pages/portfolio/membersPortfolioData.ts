@@ -168,6 +168,8 @@ export const memberPortfolios: MemberPortfolio[] = [
           { name: "FastAPI", level: 5, years: 5 },
           { name: "Node.js", level: 4, years: 4 },
           { name: "Express", level: 4, years: 4 },
+          { name: "Ruby on Rails", level: 3, years: 2 },
+          { name: "Laravel", level: 3, years: 2 },
           { name: "TypeScript", level: 4, years: 4 },
           { name: "MySQL", level: 4, years: 5 },
           { name: "PostgreSQL", level: 4, years: 6 },
