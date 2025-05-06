@@ -30,6 +30,21 @@ export default {
     addVariablesForColors,
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
+    // スクロールバー非表示のユーティリティを追加
+    function({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          /* IE and Edge */
+          '-ms-overflow-style': 'none',
+          /* Firefox */
+          'scrollbar-width': 'none',
+          /* Safari and Chrome */
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }
+      });
+    },
   ],
 };
 

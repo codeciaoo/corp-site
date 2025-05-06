@@ -1,0 +1,27 @@
+---
+export const prerender = true;
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/components/shared/Section";
+import { memberPortfolios, getPortfolioBySlug } from "@/components/pages/portfolio/membersPortfolioData";
+import MemberPortfolio from "@/components/pages/portfolio/MemberPortfolio";
+
+// 静的生成用のパス定義
+export function getStaticPaths() {
+  return memberPortfolios.map(member => ({
+    params: { slug: member.slug },
+    props: { member },
+  }));
+}
+
+// プロパティからメンバーデータを取得
+const { member } = Astro.props;
+
+// ページタイトル
+const pageTitle = `${member.name}のポートフォリオ`;
+---
+
+<Layout title={pageTitle}>
+  <Section bg="light">
+    <MemberPortfolio member={member} client:load />
+  </Section>
+</Layout>

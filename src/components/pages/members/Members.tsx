@@ -1,8 +1,9 @@
 import type React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 import { membersContent } from "./membersContent";
+import { memberPortfolios } from "../portfolio/membersPortfolioData";
 
 // Types
 interface MediaItem {
@@ -45,19 +46,29 @@ const Skill: React.FC<SkillProps> = ({ children }) => (
 
 interface MemberCardProps {
   member: TeamMember;
-  // isSelected: boolean;
-  // onClick: () => void;
+  hasDetailPage?: boolean;
 }
 
 const MemberCard: React.FC<MemberCardProps> = ({
   member,
-  // isSelected,
-  // onClick,
+  hasDetailPage = false,
 }) => {
+  // ポートフォリオページが存在するかチェック
+  const hasMemberPortfolio = memberPortfolios.some(
+    portfolio => portfolio.name === member.name
+  );
+  
+  // メンバースラッグの取得
+  const getSlug = () => {
+    const portfolio = memberPortfolios.find(p => p.name === member.name);
+    return portfolio ? portfolio.slug : undefined;
+  };
+
+  const memberSlug = getSlug();
+  const showDetailLink = hasDetailPage || hasMemberPortfolio;
+
   return (
     <div
-      // initial={{ opacity: 0, y: 20 }}
-      // animate={{ opacity: 1, y: 0 }}
       className={
         "group overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 ease-in-out hover:shadow-lg"
       }
@@ -73,13 +84,25 @@ const MemberCard: React.FC<MemberCardProps> = ({
           />
         </div>
         <div className="flex-1 space-y-6 p-6 md:p-8">
-          <div className="space-y-2">
-            <span className="inline-flex items-center rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">
-              {member.role}
-            </span>
-            <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-              {member.name}
-            </h2>
+          <div className="flex items-start justify-between space-y-2">
+            <div className="space-y-2">
+              <span className="inline-flex items-center rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">
+                {member.role}
+              </span>
+              <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+                {member.name}
+              </h2>
+            </div>
+            
+            {showDetailLink && memberSlug && (
+              <a
+                href={`/members/${memberSlug}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100"
+              >
+                詳細プロフィール
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
           </div>
 
           <div className="space-y-6">

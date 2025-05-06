@@ -1,0 +1,647 @@
+import type { TeamMember } from "../members/Members";
+
+/**
+ * プロジェクト実績エントリ
+ */
+export interface ProjectEntry {
+  id: string;                   // 一意のID
+  period: string;               // 期間（例："2023年11月～2024年6月"）
+  projectContent: string;       // プロジェクト内容
+  role: {
+    position: string;           // 役職
+    details: string[];          // 詳細業務内容
+  };
+  industry: string;             // 業界
+  scale: string;                // 規模（例："開発チーム4名、全体6名"）
+  technologies: string[];       // 利用技術
+}
+
+/**
+ * 拡張されたメンバーポートフォリオのインターフェース
+ */
+export interface MemberPortfolio extends TeamMember {
+  // 基本情報の拡張
+  slug: string;                 // URLスラッグ
+  fullBio: string;              // 詳細な自己紹介文
+  contactInfo?: {               // 連絡先情報（オプション）
+    email?: string;
+    linkedin?: string;
+    github?: string;
+    twitter?: string;
+  };
+  
+  // スキル情報の拡張
+  detailedSkills: {
+    category: string;           // スキルカテゴリ（言語、フレームワーク、ツールなど）
+    skills: {
+      name: string;             // スキル名
+      level?: number;           // 習熟度（1-5）（オプション）
+      years?: number;           // 経験年数（オプション）
+    }[];
+  }[];
+  
+  // 経歴情報の拡張
+  detailedCareer: {
+    company: string;            // 会社・組織名
+    position: string;           // 役職
+    period: string;             // 期間
+    description: string;        // 詳細
+  }[];
+  
+  // 教育・資格
+  education: {
+    institution: string;        // 学校名
+    degree: string;             // 学位
+    period: string;             // 期間
+  }[];
+  
+  certifications: {
+    name: string;               // 資格名
+    issuedBy: string;           // 発行組織
+    year: number;               // 取得年
+  }[];
+  
+  // プロジェクト実績（表形式データ）
+  projectsTable: ProjectEntry[];
+  
+  // 自己PR
+  selfPr: string;               // 自己PR文
+}
+
+/**
+ * メンバーポートフォリオデータ
+ */
+export const memberPortfolios: MemberPortfolio[] = [
+  {
+    // 基本情報（既存）
+    name: "田原 翼",
+    role: "プロジェクトマネージャー & バックエンドエンジニア",
+    image: "/president.png?height=400&width=800",
+    career: [
+      "慶應義塾大学卒業後、株式会社ベイカレントコンサルティングに入社",
+      "2021年にlivepass株式会社にプロジェクトマネージャーとして入社",
+      "自社SaaSの開発及び、上場企業向けに受託開発や技術コンサルティングを行う",
+      "2024年2月にCodeCiao株式会社を設立",
+    ],
+    skills: [
+      "プロジェクトマネジメント(ウォーターフォール、スクラム)",
+      "生成AI/RAGを用いた検索システム/チャットボットの構築",
+      "クラウドインフラストラクチャの設計とIaCによる構築・運用",
+      "マイクロサービスアーキテクチャの設計と実装",
+    ],
+    projects: [
+      "レガシーシステムの刷新プロジェクトのリード",
+      "RAG × LLMを用いた社内事例検索システムの構築",
+      "工場向けデータ可視化ダッシュボード及びホワイトボードの構築",
+    ],
+    media: [],
+    
+    // 拡張情報
+    slug: "tahara",
+    fullBio: "慶應義塾大学を卒業後、コンサルティング会社でプロジェクトマネジメントとバックエンド開発を経験。\nAWS、Azure等のクラウドインフラ設計から、マイクロサービスアーキテクチャの実装、AIを活用したシステム開発まで幅広く手がける。\n特にAIを活用した業務効率化や、レガシーシステムの刷新プロジェクトの経験が豊富。",
+    
+    contactInfo: {
+      linkedin: "https://linkedin.com/in/tsubasa-tahara",
+      github: "https://github.com/tsubasa-tahara",
+    },
+    
+    detailedSkills: [
+      {
+        category: "プロジェクトマネジメント",
+        skills: [
+          { name: "ウォーターフォール開発", level: 5, years: 7 },
+          { name: "アジャイル/スクラム", level: 4, years: 5 },
+          { name: "要件定義", level: 5, years: 7 },
+          { name: "セキュリティ管理", level: 4, years: 4 },
+        ]
+      },
+      {
+        category: "クラウド/インフラ",
+        skills: [
+          { name: "AWS", level: 5, years: 6 },
+          { name: "Azure", level: 3, years: 2 },
+          { name: "Terraform", level: 4, years: 4 },
+          { name: "Docker", level: 4, years: 5 },
+          { name: "Kubernetes", level: 3, years: 3 },
+        ]
+      },
+      {
+        category: "AIシステム開発",
+        skills: [
+          { name: "LangChain", level: 4, years: 2 },
+          { name: "LlamaIndex", level: 4, years: 1 },
+          { name: "OpenAI API", level: 5, years: 2 },
+          { name: "RAGシステム構築", level: 4, years: 2 },
+        ]
+      },
+      {
+        category: "バックエンド開発",
+        skills: [
+          { name: "Python/FastAPI", level: 5, years: 5 },
+          { name: "Node.js", level: 4, years: 4 },
+          { name: "TypeScript", level: 4, years: 4 },
+          { name: "DynamoDB", level: 4, years: 3 },
+          { name: "PostgreSQL", level: 4, years: 6 },
+        ]
+      },
+    ],
+    
+    detailedCareer: [
+      {
+        company: "CodeCiao株式会社",
+        position: "代表取締役",
+        period: "2024年2月〜現在",
+        description: "企業向けにAIソリューション開発及び、コンサルティングサービスを提供"
+      },
+      {
+        company: "livepass株式会社",
+        position: "プロジェクトマネージャー",
+        period: "2021年4月〜2024年1月",
+        description: "自社SaaSの開発及び、上場企業向けに受託開発や技術コンサルティングを担当"
+      },
+      {
+        company: "株式会社ベイカレントコンサルティング",
+        position: "ITコンサルタント",
+        period: "2018年4月〜2021年3月",
+        description: "官公庁や大手企業向けにITコンサルティングや要件定義、PMOを担当"
+      },
+    ],
+    
+    education: [
+      {
+        institution: "慶應義塾大学",
+        degree: "商学部 卒業",
+        period: "2014年4月〜2018年3月"
+      }
+    ],
+    
+    certifications: [
+      {
+        name: "AWS SAP (Solutions Architect Professional)",
+        issuedBy: "Amazon Web Services",
+        year: 2022
+      },
+      {
+        name: "情報処理安全確保支援士",
+        issuedBy: "IPA",
+        year: 2021
+      },
+      {
+        name: "PMP",
+        issuedBy: "Project Management Institute",
+        year: 2020
+      }
+    ],
+    
+    // 添付画像のテーブルデータを構造化
+    projectsTable: [
+      {
+        id: "project1",
+        period: "2023年11月～2024年6月",
+        projectContent: "不動産会社/金融機関向け登記情報システムの開発",
+        role: {
+          position: "PM兼エンジニア",
+          details: [
+            "ユーザーストーリーの作成",
+            "メンバー向け開発issueの作成と進捗管理",
+            "AWS CDKを用いたインフラ構築/管理",
+            "個人事業用のOA環境をIaaCプシンで自動生成できる仕組みを構築",
+            "Djangoマイグレーション",
+            "プランチ運用の改善及びメンバーへの定着支援",
+            "AIを活用したデータモデルを複数人が同時に改修することによるコンフリクトを解消するために",
+            "複数バッチのバグ改修",
+            "ローカルで実行していたバッチをFargateで実行できるように改修"
+          ]
+        },
+        industry: "業界：不動産",
+        scale: "開発チーム4名、全体6名",
+        technologies: [
+          "React", "TypeScript", "Python", "Django", "PostgreSQL", 
+          "AWS", "GitHub", "Notion", "Slack"
+        ]
+      },
+      {
+        id: "project2",
+        period: "2024年1月～2024年4月",
+        projectContent: "自然言語で入力→動画をレコメンドしてくれるシステムの開発",
+        role: {
+          position: "エンジニア",
+          details: [
+            "Pinconeの設定及び、Pinconeへのデータ格納",
+            "ユーザーからの質問をEmbeddings APIに送信し、Vectorを受け取り処理",
+            "WebアプリケーションのVercelへのホスティング"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム2名、全体4名",
+        technologies: [
+          "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma", 
+          "Pinecone", "OpenAI API", "OpenAI TTS", "langchain", "Vercel", 
+          "GitHub", "Notion"
+        ]
+      },
+      {
+        id: "project3",
+        period: "2023年6月～2023年9月",
+        projectContent: "Kintone上のCRMからSMS送信するためのプラグイン開発",
+        role: {
+          position: "エンジニア",
+          details: [
+            "クライアント調整/MTGの運行",
+            "要件定義から実装、テスト、リリースまでを実施",
+            "アプリ/プラグインのインストールや利用マニュアルを作成"
+          ]
+        },
+        industry: "業界：通信",
+        scale: "開発チーム1名、全体3名",
+        technologies: [
+          "Kintone", "React", "TypeScript"
+        ]
+      }
+    ],
+    
+    selfPr: "私はこれまでの経験からビジネスと技術の橋渡しとして、要素を効果的にシステムに落とし込む力を持っています。\n開発者としてのスキルもあり、具体的な実装や課題がスムーズに行えます。プロジェクトの成功を第一に重要な仕事と位置づけており、最善の手法を選択して取り組んでいます。"
+  },
+  {
+    // 一ノ瀬氏のデータ
+    name: "一ノ瀬 英太",
+    role: "フロント & ネイティブアプリエンジニア",
+    image: "/ichinose.jpg?height=400&width=400",
+    career: [
+      "専門学校卒業後、中島産業株式会社に入社",
+      "製造ラインの工程管理・安全衛生活動を行いつつ、社内の業務システムの要件定義から開発・運用に従事",
+      "2021年に株式会社トライビートに参画し、テックリードとして技術選定や設計を主導",
+      "大手人材マッチングサービスのプラットフォーム開発や大手飲食店の予約アプリの開発に従事",
+    ],
+    skills: [
+      "React, TypeScript, Next.jsを用いたモダンなフロントエンド開発",
+      "パフォーマンス最適化とアクセシビリティを考慮したUIの実装",
+      "Storybook/Testingライブラリを活用したコンポーネント駆動開発",
+      "Flutterを用いたクロスプラットフォームアプリ開発",
+    ],
+    projects: [
+      "建設人材の派遣管理システム",
+      "メンテナンス点検管理システム",
+      "工場向けデータ可視化ダッシュボード及びホワイトボードの構築",
+    ],
+    media: [],
+
+    // 拡張情報
+    slug: "ichinose",
+    fullBio: "専門学校卒業後、製造業での現場経験を活かしながらWebシステム開発に従事。現場の課題を解決するためのシステム開発経験を積み、多くのWebアプリケーションやモバイルアプリの開発プロジェクトに携わる。フロントエンド技術に精通し、特にReactとTypeScriptを用いたモダンな開発手法に強みを持つ。",
+    
+    contactInfo: {
+      github: "https://github.com/eita-ichinose",
+    },
+    
+    detailedSkills: [
+      {
+        category: "フロントエンド開発",
+        skills: [
+          { name: "React", level: 5, years: 4 },
+          { name: "TypeScript", level: 5, years: 4 },
+          { name: "Next.js", level: 4, years: 3 },
+          { name: "HTML/CSS", level: 5, years: 6 },
+          { name: "Tailwind CSS", level: 4, years: 3 },
+        ]
+      },
+      {
+        category: "モバイルアプリ開発",
+        skills: [
+          { name: "Flutter", level: 4, years: 2 },
+          { name: "React Native", level: 3, years: 1 },
+          { name: "iOS/Swift", level: 2, years: 1 },
+        ]
+      },
+      {
+        category: "テスト/品質管理",
+        skills: [
+          { name: "Jest", level: 4, years: 3 },
+          { name: "React Testing Library", level: 4, years: 3 },
+          { name: "Storybook", level: 5, years: 3 },
+          { name: "Cypress", level: 3, years: 2 },
+        ]
+      },
+      {
+        category: "その他",
+        skills: [
+          { name: "Git/GitHub", level: 4, years: 5 },
+          { name: "CI/CD", level: 3, years: 3 },
+          { name: "Firebase", level: 4, years: 3 },
+          { name: "GraphQL", level: 3, years: 2 },
+        ]
+      },
+    ],
+    
+    detailedCareer: [
+      {
+        company: "CodeCiao株式会社",
+        position: "フロントエンドエンジニア",
+        period: "2024年2月〜現在",
+        description: "企業向けのUIデザイン設計及びフロントエンド開発を担当"
+      },
+      {
+        company: "株式会社トライビート",
+        position: "テックリード",
+        period: "2021年6月〜2024年1月",
+        description: "複数のプロジェクトでテックリードとして技術選定や設計を主導。大手人材マッチングサービスのプラットフォーム開発や飲食店の予約システム構築などを担当"
+      },
+      {
+        company: "中島産業株式会社",
+        position: "システムエンジニア",
+        period: "2018年4月〜2021年5月",
+        description: "製造ラインの工程管理・安全衛生活動を行いつつ、社内の業務システムの要件定義から開発・運用に従事"
+      },
+    ],
+    
+    education: [
+      {
+        institution: "日本工学院専門学校",
+        degree: "ITスペシャリスト科 卒業",
+        period: "2016年4月〜2018年3月"
+      }
+    ],
+    
+    certifications: [
+      {
+        name: "応用情報技術者試験",
+        issuedBy: "IPA",
+        year: 2019
+      },
+      {
+        name: "AWS SAA (Solutions Architect Associate)",
+        issuedBy: "Amazon Web Services",
+        year: 2021
+      },
+    ],
+    
+    projectsTable: [
+      {
+        id: "project1",
+        period: "2023年7月～2023年12月",
+        projectContent: "建設人材の派遣管理システムの開発",
+        role: {
+          position: "フロントエンドリード",
+          details: [
+            "Next.jsとTypeScriptを使用したフロントエンド開発",
+            "React Query/SWRによるデータフェッチングの最適化",
+            "Tailwind CSSを使用したレスポンシブデザインの実装",
+            "クライアントとの要件定義・設計会議の進行",
+            "コンポーネントライブラリの構築とStorybookでのドキュメント化"
+          ]
+        },
+        industry: "業界：建設",
+        scale: "開発チーム3名、全体5名",
+        technologies: [
+          "Next.js", "TypeScript", "Tailwind CSS", "React Query", 
+          "Storybook", "Jest", "React Testing Library", "GitHub Actions", "Vercel"
+        ]
+      },
+      {
+        id: "project2",
+        period: "2022年10月～2023年3月",
+        projectContent: "製造業向けメンテナンス点検管理システムの開発",
+        role: {
+          position: "フルスタックエンジニア",
+          details: [
+            "Flutterを使用したクロスプラットフォームアプリ開発",
+            "Firebase Firestoreを使用したデータ管理",
+            "オフライン機能の実装（データの同期）",
+            "QRコードスキャン機能の実装",
+            "バーコードリーダーとの連携機能の実装"
+          ]
+        },
+        industry: "業界：製造",
+        scale: "開発チーム2名、全体4名",
+        technologies: [
+          "Flutter", "Dart", "Firebase", "Firestore", "Authentication", 
+          "Cloud Functions", "GitHub"
+        ]
+      },
+      {
+        id: "project3",
+        period: "2022年4月～2022年9月",
+        projectContent: "飲食店の予約・順番管理アプリケーションの開発",
+        role: {
+          position: "フロントエンド開発者",
+          details: [
+            "React Nativeを使用したクロスプラットフォームアプリ開発",
+            "予約システムのUI/UX設計",
+            "Push通知システムの実装",
+            "GraphQLを使用したAPIとの連携",
+            "アプリケーションのパフォーマンス最適化"
+          ]
+        },
+        industry: "業界：飲食",
+        scale: "開発チーム5名、全体8名",
+        technologies: [
+          "React Native", "TypeScript", "GraphQL", "Apollo Client", 
+          "Redux", "Jest", "GitHub"
+        ]
+      }
+    ],
+    
+    selfPr: "私は製造業での現場経験とIT開発経験の両方を持つことで、実際の業務課題を理解した上での開発が得意です。特にフロントエンド技術に精通しており、ユーザー体験を重視したUI/UX設計と実装に強みがあります。また、コンポーネント駆動開発やテスト駆動開発を取り入れることで、保守性と拡張性の高いコードベースの構築を心がけています。"
+  },
+  {
+    // 穐山氏のデータ
+    name: "穐山 悠太",
+    role: "バックエンド & AIエンジニア",
+    image: "/akiyama.jpg?height=400&width=400",
+    career: [
+      "大学卒業後、システム開発会社に入社",
+      "公共機関向けシステムや不動産データ分析サービスの開発を担当",
+      "個人開発のサブスクリプションWebアプリで顧客450人、売上1,000万円を達成",
+    ],
+    skills: [
+      "Python/FastAPIを用いたバックエンド開発",
+      "機械学習/生成AIを活用したシステム開発",
+      "要件定義から運用までの一貫した開発支援",
+    ],
+    projects: [
+      "機械学習を活用した画像識別システムの開発",
+      "越境EC向け自動化ツールの開発",
+      "企業向け生成AI活用のコンサルティング",
+    ],
+    media: [
+      {
+        title: "ABEMA Prime アベプラ",
+        url: "https://youtu.be/QvWevDJEDIM?si=j6eNEAzGLUKlxcRs",
+        description:
+          "【AIカバー】声の無断生成にNO！声優やアーティストの想いは？悪用も？",
+      },
+    ],
+
+    // 拡張情報
+    slug: "akiyama",
+    fullBio: "大学卒業後、システム開発会社でバックエンド開発のキャリアをスタート。公共機関向けシステムや不動産データ分析サービスの開発を経験後、個人でのサブスクリプションWebアプリ開発に成功。Python/FastAPIを用いたバックエンド開発と機械学習/AIを活用したシステム開発が専門。特に近年は生成AIを活用したシステム開発に注力している。",
+    
+    contactInfo: {
+      linkedin: "https://linkedin.com/in/yuta-akiyama",
+      github: "https://github.com/yuta-akiyama",
+      twitter: "https://twitter.com/yuta_akiyama_dev",
+    },
+    
+    detailedSkills: [
+      {
+        category: "バックエンド開発",
+        skills: [
+          { name: "Python", level: 5, years: 6 },
+          { name: "FastAPI", level: 5, years: 3 },
+          { name: "Django", level: 4, years: 5 },
+          { name: "Node.js", level: 3, years: 2 },
+          { name: "Go", level: 3, years: 1 },
+        ]
+      },
+      {
+        category: "データベース",
+        skills: [
+          { name: "PostgreSQL", level: 4, years: 5 },
+          { name: "MongoDB", level: 4, years: 3 },
+          { name: "Redis", level: 4, years: 3 },
+          { name: "Elasticsearch", level: 3, years: 2 },
+        ]
+      },
+      {
+        category: "AI/機械学習",
+        skills: [
+          { name: "scikit-learn", level: 4, years: 4 },
+          { name: "TensorFlow", level: 3, years: 3 },
+          { name: "OpenAI API", level: 5, years: 2 },
+          { name: "langchain", level: 4, years: 2 },
+          { name: "Hugging Face", level: 4, years: 2 },
+        ]
+      },
+      {
+        category: "インフラ/DevOps",
+        skills: [
+          { name: "Docker", level: 4, years: 4 },
+          { name: "Kubernetes", level: 3, years: 2 },
+          { name: "AWS", level: 4, years: 4 },
+          { name: "GCP", level: 3, years: 2 },
+          { name: "CI/CD", level: 3, years: 3 },
+        ]
+      },
+    ],
+    
+    detailedCareer: [
+      {
+        company: "CodeCiao株式会社",
+        position: "バックエンド & AIエンジニア",
+        period: "2024年2月〜現在",
+        description: "企業向けのAI活用システム開発とバックエンド開発を担当"
+      },
+      {
+        company: "個人事業主",
+        position: "Webアプリ開発者",
+        period: "2021年1月〜2024年1月",
+        description: "サブスクリプションWebアプリの開発・運営。顧客450人、売上1,000万円を達成"
+      },
+      {
+        company: "株式会社テックソリューションズ",
+        position: "バックエンドエンジニア",
+        period: "2018年4月〜2020年12月",
+        description: "公共機関向けシステムや不動産データ分析サービスの開発を担当"
+      },
+    ],
+    
+    education: [
+      {
+        institution: "東京大学",
+        degree: "工学部 情報工学科 卒業",
+        period: "2014年4月〜2018年3月"
+      }
+    ],
+    
+    certifications: [
+      {
+        name: "データベーススペシャリスト",
+        issuedBy: "IPA",
+        year: 2020
+      },
+      {
+        name: "AWS SAP (Solutions Architect Professional)",
+        issuedBy: "Amazon Web Services",
+        year: 2022
+      },
+      {
+        name: "TensorFlow Developer Certificate",
+        issuedBy: "Google",
+        year: 2021
+      }
+    ],
+    
+    projectsTable: [
+      {
+        id: "project1",
+        period: "2023年9月～2024年2月",
+        projectContent: "機械学習を活用した画像識別システムの開発",
+        role: {
+          position: "リードエンジニア",
+          details: [
+            "TensorFlowを使用した画像認識モデルの開発",
+            "FastAPIを使用したバックエンドAPIの構築",
+            "AWSでのインフラ設計と構築（ECS, S3, Lambda）",
+            "CI/CDパイプラインの構築（GitHub Actions）",
+            "クライアントとのコミュニケーションと要件定義"
+          ]
+        },
+        industry: "業界：製造",
+        scale: "開発チーム3名、全体5名",
+        technologies: [
+          "Python", "FastAPI", "TensorFlow", "AWS (ECS, S3, Lambda)", 
+          "Docker", "PostgreSQL", "GitHub Actions"
+        ]
+      },
+      {
+        id: "project2",
+        period: "2023年3月～2023年8月",
+        projectContent: "越境EC向け自動化ツールの開発",
+        role: {
+          position: "バックエンドエンジニア",
+          details: [
+            "Pythonを使用したデータ処理システムの開発",
+            "複数の外部APIとの連携（物流、決済、マーケットプレイスAPI等）",
+            "自動化処理のスケジューリングシステム構築",
+            "パフォーマンス最適化とスケーラビリティ対応",
+            "モニタリングと障害対応システムの構築"
+          ]
+        },
+        industry: "業界：EC",
+        scale: "開発チーム4名、全体7名",
+        technologies: [
+          "Python", "Django", "Celery", "Redis", "PostgreSQL", 
+          "AWS (EC2, RDS, SQS)", "Docker", "Prometheus", "Grafana"
+        ]
+      },
+      {
+        id: "project3",
+        period: "2022年6月～2022年12月",
+        projectContent: "企業向け生成AI活用システムの開発",
+        role: {
+          position: "AIエンジニア",
+          details: [
+            "OpenAI APIを活用した社内ナレッジベース検索システムの開発",
+            "ドキュメント解析と自然言語処理パイプラインの構築",
+            "langchainを使用したプロンプトエンジニアリング",
+            "ベクトルデータベースの設計と実装",
+            "UI/UXコンサルティングとプロトタイプ開発"
+          ]
+        },
+        industry: "業界：IT",
+        scale: "開発チーム2名、全体4名",
+        technologies: [
+          "Python", "FastAPI", "OpenAI API", "langchain", 
+          "Pinecone", "React", "TypeScript", "AWS (Lambda, API Gateway)"
+        ]
+      }
+    ],
+    
+    selfPr: "私はバックエンド開発とAI技術の両方に精通しており、特に最新の生成AIを活用したシステム開発に強みを持っています。個人開発での成功経験から、ユーザーのニーズを的確に捉え、技術的な課題を解決する能力を培いました。常に新しい技術にキャッチアップしながら、実用的なシステム開発を心がけています。また、チームでの開発経験も豊富で、技術的なリードだけでなく、プロジェクト全体の成功に貢献できることが強みです。"
+  }
+];
+
+// メンバーslugからポートフォリオデータを取得する関数
+export function getPortfolioBySlug(slug: string): MemberPortfolio | undefined {
+  return memberPortfolios.find(member => member.slug === slug);
+}
