@@ -29,17 +29,17 @@ export interface MemberPortfolio extends TeamMember {
     github?: string;
     twitter?: string;
   };
-  
+
   // スキル情報の拡張
   detailedSkills: {
     category: string;           // スキルカテゴリ（言語、フレームワーク、ツールなど）
     skills: {
-      name: string;             // スキル名
+      name: string;             // スキル名（TechStackIcon に対応する技術名）
       level?: number;           // 習熟度（1-5）（オプション）
       years?: number;           // 経験年数（オプション）
     }[];
   }[];
-  
+
   // 経歴情報の拡張
   detailedCareer: {
     company: string;            // 会社・組織名
@@ -47,23 +47,27 @@ export interface MemberPortfolio extends TeamMember {
     period: string;             // 期間
     description: string;        // 詳細
   }[];
-  
+
   // 教育・資格
   education: {
     institution: string;        // 学校名
     degree: string;             // 学位
     period: string;             // 期間
   }[];
-  
+
   certifications: {
     name: string;               // 資格名
     issuedBy: string;           // 発行組織
     year: number;               // 取得年
   }[];
-  
+  /**
+   * 所属組織のロゴ配列
+   */
+  organizationLogos?: { src: string; alt: string }[];
+
   // プロジェクト実績（表形式データ）
   projectsTable: ProjectEntry[];
-  
+
   // 自己PR
   selfPr: string;               // 自己PR文
 }
@@ -95,16 +99,23 @@ export const memberPortfolios: MemberPortfolio[] = [
       "工場向けデータ可視化ダッシュボード及びホワイトボードの構築",
     ],
     media: [],
-    
+
     // 拡張情報
     slug: "tahara",
     fullBio: "慶應義塾大学を卒業後、コンサルティング会社でプロジェクトマネジメントとバックエンド開発を経験。\nAWS、Azure等のクラウドインフラ設計から、マイクロサービスアーキテクチャの実装、AIを活用したシステム開発まで幅広く手がける。\n特にAIを活用した業務効率化や、レガシーシステムの刷新プロジェクトの経験が豊富。",
-    
+
     contactInfo: {
       linkedin: "https://linkedin.com/in/tsubasa-tahara",
       github: "https://github.com/tsubasa-tahara",
     },
-    
+    // 所属組織ロゴ
+    organizationLogos: [
+      { src: "/logos/keio-univ.svg", alt: "慶應義塾大学" },
+      { src: "/logos/baycurrent.svg", alt: "ベイカレントコンサルティング" },
+      { src: "/logos/livepass.svg", alt: "livepass株式会社" },
+      { src: "/corp_logo.png", alt: "CodeCiao株式会社" }
+    ],
+
     detailedSkills: [
       {
         category: "プロジェクトマネジメント",
@@ -126,18 +137,31 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
       {
+        category: "フロントエンド開発",
+        skills: [
+          { name: "JavaScript", level: 4, years: 5 },
+          { name: "TypeScript", level: 4, years: 4 },
+          { name: "React", level: 3, years: 3 },
+          { name: "Next.js", level: 3, years: 3 },
+          { name: "Vue.js", level: 3, years: 2 },
+          { name: "Svelte", level: 3, years: 1 },
+          { name: "Remix", level: 2, years: 1 },
+        ]
+      },
+      {
         category: "AIシステム開発",
         skills: [
           { name: "LangChain", level: 4, years: 2 },
-          { name: "LlamaIndex", level: 4, years: 1 },
-          { name: "OpenAI API", level: 5, years: 2 },
+          { name: "OpenAI", level: 5, years: 2 },
           { name: "RAGシステム構築", level: 4, years: 2 },
         ]
       },
       {
         category: "バックエンド開発",
         skills: [
-          { name: "Python/FastAPI", level: 5, years: 5 },
+          { name: "Python", level: 5, years: 5 },
+          { name: "Django", level: 5, years: 5 },
+          { name: "FastAPI", level: 5, years: 5 },
           { name: "Node.js", level: 4, years: 4 },
           { name: "TypeScript", level: 4, years: 4 },
           { name: "DynamoDB", level: 4, years: 3 },
@@ -145,7 +169,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
     ],
-    
+
     detailedCareer: [
       {
         company: "CodeCiao株式会社",
@@ -166,7 +190,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         description: "官公庁や大手企業向けにITコンサルティングや要件定義、PMOを担当"
       },
     ],
-    
+
     education: [
       {
         institution: "慶應義塾大学",
@@ -174,7 +198,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         period: "2014年4月〜2018年3月"
       }
     ],
-    
+
     certifications: [
       {
         name: "AWS SAP (Solutions Architect Professional)",
@@ -192,7 +216,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         year: 2020
       }
     ],
-    
+
     // 添付画像のテーブルデータを構造化
     projectsTable: [
       {
@@ -216,7 +240,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：不動産",
         scale: "開発チーム4名、全体6名",
         technologies: [
-          "React", "TypeScript", "Python", "Django", "PostgreSQL", 
+          "React", "TypeScript", "Python", "Django", "PostgreSQL",
           "AWS", "GitHub", "Notion", "Slack"
         ]
       },
@@ -235,8 +259,8 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：通信",
         scale: "開発チーム2名、全体4名",
         technologies: [
-          "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma", 
-          "Pinecone", "OpenAI API", "OpenAI TTS", "langchain", "Vercel", 
+          "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma",
+          "Pinecone", "OpenAI API", "OpenAI TTS", "langchain", "Vercel",
           "GitHub", "Notion"
         ]
       },
@@ -259,7 +283,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       }
     ],
-    
+
     selfPr: "私はこれまでの経験からビジネスと技術の橋渡しとして、要素を効果的にシステムに落とし込む力を持っています。\n開発者としてのスキルもあり、具体的な実装や課題がスムーズに行えます。プロジェクトの成功を第一に重要な仕事と位置づけており、最善の手法を選択して取り組んでいます。"
   },
   {
@@ -289,11 +313,11 @@ export const memberPortfolios: MemberPortfolio[] = [
     // 拡張情報
     slug: "ichinose",
     fullBio: "専門学校卒業後、製造業での現場経験を活かしながらWebシステム開発に従事。現場の課題を解決するためのシステム開発経験を積み、多くのWebアプリケーションやモバイルアプリの開発プロジェクトに携わる。フロントエンド技術に精通し、特にReactとTypeScriptを用いたモダンな開発手法に強みを持つ。",
-    
+
     contactInfo: {
       github: "https://github.com/eita-ichinose",
     },
-    
+
     detailedSkills: [
       {
         category: "フロントエンド開発",
@@ -332,7 +356,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
     ],
-    
+
     detailedCareer: [
       {
         company: "CodeCiao株式会社",
@@ -353,7 +377,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         description: "製造ラインの工程管理・安全衛生活動を行いつつ、社内の業務システムの要件定義から開発・運用に従事"
       },
     ],
-    
+
     education: [
       {
         institution: "日本工学院専門学校",
@@ -361,7 +385,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         period: "2016年4月〜2018年3月"
       }
     ],
-    
+
     certifications: [
       {
         name: "応用情報技術者試験",
@@ -374,7 +398,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         year: 2021
       },
     ],
-    
+
     projectsTable: [
       {
         id: "project1",
@@ -393,7 +417,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：建設",
         scale: "開発チーム3名、全体5名",
         technologies: [
-          "Next.js", "TypeScript", "Tailwind CSS", "React Query", 
+          "Next.js", "TypeScript", "Tailwind CSS", "React Query",
           "Storybook", "Jest", "React Testing Library", "GitHub Actions", "Vercel"
         ]
       },
@@ -414,7 +438,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：製造",
         scale: "開発チーム2名、全体4名",
         technologies: [
-          "Flutter", "Dart", "Firebase", "Firestore", "Authentication", 
+          "Flutter", "Dart", "Firebase", "Firestore", "Authentication",
           "Cloud Functions", "GitHub"
         ]
       },
@@ -435,12 +459,12 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：飲食",
         scale: "開発チーム5名、全体8名",
         technologies: [
-          "React Native", "TypeScript", "GraphQL", "Apollo Client", 
+          "React Native", "TypeScript", "GraphQL", "Apollo Client",
           "Redux", "Jest", "GitHub"
         ]
       }
     ],
-    
+
     selfPr: "私は製造業での現場経験とIT開発経験の両方を持つことで、実際の業務課題を理解した上での開発が得意です。特にフロントエンド技術に精通しており、ユーザー体験を重視したUI/UX設計と実装に強みがあります。また、コンポーネント駆動開発やテスト駆動開発を取り入れることで、保守性と拡張性の高いコードベースの構築を心がけています。"
   },
   {
@@ -475,13 +499,13 @@ export const memberPortfolios: MemberPortfolio[] = [
     // 拡張情報
     slug: "akiyama",
     fullBio: "大学卒業後、システム開発会社でバックエンド開発のキャリアをスタート。公共機関向けシステムや不動産データ分析サービスの開発を経験後、個人でのサブスクリプションWebアプリ開発に成功。Python/FastAPIを用いたバックエンド開発と機械学習/AIを活用したシステム開発が専門。特に近年は生成AIを活用したシステム開発に注力している。",
-    
+
     contactInfo: {
       linkedin: "https://linkedin.com/in/yuta-akiyama",
       github: "https://github.com/yuta-akiyama",
       twitter: "https://twitter.com/yuta_akiyama_dev",
     },
-    
+
     detailedSkills: [
       {
         category: "バックエンド開発",
@@ -523,7 +547,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         ]
       },
     ],
-    
+
     detailedCareer: [
       {
         company: "CodeCiao株式会社",
@@ -544,7 +568,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         description: "公共機関向けシステムや不動産データ分析サービスの開発を担当"
       },
     ],
-    
+
     education: [
       {
         institution: "東京大学",
@@ -552,7 +576,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         period: "2014年4月〜2018年3月"
       }
     ],
-    
+
     certifications: [
       {
         name: "データベーススペシャリスト",
@@ -570,7 +594,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         year: 2021
       }
     ],
-    
+
     projectsTable: [
       {
         id: "project1",
@@ -589,7 +613,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：製造",
         scale: "開発チーム3名、全体5名",
         technologies: [
-          "Python", "FastAPI", "TensorFlow", "AWS (ECS, S3, Lambda)", 
+          "Python", "FastAPI", "TensorFlow", "AWS (ECS, S3, Lambda)",
           "Docker", "PostgreSQL", "GitHub Actions"
         ]
       },
@@ -610,7 +634,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：EC",
         scale: "開発チーム4名、全体7名",
         technologies: [
-          "Python", "Django", "Celery", "Redis", "PostgreSQL", 
+          "Python", "Django", "Celery", "Redis", "PostgreSQL",
           "AWS (EC2, RDS, SQS)", "Docker", "Prometheus", "Grafana"
         ]
       },
@@ -631,12 +655,12 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：IT",
         scale: "開発チーム2名、全体4名",
         technologies: [
-          "Python", "FastAPI", "OpenAI API", "langchain", 
+          "Python", "FastAPI", "OpenAI API", "langchain",
           "Pinecone", "React", "TypeScript", "AWS (Lambda, API Gateway)"
         ]
       }
     ],
-    
+
     selfPr: "私はバックエンド開発とAI技術の両方に精通しており、特に最新の生成AIを活用したシステム開発に強みを持っています。個人開発での成功経験から、ユーザーのニーズを的確に捉え、技術的な課題を解決する能力を培いました。常に新しい技術にキャッチアップしながら、実用的なシステム開発を心がけています。また、チームでの開発経験も豊富で、技術的なリードだけでなく、プロジェクト全体の成功に貢献できることが強みです。"
   }
 ];

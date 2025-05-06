@@ -35,14 +35,23 @@ export interface CareerSectionProps {
    * 資格・認定
    */
   certifications: CertificationItem[];
+  /**
+   * 所属組織ロゴ
+   */
+  organizationLogos?: { src: string; alt: string }[];
 }
 
 /**
  * 経歴アイテムコンポーネント
  */
-const CareerItemComponent: React.FC<{ item: CareerItem; index: number }> = ({ 
-  item, 
-  index 
+const CareerItemComponent: React.FC<{
+  item: CareerItem;
+  index: number;
+  organizationLogos?: { src: string; alt: string }[];
+}> = ({
+  item,
+  index,
+  organizationLogos,
 }) => {
   return (
     <ScrollReveal
@@ -58,7 +67,19 @@ const CareerItemComponent: React.FC<{ item: CareerItem; index: number }> = ({
                 <Building className="h-4 w-4" />
                 {item.position}
               </div>
-              <div className="mt-1 text-sm font-medium text-gray-700">{item.company}</div>
+              <div className="mt-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+                {organizationLogos && (
+                  (() => {
+                    const logo = organizationLogos.find(l =>
+                      item.company.includes(l.alt) || l.alt.includes(item.company)
+                    );
+                    return logo ? (
+                      <img src={logo.src} alt={logo.alt} className="h-4 w-auto" />
+                    ) : null;
+                  })()
+                )}
+                {item.company}
+              </div>
               <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
                 <Calendar className="h-3 w-3" />
                 {item.period}
@@ -77,9 +98,14 @@ const CareerItemComponent: React.FC<{ item: CareerItem; index: number }> = ({
 /**
  * 学歴アイテムコンポーネント
  */
-const EducationItemComponent: React.FC<{ item: EducationItem; index: number }> = ({ 
-  item, 
-  index 
+const EducationItemComponent: React.FC<{
+  item: EducationItem;
+  index: number;
+  organizationLogos?: { src: string; alt: string }[];
+}> = ({
+  item,
+  index,
+  organizationLogos,
 }) => {
   return (
     <ScrollReveal
@@ -91,10 +117,19 @@ const EducationItemComponent: React.FC<{ item: EducationItem; index: number }> =
         <CardContent className="p-0">
           <div className="flex flex-col p-4 md:flex-row md:p-5">
             <div className="mb-3 w-full md:mb-0 md:w-1/3">
-              <div className="flex items-center gap-2 font-semibold text-blue-700">
-                <GraduationCap className="h-4 w-4" />
-                {item.institution}
-              </div>
+            <div className="flex items-center gap-2 font-semibold text-blue-700">
+              {(() => {
+                const logo = organizationLogos?.find(l =>
+                  item.institution.includes(l.alt) || l.alt.includes(item.institution)
+                );
+                return logo ? (
+                  <img src={logo.src} alt={logo.alt} className="h-4 w-auto" />
+                ) : (
+                  <GraduationCap className="h-4 w-4" />
+                );
+              })()}
+              {item.institution}
+            </div>
               <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
                 <Calendar className="h-3 w-3" />
                 {item.period}
@@ -151,6 +186,7 @@ const CareerSection: React.FC<CareerSectionProps> = ({
   career,
   education,
   certifications,
+  organizationLogos,
 }) => {
   return (
     <section className="mb-12">
@@ -163,7 +199,12 @@ const CareerSection: React.FC<CareerSectionProps> = ({
           </h3>
           <div className="space-y-4">
             {career.map((item, index) => (
-              <CareerItemComponent key={index} item={item} index={index} />
+              <CareerItemComponent
+                key={index}
+                item={item}
+                index={index}
+                organizationLogos={organizationLogos}
+              />
             ))}
           </div>
         </div>
@@ -174,7 +215,12 @@ const CareerSection: React.FC<CareerSectionProps> = ({
           </h3>
           <div className="space-y-4">
             {education.map((item, index) => (
-              <EducationItemComponent key={index} item={item} index={index} />
+              <EducationItemComponent
+                key={index}
+                item={item}
+                index={index}
+                organizationLogos={organizationLogos}
+              />
             ))}
           </div>
         </div>

@@ -98,6 +98,7 @@ const MemberPortfolioComponent: React.FC<MemberPortfolioProps> = ({ member }) =>
           career={member.detailedCareer}
           education={member.education}
           certifications={member.certifications}
+          organizationLogos={member.organizationLogos}
         />
       </div>
       

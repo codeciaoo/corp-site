@@ -72,6 +72,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               ))}
             </div>
             
+            
             {contactInfo && (
               <div className="flex gap-4 pt-2">
                 {contactInfo.github && (

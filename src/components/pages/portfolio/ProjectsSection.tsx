@@ -1,7 +1,9 @@
 import React from "react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import ProjectInfoCard from "@/components/projects/ProjectInfoCard";
+import TechStackIcon from "@/components/projects/TechStackIcon";
 import { Briefcase, Code } from "lucide-react";
+import type { TechInfo } from "@/components/projects/TechStackDisplay";
 
 /**
  * プロジェクトエントリーの型定義
@@ -57,6 +59,15 @@ const generateTechnologiesHtml = (technologies: string[]): string => {
 };
 
 /**
+ * 技術名の配列をTechInfo配列に変換
+ */
+const convertToTechInfo = (technologies: string[]): TechInfo[] => {
+  return technologies.map(tech => ({
+    name: tech
+  }));
+};
+
+/**
  * プロジェクトセクションコンポーネント
  */
 const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
@@ -83,7 +94,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                 ${generateRoleDetailsHtml(project.role.position, project.role.details)}
                 ${generateTechnologiesHtml(project.technologies)}
               `}
-              technologies={project.technologies.map(tech => ({ name: tech }))}
+              technologies={convertToTechInfo(project.technologies)}
             />
           </ScrollReveal>
         ))}
