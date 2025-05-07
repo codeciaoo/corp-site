@@ -153,7 +153,7 @@ export const taharaPortfolio: MemberPortfolio = {
   projectsTable: [
     {
       id: "project0",
-      period: "2024年1月～2024年5月",
+      period: "2025年1月～2024年5月",
       projectContent: "Kubernetesベースのマルチテナントクラウドネイティブ基盤構築",
       role: {
         position: "クラウドエンジニア",
@@ -198,7 +198,7 @@ export const taharaPortfolio: MemberPortfolio = {
       period: "2024年7月～2024年12月",
       projectContent: "業務管理システムのアプリ・インフラ構築",
       role: {
-        position: "PM兼エンジニア",
+        position: "エンジニア",
         details: [
           "PHP/Laravelを用いた会計・請求・料金管理APIの設計・実装",
           "ArtisanコマンドによるCSV一括インポート・トランケート処理の開発",
@@ -231,7 +231,7 @@ export const taharaPortfolio: MemberPortfolio = {
         ]
       },
       industry: "業界：製造",
-      scale: "開発チーム2名、全体2名",
+      scale: "開発チーム3名、全体5名",
       technologies: [
         "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
         "Hugging Face"
@@ -239,7 +239,7 @@ export const taharaPortfolio: MemberPortfolio = {
     },
     {
       id: "project4",
-      period: "2024年5月～2024年8月",
+      period: "2024年2月～2024年8月",
       projectContent: "建設現場DXプラットフォームの開発",
       role: {
         position: "PM兼エンジニア",
@@ -275,7 +275,7 @@ export const taharaPortfolio: MemberPortfolio = {
         ]
       },
       industry: "業界：不動産",
-      scale: "開発チーム2名、全体2名",
+      scale: "開発チーム3名、全体5名",
       technologies: [
         "AWS", "ECS", "Fargate", "EC2", "Docker", "CDK", "CodePipeline", "CodeBuild",
         "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "IAM", "ALB"
@@ -296,7 +296,7 @@ export const taharaPortfolio: MemberPortfolio = {
         ]
       },
       industry: "業界：通信",
-      scale: "開発チーム2名、全体2名",
+      scale: "開発チーム3名、全体5名",
       technologies: [
         "AWS", "Terraform", "IaC", "AWS Organizations", "SSO",
         "GitHub Actions", "CI/CD", "CloudWatch", "S3", "Lambda"
@@ -317,7 +317,7 @@ export const taharaPortfolio: MemberPortfolio = {
         ]
       },
       industry: "業界：不動産",
-      scale: "開発チーム4名、全体6名",
+      scale: "開発チーム7名、全体10名",
       technologies: [
         "React", "TypeScript", "Python", "Django", "PostgreSQL",
         "AWS", "GitHub", "Notion", "Slack"
@@ -345,29 +345,8 @@ export const taharaPortfolio: MemberPortfolio = {
       ]
     },
     {
-      id: "project9",
-      period: "2023年6月～2023年9月",
-      projectContent: "Kintone上のCRMからSMS送信するためのプラグイン開発",
-      role: {
-        position: "エンジニア",
-        details: [
-          "ReactとTypeScriptを使用したKintoneプラグインの設計・実装",
-          "SMS APIとの連携による顧客向けメッセージ送信機能の開発",
-          "Kintone REST API Client/Webpack/Babelを使用したモジュール構成とビルドパイプラインの構築",
-          "Kintoneレコード情報の取得・加工ロジックとSMS APIエラーハンドリングの実装、送信履歴の自動保存機能の開発",
-          "ユーザー側の操作性を考慮したUIデザイン設計とステータス管理機能の実装",
-          "クライアント環境でのE2Eテスト実施とプラグイン導入マニュアル、管理者向け設定ガイドの作成"
-        ]
-      },
-      industry: "業界：通信",
-      scale: "開発チーム1名、全体3名",
-      technologies: [
-        "Kintone", "React", "TypeScript", "Webpack"
-      ]
-    },
-    {
       id: "project10",
-      period: "2023年7月～2023年10月",
+      period: "2023年6月～2023年10月",
       projectContent: "建設現場向け進捗管理アプリのPoC開発",
       role: {
         position: "PM兼エンジニア",
@@ -386,78 +365,6 @@ export const taharaPortfolio: MemberPortfolio = {
       technologies: [
         "Vue.js", "Nuxt.js", "TypeScript", "Node.js", "MySQL", "Prisma",
         "AWS", "GitHub", "Notion", "Teams"
-      ]
-    },
-    {
-      id: "project11",
-      period: "2022年9月～2023年8月",
-      projectContent: "ビデオプレゼンサービスの立ち上げ",
-      role: {
-        position: "PM兼エンジニア",
-        details: [
-          "インサイドセールス経験者へのヒアリング",
-          "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
-          "ユーザーストーリー作成及び開発issueの発行",
-          "ユーザーヒアリングとプロダクト改善",
-          "デザインへのフィードバック",
-          "開発の進捗管理",
-          "AWS SAMを用いたインフラ構築",
-          "Ruby on Railsを使って視聴レポートを確認できる管理画面を作成"
-        ]
-      },
-      industry: "業界：通信",
-      scale: "開発チーム5名、全体10名",
-      technologies: [
-        "React", "TypeScript", "Ruby on Rails", "MySQL",
-        "AWS", "GitHub", "Figma", "Notion", "Slack"
-      ]
-    },
-    {
-      id: "project12",
-      period: "2022年9月～2023年8月",
-      projectContent: "動画サービスシステムのリプレイス支援及びweb開発における開発フローを教育支援",
-      role: {
-        position: "PM兼エンジニア",
-        details: [
-          "As-is/To-beのインフラ構成図作成",
-          "スケジュール作成及び進捗管理",
-          "git/githubの利用方法の教育及び、ブランチ運用やAWS運用の各種ガイドラインを作成",
-          "開発issueの発行/アサイン/進捗管理",
-          "IaC GeneratorやAWS Consoleから既存リソースの詳細設定を把握",
-          "AWS CDKを使ってECS/Fargateベースの新環境の構築及びCICDパイプラインを構築",
-          "Sentryの導入及びslack/githubへの通知設定の自動化や、活用方法をコンサルティング"
-        ]
-      },
-      industry: "業界：通信",
-      scale: "開発チーム4名、全体6名",
-      technologies: [
-        "JavaScript", "PHP", "Laravel", "MySQL",
-        "AWS", "GitHub", "Notion", "Slack"
-      ]
-    },
-    {
-      id: "project13",
-      period: "2022年4月～2024年3月",
-      projectContent: "RCS（SMSの次世代技術）を用いたB2C配信システムの開発/保守",
-      role: {
-        position: "PM兼エンジニア",
-        details: [
-          "既存ライセンス保守及び新機能の検討/開発",
-          "ユーザー企業との週次MTG及び課題や開発要望の取りまとめ",
-          "見積もり/契約締結",
-          "開発issueの発行/アサイン/進捗管理",
-          "CloudFormationを用いたインフラ構築",
-          "Cloudwatch, Datadogを用いてメトリクス/ログの監視や、アラート発生時の対応マニュアル、週次の棚卸会など運用の定着まで実現",
-          "K6, JMeter, ZAPを用いてAPIの負荷試験や脆弱性試験を実施し、結果を分析して開発エンジニアへフィードバック",
-          "Python/Django/PostgreSQLのEOL対応及びリリースを実施"
-        ]
-      },
-      industry: "業界：通信",
-      scale: "開発チーム10名、全体50名",
-      technologies: [
-        "Python", "Django", "Java", "Spring Boot", "Nginx", "Tomcat",
-        "PostgreSQL", "Redis", "AWS", "GitHub", "Circle CI",
-        "Figma", "Notion", "Slack"
       ]
     },
     {
