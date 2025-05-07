@@ -1,15 +1,14 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Section from "@/components/Section";
-import MemberPortfolio from "@/components/portfolio/MemberPortfolio";
-import { taharaPortfolio } from "@/data/taharaPortfolio";
+import MemberPortfolio from "@/components/pages/portfolio/MemberPortfolio";
+import { taharaPortfolio } from "@/components/pages/portfolio/data/taharaPortfolio";
 
 // ページタイトル
 const pageTitle = `${taharaPortfolio.name}のポートフォリオ`;
 ---
 
 <Layout title={pageTitle}>
-  <Section bg="light">
+  <div class="container mx-auto">
     <MemberPortfolio member={taharaPortfolio} client:load />
-  </Section>
+  </div>
 </Layout>

@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import TechStackIcon from "@/components/projects/TechStackIcon";
-import { SkillWithLevel, SkillCategory } from "./portfolioTypes";
+import type { SkillWithLevel, SkillCategory } from "./portfolioTypes";
 
 export interface SkillsSectionProps {
   /**
@@ -91,7 +91,7 @@ const SkillBadge: React.FC<{ skill: SkillWithLevel }> = ({ skill }) => {
 /**
  * スキルカテゴリーコンポーネント
  */
-const SkillCategory: React.FC<{ category: SkillCategory; index: number }> = ({
+const SkillCategoryComponent: React.FC<{ category: SkillCategory; index: number }> = ({
   category,
   index,
 }) => {
@@ -158,7 +158,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
       <h2 className="mb-6 text-2xl font-bold text-gray-900">スキル</h2>
       <div className="space-y-8 rounded-xl bg-gray-50/70 p-6 backdrop-blur-sm shadow-inner">
         {skills.map((category, index) => (
-          <SkillCategory key={index} category={category} index={index} />
+          <SkillCategoryComponent key={index} category={category} index={index} />
         ))}
       </div>
     </section>
