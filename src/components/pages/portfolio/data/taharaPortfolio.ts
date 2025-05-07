@@ -34,12 +34,12 @@ export const taharaPortfolio: MemberPortfolio = {
   contactInfo: {},
 
   // 所属組織ロゴ
-  organizationLogos: [
-    { src: "/keio.png", alt: "慶應義塾大学" },
-    { src: "/baycurrent.png", alt: "ベイカレントコンサルティング" },
-    { src: "/livepass.png", alt: "livepass株式会社" },
-    { src: "/codeciao_new.png", alt: "CodeCiao株式会社" },
-  ],
+  // organizationLogos: [
+  //   { src: "/keio.png", alt: "慶應義塾大学" },
+  //   { src: "/baycurrent.png", alt: "ベイカレントコンサルティング" },
+  //   { src: "/livepass.png", alt: "livepass株式会社" },
+  //   { src: "/codeciao.png", alt: "CodeCiao株式会社" },
+  // ],
 
   detailedSkills: [
     {
@@ -111,14 +111,14 @@ export const taharaPortfolio: MemberPortfolio = {
     {
       company: "CodeCiao株式会社",
       position: "代表取締役",
-      period: "2024年2月〜現在",
+      period: "2024年6月〜現在",
       description: "企業向けにAIソリューション開発及び、コンサルティングサービスを提供"
     },
     {
       company: "livepass株式会社",
       position: "プロジェクトマネージャー",
-      period: "2022年4月〜2024年1月",
-      description: "自社SaaSの開発及び、上場企業向けに受託開発や技術コンサルティングを担当"
+      period: "2022年4月〜2024年5月",
+      description: "自社SaaSの開発、上場企業向けに受託開発や技術コンサルティングを提供"
     },
     {
       company: "株式会社ベイカレントコンサルティング",
@@ -277,7 +277,7 @@ export const taharaPortfolio: MemberPortfolio = {
       industry: "業界：不動産",
       scale: "開発チーム2名、全体2名",
       technologies: [
-        "AWS", "ECS", "Fargate", "EC2", "Docker", "CloudFormation", "CDK", "CodePipeline", "CodeBuild",
+        "AWS", "ECS", "Fargate", "EC2", "Docker", "CDK", "CodePipeline", "CodeBuild",
         "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "IAM", "ALB"
       ]
     },
@@ -340,8 +340,8 @@ export const taharaPortfolio: MemberPortfolio = {
       scale: "開発チーム2名、全体4名",
       technologies: [
         "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma",
-        "Pinecone", "OpenAI", "OpenAI TTS", "langchain", "Vercel",
-        "GitHub", "Notion", "Serverless Functions", "Redis"
+        "Pinecone", "OpenAI", "langchain", "Vercel",
+        "GitHub", "Notion"
       ]
     },
     {
