@@ -378,21 +378,21 @@ export const taharaPortfolio: MemberPortfolio = {
           "クレジットカード基幹システムリプレイスのPMO支援",
           "保険代理店の営業DX支援",
           "経済産業省主導の診断システムAI化と、医療情報を秘匿化して管理する技術の検討WGのPMO支援",
-          "社内コミュニケーションアプリの事業立案及び開発支援",
-          "PM/PMO業務",
+          "Kintone上のCRMからSMS送信するためのプラグイン開発（React/TypeScript）",
+          "ビデオプレゼンサービスの企画/立ち上げPM及びAWS SAMによるインフラ構築",
+          "動画サービスシステムのリプレイス支援とAWS CDKによるECS/Fargate基盤構築",
+          "RCSを用いたB2C配信システムの開発保守/運用監視体制の構築",
           "業務一覧/業務フロー/機能一覧/ER図/システム構成図など各種プロジェクト資料の作成",
-          "ベンダーコントロール",
-          "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
-          "ユーザーストーリー作成",
-          "バックエンド及びインフラ開発/監視の導入"
+          "ベンダーコントロールとコミュニケーション管理",
+          "バックエンド及びインフラ開発/監視体制の導入と運用最適化"
         ]
       },
       industry: "業界：金融/医療/通信",
       scale: "チーム3-10名、全体1000名",
       technologies: [
-        "Word", "Excel", "PowerPoint", "Outlook", "Slack",
-        "Java", "Spring Boot", "Nginx", "Tomcat",
-        "PostgreSQL", "Redis", "AWS"
+        "Python", "Django", "Java", "Spring Boot", "React", "TypeScript", 
+        "Webpack", "AWS", "PostgreSQL", "Redis", "GitHub", "Circle CI",
+        "MySQL", "Kintone", "Datadog", "CloudWatch", "CloudFormation"
       ]
     }
   ],
