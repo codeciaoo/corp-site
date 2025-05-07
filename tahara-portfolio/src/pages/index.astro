@@ -1,0 +1,15 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/components/Section";
+import MemberPortfolio from "@/components/portfolio/MemberPortfolio";
+import { taharaPortfolio } from "@/data/taharaPortfolio";
+
+// ページタイトル
+const pageTitle = `${taharaPortfolio.name}のポートフォリオ`;
+---
+
+<Layout title={pageTitle}>
+  <Section bg="light">
+    <MemberPortfolio member={taharaPortfolio} client:load />
+  </Section>
+</Layout>

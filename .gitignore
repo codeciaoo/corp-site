@@ -45,3 +45,4 @@ dist
 **/.claude/settings.local.json
 
 standalone-portfolio
+tahara-portfolio/node_modules

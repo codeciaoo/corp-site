@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .table-wrapper {
+    @apply overflow-x-auto w-full block;
+  }
+  
+  .table-wrapper table {
+    @apply w-full whitespace-nowrap;
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+    @apply p-2 border border-gray-200;
+  }
+}

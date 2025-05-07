@@ -1,0 +1,62 @@
+---
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "田原翼のポートフォリオ",
+  description = "プロジェクトマネージャー & バックエンドエンジニア",
+  ogImage = "/images/president.png",
+} = Astro.props;
+
+const formattedTitle = title ? `${title}` : "田原翼のポートフォリオ";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <GoogleFontsOptimizer
+      url="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="田原翼" />
+    <meta name="keywords" content="クラウドネイティブ, AWS, アーキテクト, プロジェクトマネージャー" />
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="profile" />
+    <meta name="title" property="og:title" content={formattedTitle} />
+    <meta name="description" property="og:description" content={description} />
+    <meta name="image" property="og:image" content={ogImage} />
+    <meta property="og:url" content={Astro.url.href} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={formattedTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
+    
+    <title>{formattedTitle}</title>
+  </head>
+  <body>
+    <main class="mx-auto min-h-screen">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/globals.css";
+</style>
