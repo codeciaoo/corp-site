@@ -345,6 +345,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "scrum": BsKanban,
   "agile/scrum": BsKanban,
   "要件定義": FaClipboardList,
+  "要件定義・設計": FaClipboardList,
   "requirements": FaClipboardList,
   "requirements definition": FaClipboardList,
   "セキュリティ管理": FaShieldAlt,
