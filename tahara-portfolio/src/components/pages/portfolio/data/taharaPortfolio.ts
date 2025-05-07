@@ -215,6 +215,278 @@ export const taharaPortfolio: MemberPortfolio = {
         "Laravel", "PHP", "MySQL", "Docker", "Terraform", "AWS", "ECS", "Aurora",
         "API Gateway", "Lambda", "Python", "CodeBuild", "CodePipeline"
       ]
+    },
+    {
+      id: "project3",
+      period: "2024年7月～2024年12月",
+      projectContent: "RAG・生成AI活用による製造現場の安全管理システム開発",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "製造業のお客様向けにRAGと生成AIを活用した安全管理システムのPOC開発",
+          "ハイブリッド検索（ベクトル＋キーワード）による検索精度の向上",
+          "クロスエンコーダーとLLMリランキングを組み合わせた高精度な情報抽出システムの実装",
+          "生成AIによる現場状況に応じた安全アドバイスの提供",
+          "プロジェクト全体の進捗管理とクライアントコミュニケーション"
+        ]
+      },
+      industry: "業界：製造",
+      scale: "開発チーム2名、全体2名",
+      technologies: [
+        "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
+        "Hugging Face"
+      ]
+    },
+    {
+      id: "project4",
+      period: "2024年5月～2024年8月",
+      projectContent: "建設現場DXプラットフォームの開発",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "建設現場向け統合管理システムの開発",
+          "Remix/Nest.jsによる管理者向けWebアプリケーションの設計・開発",
+          "Service Worker活用のPWAアプリによるオフライン対応機能の実現",
+          "AWS Amplifyでの展開とCI/CD基盤の整備",
+          "自動テスト基盤の構築と運用効率化の実現",
+          "クライアントとのコミュニケーションとプロジェクト推進"
+        ]
+      },
+      industry: "業界：建設",
+      scale: "開発チーム5名、全体5名",
+      technologies: [
+        "Remix", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify",
+        "DynamoDB", "Lambda", "GitHub Actions", "Jest", "Playwright"
+      ]
+    },
+    {
+      id: "project5",
+      period: "2023年9月～2023年12月",
+      projectContent: "EC2からECSへの移行プロジェクト",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "不動産ポータルサイトのEC2(m5.large×4台)からECS Fargateへのインフラ基盤移行",
+          "AWS CloudFormationとCDKを組み合わせたIaCによる環境構築の自動化",
+          "CodePipeline/CodeBuild/CodeDeployによるCI/CDパイプラインの構築",
+          "ALBとRoute53を活用したブルーグリーンデプロイの導入によりダウンタイムを30分→5分に短縮",
+          "ECRとAquaSecurityによるコンテナイメージの脆弱性スキャンの自動化と対策フロー確立",
+          "CloudWatchとDatadogによる詳細なメトリクス監視とアラート体制の構築"
+        ]
+      },
+      industry: "業界：不動産",
+      scale: "開発チーム2名、全体2名",
+      technologies: [
+        "AWS", "ECS", "Fargate", "EC2", "Docker", "CDK", "CodePipeline", "CodeBuild",
+        "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "IAM", "ALB"
+      ]
+    },
+    {
+      id: "project6",
+      period: "2023年8月～2023年11月",
+      projectContent: "AWS環境の統合管理基盤構築プロジェクト",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "Account Factory for Terraform（AFT）を活用した複数事業部のAWS環境統合管理",
+          "アカウント作成の自動化と環境分離によるリスク低減",
+          "不正リソース作成防止とコスト最適化の仕組み構築",
+          "SSOによる認証統合とセキュリティ強化の実現",
+          "自動脆弱性スキャンやCI/CD内のセキュリティ検証体制の整備"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム2名、全体2名",
+      technologies: [
+        "AWS", "Terraform", "IaC", "AWS Organizations", "SSO",
+        "GitHub Actions", "CI/CD", "CloudWatch", "S3", "Lambda"
+      ]
+    },
+    {
+      id: "project7",
+      period: "2023年11月～2025年5月",
+      projectContent: "不動産会社/金融機関向け登記情報システムの開発",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "ユーザーストーリーの作成とメンバー向け開発issueの作成と進捗管理",
+          "AWS CDKを用いたインフラ構築/管理",
+          "バックエンドAPIの開発",
+          "pandasを用いた登記簿情報投入のスクリプト作成",
+          "ローカルで実行していたバッチをFargateで実行できるように改修"
+        ]
+      },
+      industry: "業界：不動産",
+      scale: "開発チーム4名、全体6名",
+      technologies: [
+        "React", "TypeScript", "Python", "Django", "PostgreSQL",
+        "AWS", "GitHub", "Notion", "Slack"
+      ]
+    },
+    {
+      id: "project8",
+      period: "2024年1月～2024年4月",
+      projectContent: "自然言語で入力→動画をレコメンドしてくれるシステムの開発",
+      role: {
+        position: "エンジニア",
+        details: [
+          "PineconeとOpenAI Embeddings APIを組み合わせたベクトル検索システムの設計・実装",
+          "SvelteKitとTypeScriptによるフロントエンド実装",
+          "OpenAI TTSを活用した検索結果の音声フィードバック機能の実装",
+          "Vercelを用いたCI/CDパイプラインの構築とServerless Functionsによるバックエンド処理の最適化"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム2名、全体4名",
+      technologies: [
+        "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma",
+        "Pinecone", "OpenAI", "langchain", "Vercel",
+        "GitHub", "Notion"
+      ]
+    },
+    {
+      id: "project9",
+      period: "2023年6月～2023年9月",
+      projectContent: "Kintone上のCRMからSMS送信するためのプラグイン開発",
+      role: {
+        position: "エンジニア",
+        details: [
+          "ReactとTypeScriptを使用したKintoneプラグインの設計・実装",
+          "SMS APIとの連携による顧客向けメッセージ送信機能の開発",
+          "Kintone REST API Client/Webpack/Babelを使用したモジュール構成とビルドパイプラインの構築",
+          "Kintoneレコード情報の取得・加工ロジックとSMS APIエラーハンドリングの実装、送信履歴の自動保存機能の開発",
+          "ユーザー側の操作性を考慮したUIデザイン設計とステータス管理機能の実装",
+          "クライアント環境でのE2Eテスト実施とプラグイン導入マニュアル、管理者向け設定ガイドの作成"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム1名、全体3名",
+      technologies: [
+        "Kintone", "React", "TypeScript", "Webpack"
+      ]
+    },
+    {
+      id: "project10",
+      period: "2023年7月～2023年10月",
+      projectContent: "建設現場向け進捗管理アプリのPoC開発",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "クライアント調整/全体MTGの進行",
+          "要件定義書の作成(業務一覧/業務フロー/機能一覧)",
+          "設計書の作成(採用技術の選定/ER図/テーブル定義)",
+          "ブランチ運用やAWS運用方法などをまとめた開発プロセスドキュメントを作成し、先方社員へ教育支援を実施",
+          "Vue/Nuxt.js/MUIを使って、ユーザー作成、作業現場作成、日報入力フォームの画面を作成",
+          "Node.js/TypeSctiptを使って各種APIを作成",
+          "AWS CDKを使ってインフラを構築"
+        ]
+      },
+      industry: "業界：建設",
+      scale: "開発チーム4名、全体6名",
+      technologies: [
+        "Vue.js", "Nuxt.js", "TypeScript", "Node.js", "MySQL", "Prisma",
+        "AWS", "GitHub", "Notion", "Teams"
+      ]
+    },
+    {
+      id: "project11",
+      period: "2022年9月～2023年8月",
+      projectContent: "ビデオプレゼンサービスの立ち上げ",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "インサイドセールス経験者へのヒアリング",
+          "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
+          "ユーザーストーリー作成及び開発issueの発行",
+          "ユーザーヒアリングとプロダクト改善",
+          "デザインへのフィードバック",
+          "開発の進捗管理",
+          "AWS SAMを用いたインフラ構築",
+          "Ruby on Railsを使って視聴レポートを確認できる管理画面を作成"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム5名、全体10名",
+      technologies: [
+        "React", "TypeScript", "Ruby on Rails", "MySQL",
+        "AWS", "GitHub", "Figma", "Notion", "Slack"
+      ]
+    },
+    {
+      id: "project12",
+      period: "2022年9月～2023年8月",
+      projectContent: "動画サービスシステムのリプレイス支援及びweb開発における開発フローを教育支援",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "As-is/To-beのインフラ構成図作成",
+          "スケジュール作成及び進捗管理",
+          "git/githubの利用方法の教育及び、ブランチ運用やAWS運用の各種ガイドラインを作成",
+          "開発issueの発行/アサイン/進捗管理",
+          "IaC GeneratorやAWS Consoleから既存リソースの詳細設定を把握",
+          "AWS CDKを使ってECS/Fargateベースの新環境の構築及びCICDパイプラインを構築",
+          "Sentryの導入及びslack/githubへの通知設定の自動化や、活用方法をコンサルティング"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム4名、全体6名",
+      technologies: [
+        "JavaScript", "PHP", "Laravel", "MySQL",
+        "AWS", "GitHub", "Notion", "Slack"
+      ]
+    },
+    {
+      id: "project13",
+      period: "2022年4月～2024年3月",
+      projectContent: "RCS（SMSの次世代技術）を用いたB2C配信システムの開発/保守",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "既存ライセンス保守及び新機能の検討/開発",
+          "ユーザー企業との週次MTG及び課題や開発要望の取りまとめ",
+          "見積もり/契約締結",
+          "開発issueの発行/アサイン/進捗管理",
+          "CloudFormationを用いたインフラ構築",
+          "Cloudwatch, Datadogを用いてメトリクス/ログの監視や、アラート発生時の対応マニュアル、週次の棚卸会など運用の定着まで実現",
+          "K6, JMeter, ZAPを用いてAPIの負荷試験や脆弱性試験を実施し、結果を分析して開発エンジニアへフィードバック",
+          "Python/Django/PostgreSQLのEOL対応及びリリースを実施"
+        ]
+      },
+      industry: "業界：通信",
+      scale: "開発チーム10名、全体50名",
+      technologies: [
+        "Python", "Django", "Java", "Spring Boot", "Nginx", "Tomcat",
+        "PostgreSQL", "Redis", "AWS", "GitHub", "Circle CI",
+        "Figma", "Notion", "Slack"
+      ]
+    },
+    {
+      id: "project14",
+      period: "2017年4月～2022年3月",
+      projectContent: "会社員時代の経歴（ベイカレントコンサルティングに所属）",
+      role: {
+        position: "コンサルタント/PMO/ITアーキテクト",
+        details: [
+          "XX payの立ち上げPJのPMO支援やBPR支援",
+          "クレジットカード基幹システムリプレイスのPMO支援",
+          "保険代理店の営業DX支援",
+          "経済産業省主導の診断システムAI化と、医療情報を秘匿化して管理する技術の検討WGのPMO支援",
+          "社内コミュニケーションアプリの事業立案及び開発支援",
+          "PM/PMO業務",
+          "業務一覧/業務フロー/機能一覧/ER図/システム構成図など各種プロジェクト資料の作成",
+          "ベンダーコントロール",
+          "コンセプト立案/ペルソナ設計/カスタマージャーニー作成",
+          "ユーザーストーリー作成",
+          "バックエンド及びインフラ開発/監視の導入"
+        ]
+      },
+      industry: "業界：金融/医療/通信",
+      scale: "チーム3-10名、全体1000名",
+      technologies: [
+        "Word", "Excel", "PowerPoint", "Outlook", "Slack",
+        "Java", "Spring Boot", "Nginx", "Tomcat",
+        "PostgreSQL", "Redis", "AWS"
+      ]
     }
   ],
 
