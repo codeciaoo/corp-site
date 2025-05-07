@@ -67,7 +67,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <div className="max-w-2xl space-y-2">
               {bio.split('\n').map((paragraph, index) => (
                 <p key={index} className="text-gray-600">
-                  {paragraph}
+                  {paragraph.startsWith('• ') ? (
+                    <span className="flex items-start">
+                      <span className="text-teal-500 mr-2 text-sm">•</span>
+                      <span>{paragraph.substring(2)}</span>
+                    </span>
+                  ) : (
+                    paragraph
+                  )}
                 </p>
               ))}
             </div>

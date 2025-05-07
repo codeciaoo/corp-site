@@ -151,28 +151,67 @@ const EducationItemComponent: React.FC<{
 const CertificationItemComponent: React.FC<{ 
   certifications: CertificationItem[]; 
 }> = ({ certifications }) => {
+  // 資格画像マッピング
+  const getCertificationImage = (certName: string) => {
+    if (certName.includes("AWS SAP")) return "/sap.jpg";
+    if (certName.includes("応用情報技術者")) return "/ipa.jpg";
+    if (certName.includes("TensorFlow")) return "/tensorflow.png";
+    if (certName.includes("データベース")) return "/database.png";
+    return null;
+  };
+
+  // アイコンマッピング (画像がない場合)
+  const getCertificationIcon = (certName: string) => {
+    if (certName.includes("AWS")) return "💻";
+    if (certName.includes("情報技術者")) return "🔍";
+    if (certName.includes("TensorFlow")) return "🧠";
+    if (certName.includes("データベース")) return "💾";
+    return "🏆";
+  };
+
   return (
     <ScrollReveal animation="fade" className="mt-8">
-      <div className="space-y-4 rounded-xl bg-gray-50 p-6">
+      <div className="space-y-6 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 p-6 shadow-md border border-purple-100">
         <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-          <Award className="h-5 w-5 text-purple-500" />
+          <Award className="h-5 w-5 text-purple-600" />
           資格・認定
         </h3>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {certifications.map((cert, index) => (
-            <div 
-              key={index} 
-              className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200"
-            >
-              <div className="font-medium text-gray-900">{cert.name}</div>
-              <div className="mt-1 text-xs text-gray-600">
-                <span>{cert.issuedBy}</span>
-                <span className="ml-2 rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-800">
-                  {cert.year}年
-                </span>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {certifications.map((cert, index) => {
+            const certImage = getCertificationImage(cert.name);
+            
+            return (
+              <div 
+                key={index} 
+                className="relative flex rounded-lg bg-white p-5 shadow-md hover:shadow-lg transition-all duration-300 ring-1 ring-purple-200 overflow-hidden"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    {certImage ? (
+                      <div className="flex-shrink-0">
+                        <img 
+                          src={certImage} 
+                          alt={cert.name} 
+                          className="h-14 w-14 object-contain rounded-lg"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-2xl flex-shrink-0" role="img" aria-label="Certificate">
+                        {getCertificationIcon(cert.name)}
+                      </span>
+                    )}
+                    <div className="font-medium text-gray-900 text-base">{cert.name}</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">{cert.issuedBy}</span>
+                    <span className="rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800">
+                      {cert.year}年
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </ScrollReveal>

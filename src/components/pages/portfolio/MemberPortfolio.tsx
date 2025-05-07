@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import type { MemberPortfolio } from "./membersPortfolioData";
+import type { MemberPortfolio } from "./portfolioTypes";
 import ProfileHeader from "./ProfileHeader";
 import SkillsSection from "./SkillsSection";
 import CareerSection from "./CareerSection";

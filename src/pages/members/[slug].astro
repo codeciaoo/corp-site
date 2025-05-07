@@ -1,8 +1,9 @@
 ---
 export const prerender = true;
 import Layout from "@/layouts/Layout.astro";
+import StandaloneLayout from "@/layouts/StandaloneLayout.astro";
 import Section from "@/components/shared/Section";
-import { memberPortfolios, getPortfolioBySlug } from "@/components/pages/portfolio/membersPortfolioData";
+import { memberPortfolios, getPortfolioBySlug, getAllMemberSlugs } from "@/components/pages/portfolio/data";
 import MemberPortfolio from "@/components/pages/portfolio/MemberPortfolio";
 
 // 静的生成用のパス定義
@@ -18,10 +19,31 @@ const { member } = Astro.props;
 
 // ページタイトル
 const pageTitle = `${member.name}のポートフォリオ`;
+
+// 環境変数でスタンドアロンモードを制御
+// ビルド時に STANDALONE=true を設定することでヘッダー/フッターなしになります
+const isStandalone = import.meta.env.STANDALONE === "true";
+
+// URLパラメータでスタンドアロンモードを制御（開発用）
+// ?standalone=true でヘッダー/フッターなしになります
+const urlParams = new URL(Astro.request.url).searchParams;
+const standaloneParam = urlParams.get('standalone');
+const isStandaloneFromUrl = standaloneParam === 'true';
+
+// Taharaの場合かつスタンドアロンモードが有効な場合に特殊レイアウトを使用
+const useStandaloneLayout = (member.slug === 'tahara' && (isStandalone || isStandaloneFromUrl));
 ---
 
-<Layout title={pageTitle}>
-  <Section bg="light">
-    <MemberPortfolio member={member} client:load />
-  </Section>
-</Layout>
+{useStandaloneLayout ? (
+  <StandaloneLayout title={pageTitle}>
+    <Section bg="light">
+      <MemberPortfolio member={member} client:load />
+    </Section>
+  </StandaloneLayout>
+) : (
+  <Layout title={pageTitle}>
+    <Section bg="light">
+      <MemberPortfolio member={member} client:load />
+    </Section>
+  </Layout>
+)}

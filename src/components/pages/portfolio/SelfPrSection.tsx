@@ -18,15 +18,22 @@ const SelfPrSection: React.FC<SelfPrSectionProps> = ({ content }) => {
       <h2 className="mb-6 text-2xl font-bold text-gray-900">自己PR</h2>
       
       <ScrollReveal animation="fade">
-        <div className="relative rounded-xl bg-gradient-to-br from-teal-50 to-blue-50 p-6 shadow-sm">
+        <div className="relative rounded-xl bg-gradient-to-br from-teal-50 to-blue-50 p-6 shadow-sm border border-teal-100">
           <div className="absolute -left-2 -top-2 text-teal-300">
             <MessageSquareQuote className="h-8 w-8" />
           </div>
           
-          <div className="mt-4 space-y-3 pl-2 text-gray-700">
+          <div className="mt-4 space-y-4 pl-2 text-gray-700">
             {content.split('\n').map((paragraph, index) => (
               <p key={index} className="leading-relaxed">
-                {paragraph}
+                {paragraph.startsWith('• ') ? (
+                  <span className="flex items-start">
+                    <span className="text-teal-500 mr-2 font-bold">•</span>
+                    <span>{paragraph.substring(2)}</span>
+                  </span>
+                ) : (
+                  paragraph
+                )}
               </p>
             ))}
           </div>

@@ -102,11 +102,9 @@ export const memberPortfolios: MemberPortfolio[] = [
 
     // 拡張情報
     slug: "tahara",
-    fullBio: "・慶應義塾大学卒業後、大手コンサルティング企業でPMO・アーキテクト職を経験\n・AWS/GCPでのKubernetesクラスタ管理と生成AIシステム開発が専門領域\n・金融・通信業界向けマイクロサービスアーキテクチャの実装に強み\n・RAG/LLMを活用した業務効率化ソリューションの設計・開発を推進\n・レガシーシステムのクラウドネイティブ移行など、エンタープライズ案件を多数牽引",
+    fullBio: "• 慶應義塾大学卒業後、ベイカレントコンサルティングでPMO・アーキテクト職を7年間経験\n• AWS/Terraform/CDKを使ったクラウドインフラ設計と自動化に精通（AWS SAP保有）\n• Kubernetes/Docker/ArgoCDによるクラウドネイティブ基盤構築のエキスパート\n• 生成AI（OpenAI/Gemini）とRAGを活用した業務効率化システム開発が得意\n• FastAPI/Djangoを使ったPythonバックエンド開発の実装レベル\n• 金融・通信・製造業向けマイクロサービスの設計・実装を多数主導",
 
     contactInfo: {
-      linkedin: "https://linkedin.com/in/tsubasa-tahara",
-      github: "https://github.com/tsubasa-tahara",
     },
     // 所属組織ロゴ
     organizationLogos: [
@@ -120,69 +118,64 @@ export const memberPortfolios: MemberPortfolio[] = [
       {
         category: "プロジェクトマネジメント",
         skills: [
-          { name: "ウォーターフォール開発", level: 5, years: 7 },
+          { name: "ウォーターフォール開発", level: 4, years: 7 },
           { name: "アジャイル/スクラム", level: 4, years: 5 },
-          { name: "要件定義", level: 5, years: 7 },
-          { name: "セキュリティ管理", level: 4, years: 4 },
+          { name: "要件定義・設計", level: 5, years: 7 },
         ]
       },
       {
         category: "クラウド/インフラ",
         skills: [
-          { name: "AWS", level: 5, years: 6 },
-          { name: "AWS CDK", level: 4, years: 4 },
-          { name: "GCP", level: 3, years: 2 },
-          { name: "Azure", level: 3, years: 2 },
+          { name: "AWS", level: 5, years: 7 },
+          { name: "AWS CDK", level: 4, years: 3 },
+          { name: "GCP", level: 2, years: 2 },
+          { name: "Azure", level: 1, years: 1 },
           { name: "Terraform", level: 4, years: 4 },
           { name: "Docker", level: 4, years: 5 },
-          { name: "Kubernetes", level: 4, years: 3 },
-          { name: "Istio", level: 4, years: 2 },
-          { name: "ArgoCD", level: 4, years: 2 },
-          { name: "Prometheus", level: 4, years: 3 },
-          { name: "Grafana", level: 4, years: 3 },
+          { name: "Kubernetes", level: 3, years: 3 },
+          { name: "ArgoCD", level: 2, years: 1 },
+          { name: "Prometheus", level: 2, years: 1 },
+          { name: "Grafana", level: 3, years: 3 },
         ]
       },
       {
         category: "フロントエンド開発",
         skills: [
-          { name: "JavaScript", level: 4, years: 5 },
-          { name: "TypeScript", level: 4, years: 4 },
-          { name: "React", level: 3, years: 3 },
-          { name: "Next.js", level: 3, years: 3 },
-          { name: "Vue.js", level: 3, years: 2 },
-          { name: "Svelte", level: 3, years: 1 },
-          { name: "Remix", level: 2, years: 1 },
-        ]
-      },
-      {
-        category: "AIシステム開発",
-        skills: [
-          { name: "LangChain", level: 4, years: 2 },
-          { name: "OpenAI", level: 5, years: 2 },
-          { name: "Gemini", level: 4, years: 1 },
-          { name: "Hugging Face", level: 3, years: 1 },
-          { name: "RAGシステム構築", level: 4, years: 2 },
+          { name: "JavaScript", level: 2, years: 4 },
+          { name: "TypeScript", level: 2, years: 4 },
+          { name: "React", level: 2, years: 4 },
+          { name: "Next.js", level: 2, years: 4 },
+          { name: "Vue.js", level: 1, years: 2 },
+          { name: "Remix", level: 1, years: 1 },
         ]
       },
       {
         category: "バックエンド開発",
         skills: [
-          { name: "Python", level: 5, years: 5 },
-          { name: "Django", level: 5, years: 5 },
-          { name: "FastAPI", level: 5, years: 5 },
-          { name: "Node.js", level: 4, years: 4 },
-          { name: "Express", level: 4, years: 4 },
-          { name: "Ruby on Rails", level: 3, years: 2 },
-          { name: "Laravel", level: 3, years: 2 },
-          { name: "TypeScript", level: 4, years: 4 },
-          { name: "MySQL", level: 4, years: 5 },
-          { name: "PostgreSQL", level: 4, years: 6 },
-          { name: "DynamoDB", level: 4, years: 3 },
-          { name: "Redis", level: 4, years: 3 },
-          { name: "MongoDB", level: 4, years: 3 },
-          { name: "Elasticsearch", level: 4, years: 3 },
-          { name: "Kibana", level: 4, years: 3 },
-          { name: "Fluentd", level: 4, years: 3 },
+          { name: "Python", level: 4, years: 7 },
+          { name: "Django", level: 4, years: 7 },
+          { name: "FastAPI", level: 4, years: 5 },
+          { name: "Node.js", level: 2, years: 2 },
+          { name: "Express", level: 2, years: 2 },
+          { name: "Ruby on Rails", level: 1, years: 1 },
+          { name: "Laravel", level: 2, years: 1 },
+          { name: "TypeScript", level: 3, years: 3 },
+          { name: "MySQL", level: 3, years: 3 },
+          { name: "PostgreSQL", level: 3, years: 7 },
+          { name: "DynamoDB", level: 3, years: 3 },
+          { name: "Redis", level: 3, years: 7 },
+          { name: "MongoDB", level: 2, years: 1 },
+        ]
+      },
+      {
+        category: "AIシステム開発",
+        skills: [
+          { name: "OpenAI", level: 3, years: 2 },
+          { name: "Gemini", level: 3, years: 2 },
+          { name: "LangChain", level: 3, years: 2 },
+          { name: "Pinecone", level: 3, years: 2 },
+          { name: "PyTorch", level: 2, years: 2 },
+          { name: "Hugging Face", level: 3, years: 2 },
         ]
       },
     ],
@@ -197,13 +190,13 @@ export const memberPortfolios: MemberPortfolio[] = [
       {
         company: "livepass株式会社",
         position: "プロジェクトマネージャー",
-        period: "2021年4月〜2024年1月",
+        period: "2022年4月〜2024年1月",
         description: "自社SaaSの開発及び、上場企業向けに受託開発や技術コンサルティングを担当"
       },
       {
         company: "株式会社ベイカレントコンサルティング",
         position: "ITコンサルタント",
-        period: "2016年4月〜2021年3月",
+        period: "2016年4月〜2022年3月",
         description: "官公庁や大手企業向けにITコンサルティングや要件定義、PMOを担当"
       },
     ],
@@ -236,7 +229,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         period: "2024年1月～2024年6月",
         projectContent: "Kubernetesベースのマルチテナントクラウドネイティブ基盤構築",
         role: {
-          position: "クラウドアーキテクト兼エンジニア",
+          position: "クラウドエンジニア",
           details: [
             "Terraformモジュール設計によるマルチクラウド環境(GCP/AWS)でのIaC実装",
             "マルチテナント&複数環境(開発/ステージング/本番)の一元管理体制の確立",
@@ -262,9 +255,8 @@ export const memberPortfolios: MemberPortfolio[] = [
           details: [
             "NestJS＋GraphQL＋Prismaを用いたサービスの設計・実装",
             "音声認識API連携→自動文字起こし→AI要約・VOC生成パイプラインにカスタムプロンプト管理を導入",
-            "Next.js＋TypeScriptフロントエンドで要約UI／AIチャットサイドバーを開発、Apollo Client／Zustandで状態管理",
-            "zod＋i18n対応の共通ライブラリを作成し、OpenAI（または独自AI基盤）へのプロンプト送信ロジックを抽象化",
-            "プロジェクト全体の進捗管理と機能設計"
+            "Next.js＋TypeScriptフロントエンドで要約UI/AIチャットサイドバーを開発、Apollo Client/Zustandで状態管理",
+            "zod＋i18n対応の共通ライブラリを作成し、OpenAIへのプロンプト送信ロジックを抽象化",
           ]
         },
         industry: "業界：ITサービス",
@@ -281,12 +273,11 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "PM兼エンジニア",
           details: [
-            "Laravel 11.x／PHP 8.3を用いた会計・請求・料金管理APIの設計・実装",
+            "PHP/Laravelを用いた会計・請求・料金管理APIの設計・実装",
             "ArtisanコマンドによるCSV一括インポート・トランケート処理の開発",
             "Maatwebsite Excel／PhpSpreadsheet／TCPDF／FPDIを組み合わせたExcel・PDF帳票出力機能の実装",
             "Docker（nginx、PHP-FPM、MySQL、Fluent Bit）環境の構築",
-            "Terraformを活用し、ALB/ECS/Aurora/API Gateway/Lambda等のAWSリソースをモジュール化して開発・運用環境をコード管理",
-            "30以上の再利用可能なモジュールを設計・実装し、インフラの標準化と運用効率化を推進",
+            "Terraformを活用し、ALB/ECS/Aurora/API Gateway/Lambda等のAWSリソースをモジュール化",
             "Python/ShellスクリプトでDBスキーマやデータのダンプ・リストアを自動化し、移行・運用フローを最適化",
             "AWS CodeBuild/CodePipelineによるCI/CDパイプラインを構築し、Dev/Stg/Prod各環境への継続的デプロイとクロスアカウント運用を実現"
           ]
@@ -316,7 +307,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         scale: "開発チーム2名、全体2名",
         technologies: [
           "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
-          "Hugging Face", "PyTorch"
+          "Hugging Face"
         ]
       },
       {
@@ -337,7 +328,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：建設",
         scale: "開発チーム5名、全体5名",
         technologies: [
-          "Next.js", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify",
+          "Remix", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify",
           "DynamoDB", "Lambda", "GitHub Actions", "Jest", "Playwright"
         ]
       },
@@ -348,7 +339,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "PM兼エンジニア",
           details: [
-            "不動産ポータルサイトのEC2(t3.large×6台)からECS Fargateへのインフラ基盤移行",
+            "不動産ポータルサイトのEC2(m5.large×4台)からECS Fargateへのインフラ基盤移行",
             "AWS CloudFormationとCDKを組み合わせたIaCによる環境構築の自動化",
             "CodePipeline/CodeBuild/CodeDeployによるCI/CDパイプラインの構築",
             "ALBとRoute53を活用したブルーグリーンデプロイの導入によりダウンタイムを30分→5分に短縮",
@@ -360,7 +351,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         scale: "開発チーム2名、全体2名",
         technologies: [
           "AWS", "ECS", "Fargate", "EC2", "Docker", "CloudFormation", "CDK", "CodePipeline", "CodeBuild",
-          "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "AquaSecurity", "IAM", "ALB"
+          "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "IAM", "ALB"
         ]
       },
       {
@@ -391,14 +382,10 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "PM兼エンジニア",
           details: [
-            "ユーザーストーリーの作成",
-            "メンバー向け開発issueの作成と進捗管理",
+            "ユーザーストーリーの作成とメンバー向け開発issueの作成と進捗管理",
             "AWS CDKを用いたインフラ構築/管理",
-            "個人事業用のOA環境をIaaCプシンで自動生成できる仕組みを構築",
-            "Djangoマイグレーション",
-            "プランチ運用の改善及びメンバーへの定着支援",
-            "AIを活用したデータモデルを複数人が同時に改修することによるコンフリクトを解消するために",
-            "複数バッチのバグ改修",
+            "バックエンドAPIの開発",
+            "pandasを用いた登記簿情報投入のスクリプト作成",
             "ローカルで実行していたバッチをFargateで実行できるように改修"
           ]
         },
@@ -416,18 +403,17 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "エンジニア",
           details: [
-            "PineconeとOpenAI Embeddings APIを組み合わせたベクトル検索システムの設計・実装、動画メタデータの効率的なインデクシング処理の開発",
-            "自然言語クエリの最適化処理とPythonバックエンドでの類似度スコアリングアルゴリズムの実装、検索精度向上のための調整",
-            "SvelteKitとTypeScriptによるフロントエンド実装、Prisma ORM/PostgreSQLでの動画メタデータとユーザー履歴の永続化処理",
-            "OpenAI TTSを活用した検索結果の音声フィードバック機能の実装、UXを向上させるためのストリーミングレスポンス処理の最適化",
-            "Vercelを用いたCI/CDパイプラインの構築とServerless Functionsによるバックエンド処理の最適化、本番環境のパフォーマンス監視と改善"
+            "PineconeとOpenAI Embeddings APIを組み合わせたベクトル検索システムの設計・実装",
+            "SvelteKitとTypeScriptによるフロントエンド実装",
+            "OpenAI TTSを活用した検索結果の音声フィードバック機能の実装",
+            "Vercelを用いたCI/CDパイプラインの構築とServerless Functionsによるバックエンド処理の最適化"
           ]
         },
         industry: "業界：通信",
         scale: "開発チーム2名、全体4名",
         technologies: [
           "Svelte Kit", "TypeScript", "Python", "PostgreSQL", "Prisma",
-          "Pinecone", "OpenAI API", "OpenAI TTS", "langchain", "Vercel",
+          "Pinecone", "OpenAI", "OpenAI TTS", "langchain", "Vercel",
           "GitHub", "Notion", "Serverless Functions", "Redis"
         ]
       },
@@ -438,17 +424,18 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "エンジニア",
           details: [
-            "ReactとTypeScriptを使用したKintoneプラグインの設計・実装、SMS APIとの連携による顧客向けメッセージ送信機能の開発",
+            "ReactとTypeScriptを使用したKintoneプラグインの設計・実装",
+            "SMS APIとの連携による顧客向けメッセージ送信機能の開発",
             "Kintone REST API Client/Webpack/Babelを使用したモジュール構成とビルドパイプラインの構築",
             "Kintoneレコード情報の取得・加工ロジックとSMS APIエラーハンドリングの実装、送信履歴の自動保存機能の開発",
-            "ユーザー側の操作性を考慮したUIデザイン設計とステータス管理機能の実装、ReactカスタムHooksによる状態管理の最適化",
+            "ユーザー側の操作性を考慮したUIデザイン設計とステータス管理機能の実装",
             "クライアント環境でのE2Eテスト実施とプラグイン導入マニュアル、管理者向け設定ガイドの作成"
           ]
         },
         industry: "業界：通信",
         scale: "開発チーム1名、全体3名",
         technologies: [
-          "Kintone", "React", "TypeScript", "Webpack", "REST API", "SMS API", "Jest", "ESLint"
+          "Kintone", "React", "TypeScript", "Webpack"
         ]
       },
       {
@@ -576,7 +563,7 @@ export const memberPortfolios: MemberPortfolio[] = [
       }
     ],
 
-    selfPr: "私はこれまでの経験からビジネスと技術の橋渡しとして、要素を効果的にシステムに落とし込む力を持っています。\n開発者としてのスキルもあり、具体的な実装や課題がスムーズに行えます。プロジェクトの成功を第一に重要な仕事と位置づけており、最善の手法を選択して取り組んでいます。"
+    selfPr: "• ビジネス要件を技術で解決するコンサルタント経験と、手を動かせるエンジニアとしての両面を持ち合わせています\n• プロジェクトマネジメントスキル（ウォーターフォール/アジャイル）とクラウドアーキテクチャ設計の知見を活かし、要件定義から実装までをワンストップで提供できます\n• 7年間培ったエンタープライズ向け大規模システム開発の経験と、最新のAI技術への知見を組み合わせ、企業のDX推進を支援します\n• お客様のビジネス成果を最優先に考え、コストと価値のバランスを重視した最適なソリューションを提案します"
   },
   {
     // 一ノ瀬氏のデータ
@@ -607,7 +594,6 @@ export const memberPortfolios: MemberPortfolio[] = [
     fullBio: "専門学校卒業後、製造業での現場経験を活かしながらWebシステム開発に従事。現場の課題を解決するためのシステム開発経験を積み、多くのWebアプリケーションやモバイルアプリの開発プロジェクトに携わる。フロントエンド技術に精通し、特にReactとTypeScriptを用いたモダンな開発手法に強みを持つ。",
 
     contactInfo: {
-      github: "https://github.com/eita-ichinose",
     },
 
     detailedSkills: [
@@ -793,9 +779,6 @@ export const memberPortfolios: MemberPortfolio[] = [
     fullBio: "大学卒業後、システム開発会社でバックエンド開発のキャリアをスタート。公共機関向けシステムや不動産データ分析サービスの開発を経験後、個人でのサブスクリプションWebアプリ開発に成功。Python/FastAPIを用いたバックエンド開発と機械学習/AIを活用したシステム開発が専門。特に近年は生成AIを活用したシステム開発に注力している。",
 
     contactInfo: {
-      linkedin: "https://linkedin.com/in/yuta-akiyama",
-      github: "https://github.com/yuta-akiyama",
-      twitter: "https://twitter.com/yuta_akiyama_dev",
     },
 
     detailedSkills: [

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, ExternalLink } from "lucide-react";
 import { membersContent } from "./membersContent";
-import { memberPortfolios } from "../portfolio/membersPortfolioData";
+import { memberPortfolios, getPortfolioByName } from "../portfolio/data";
 
 // Types
 interface MediaItem {
@@ -54,17 +54,9 @@ const MemberCard: React.FC<MemberCardProps> = ({
   hasDetailPage = false,
 }) => {
   // ポートフォリオページが存在するかチェック
-  const hasMemberPortfolio = memberPortfolios.some(
-    portfolio => portfolio.name === member.name
-  );
-  
-  // メンバースラッグの取得
-  const getSlug = () => {
-    const portfolio = memberPortfolios.find(p => p.name === member.name);
-    return portfolio ? portfolio.slug : undefined;
-  };
-
-  const memberSlug = getSlug();
+  const portfolio = getPortfolioByName(member.name);
+  const hasMemberPortfolio = !!portfolio;
+  const memberSlug = portfolio?.slug;
   const showDetailLink = hasDetailPage || hasMemberPortfolio;
 
   return (
