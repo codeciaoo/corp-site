@@ -195,7 +195,28 @@ export const taharaPortfolio: MemberPortfolio = {
     },
     {
       id: "project2",
-      period: "2024年7月～2024年12月",
+      period: "2024年9月～2025年12月",
+      projectContent: "RAG・生成AI活用による製造現場の安全管理システム開発",
+      role: {
+        position: "PM兼エンジニア",
+        details: [
+          "製造業のお客様向けにRAGと生成AIを活用した安全管理システムのPOC開発",
+          "ハイブリッド検索（ベクトル＋キーワード）による検索精度の向上",
+          "クロスエンコーダーとLLMリランキングを組み合わせた高精度な情報抽出システムの実装",
+          "生成AIによる現場状況に応じた安全アドバイスの提供",
+          "プロジェクト全体の進捗管理とクライアントコミュニケーション"
+        ]
+      },
+      industry: "業界：製造",
+      scale: "開発チーム3名、全体5名",
+      technologies: [
+        "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
+        "Hugging Face"
+      ]
+    },
+    {
+      id: "project3",
+      period: "2024年8月～2025年3月",
       projectContent: "業務管理システムのアプリ・インフラ構築",
       role: {
         position: "エンジニア",
@@ -217,29 +238,8 @@ export const taharaPortfolio: MemberPortfolio = {
       ]
     },
     {
-      id: "project3",
-      period: "2024年7月～2024年12月",
-      projectContent: "RAG・生成AI活用による製造現場の安全管理システム開発",
-      role: {
-        position: "PM兼エンジニア",
-        details: [
-          "製造業のお客様向けにRAGと生成AIを活用した安全管理システムのPOC開発",
-          "ハイブリッド検索（ベクトル＋キーワード）による検索精度の向上",
-          "クロスエンコーダーとLLMリランキングを組み合わせた高精度な情報抽出システムの実装",
-          "生成AIによる現場状況に応じた安全アドバイスの提供",
-          "プロジェクト全体の進捗管理とクライアントコミュニケーション"
-        ]
-      },
-      industry: "業界：製造",
-      scale: "開発チーム3名、全体5名",
-      technologies: [
-        "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
-        "Hugging Face"
-      ]
-    },
-    {
       id: "project4",
-      period: "2024年2月～2024年8月",
+      period: "2024年6月～2024年9月",
       projectContent: "建設現場DXプラットフォームの開発",
       role: {
         position: "PM兼エンジニア",
@@ -261,7 +261,7 @@ export const taharaPortfolio: MemberPortfolio = {
     },
     {
       id: "project5",
-      period: "2023年9月～2023年12月",
+      period: "2024年6月～2024年9月",
       projectContent: "EC2からECSへの移行プロジェクト",
       role: {
         position: "PM兼エンジニア",
@@ -390,12 +390,12 @@ export const taharaPortfolio: MemberPortfolio = {
       industry: "業界：金融/医療/通信",
       scale: "チーム3-10名、全体1000名",
       technologies: [
-        "Python", "Django", "Java", "Spring Boot", "React", "TypeScript", 
+        "Python", "Django", "Java", "Spring Boot", "React", "TypeScript",
         "Webpack", "AWS", "PostgreSQL", "Redis", "GitHub", "Circle CI",
         "MySQL", "Kintone", "Datadog", "CloudWatch", "CloudFormation"
       ]
     }
   ],
 
-  selfPr: "• ビジネス要件を技術で解決するコンサルタント経験と、手を動かせるエンジニアとしての両面を持ち合わせています\n• プロジェクトマネジメントスキル（ウォーターフォール/アジャイル）とクラウドアーキテクチャ設計の知見を活かし、要件定義から実装までをワンストップで提供できます\n• 7年間培ったエンタープライズ向け大規模システム開発の経験と、最新のAI技術への知見を組み合わせ、企業のDX推進を支援します\n• お客様のビジネス成果を最優先に考え、コストと価値のバランスを重視した最適なソリューションを提案します"
+  selfPr: "• ビジネス要件を技術で解決するコンサルタント経験と、手を動かせるエンジニアとしての両面を持ち合わせています\n• プロジェクトマネジメントスキル（ウォーターフォール/アジャイル）とクラウドアーキテクチャ設計の知見を活かし、要件定義から実装までをワンストップで提供できます\n• 7年間培ったエンタープライズ向け大規模システム開発の経験と、最新のAI技術への知見を組み合わせ、企業のDX推進を支援します\n• お客様のビジネス成果を最優先に考え、コストと価値のバランスを重視した最適なソリューションを提案します\n• AWS CDK/Terraformを用いたIaCによる自動化とコンテナベースのマイクロサービスアーキテクチャ設計が得意です\n• RAG(検索拡張生成)とLLMを組み合わせた業務特化型AIシステムの設計・開発経験が豊富です"
 };
