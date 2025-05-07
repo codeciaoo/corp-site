@@ -29,7 +29,7 @@ export const taharaPortfolio: MemberPortfolio = {
 
   // 拡張情報
   slug: "tahara",
-  fullBio: "• 慶應義塾大学卒業後、ベイカレントコンサルティングでPMO・アーキテクト職を7年間経験\n• AWS/Terraform/CDKを使ったクラウドインフラ設計と自動化に精通（AWS SAP保有）\n• Docker/Kubernetesによるクラウドネイティブ基盤構築のエキスパート\n• 生成AI（OpenAI/Gemini）とRAGを活用した業務効率化システム開発が得意\n• FastAPI/Djangoを使ったPythonバックエンド開発\n• 金融・通信・製造業向けマイクロサービスの設計・実装を多数主導",
+  fullBio: "• 慶應義塾大学卒業後、ベイカレントコンサルティングでPMO・アーキテクト職を7年間経験\n• AWS/Terraform/CDKを使ったクラウドインフラ設計と自動化に精通（AWS SAP保有）\n• 生成AI（OpenAI/Gemini）とRAGを活用した業務効率化システム開発が得意\n• FastAPI/Djangoを使ったPythonバックエンド開発\n• 金融・通信・製造業向けマイクロサービスの設計・実装を多数主導",
 
   contactInfo: {},
 
