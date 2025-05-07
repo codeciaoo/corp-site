@@ -3,6 +3,8 @@ import { Clock, Building, Users } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import TechStackDisplay from "./TechStackDisplay";
+import type { TechInfo } from "./TechStackDisplay";
 
 export interface ProjectInfoCardProps {
   /**
@@ -32,7 +34,7 @@ export interface ProjectInfoCardProps {
   /**
    * テクノロジースタック
    */
-  technologies?: Array<{name: string; description?: string; icon?: string}>;
+  technologies?: TechInfo[];
   /**
    * 追加のクラス名
    */
@@ -49,6 +51,7 @@ const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({
   team,
   summary,
   content,
+  technologies,
   className,
 }) => {
   return (
@@ -112,6 +115,13 @@ const ProjectInfoCard: React.FC<ProjectInfoCardProps> = ({
             <div 
               className="prose prose-blue max-w-none prose-h2:text-base prose-h2:font-semibold prose-h2:text-blue-700 prose-h2:border-b prose-h2:border-blue-200 prose-h2:pb-1"
               dangerouslySetInnerHTML={{ __html: content }} 
+            />
+          )}
+          
+          {technologies && technologies.length > 0 && (
+            <TechStackDisplay 
+              technologies={technologies} 
+              className="mt-6 pt-4 border-t border-gray-100"
             />
           )}
         </CardContent>

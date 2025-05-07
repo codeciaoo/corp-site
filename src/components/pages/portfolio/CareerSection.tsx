@@ -59,34 +59,34 @@ const CareerItemComponent: React.FC<{
       delay={0.1 * index}
       className="mb-4 last:mb-0"
     >
-      <Card className="overflow-hidden border-l-4 border-teal-400">
+      <Card className="overflow-hidden border-l-4 border-teal-400 shadow-sm">
         <CardContent className="p-0">
-          <div className="flex flex-col p-4 md:flex-row md:p-5">
+          <div className="flex flex-col p-4 gap-3 md:flex-row md:items-center md:p-5 md:gap-6">
             <div className="mb-3 w-full text-left md:mb-0 md:w-1/3">
-              <div className="flex items-center gap-2 font-semibold text-teal-700">
-                <Building className="h-4 w-4" />
+              <div className="flex items-center gap-2 font-semibold text-teal-700 text-base">
+                <Building className="h-5 w-5" />
                 {item.position}
               </div>
-              <div className="mt-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <div className="mt-3 flex items-center gap-3 text-base font-semibold text-gray-800">
                 {organizationLogos && (
                   (() => {
                     const logo = organizationLogos.find(l =>
                       item.company.includes(l.alt) || l.alt.includes(item.company)
                     );
                     return logo ? (
-                      <img src={logo.src} alt={logo.alt} className="h-4 w-auto" />
+                      <img src={logo.src} alt={logo.alt} className="h-12 w-auto max-w-[48px] object-contain mr-1" />
                     ) : null;
                   })()
                 )}
                 {item.company}
               </div>
               <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-                <Calendar className="h-3 w-3" />
+                <Calendar className="h-4 w-4" />
                 {item.period}
               </div>
             </div>
-            <div className="flex-1 text-sm text-gray-600 md:border-l md:border-gray-200 md:pl-5">
-              {item.description}
+            <div className="flex-1 text-gray-700 md:border-l md:border-gray-200 md:pl-6 md:pr-2">
+              <p className="leading-relaxed text-base">{item.description}</p>
             </div>
           </div>
         </CardContent>
@@ -113,30 +113,30 @@ const EducationItemComponent: React.FC<{
       delay={0.1 * index}
       className="mb-4 last:mb-0"
     >
-      <Card className="border-l-4 border-blue-400">
+      <Card className="border-l-4 border-blue-400 shadow-sm">
         <CardContent className="p-0">
-          <div className="flex flex-col p-4 md:flex-row md:p-5">
+          <div className="flex flex-col p-4 gap-3 md:flex-row md:items-center md:p-5 md:gap-6">
             <div className="mb-3 w-full md:mb-0 md:w-1/3">
-            <div className="flex items-center gap-2 font-semibold text-blue-700">
+            <div className="flex items-center gap-3 font-semibold text-blue-700 text-base">
               {(() => {
                 const logo = organizationLogos?.find(l =>
                   item.institution.includes(l.alt) || l.alt.includes(item.institution)
                 );
                 return logo ? (
-                  <img src={logo.src} alt={logo.alt} className="h-4 w-auto" />
+                  <img src={logo.src} alt={logo.alt} className="h-12 w-auto max-w-[48px] object-contain mr-1" />
                 ) : (
-                  <GraduationCap className="h-4 w-4" />
+                  <GraduationCap className="h-5 w-5" />
                 );
               })()}
               {item.institution}
             </div>
               <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-                <Calendar className="h-3 w-3" />
+                <Calendar className="h-4 w-4" />
                 {item.period}
               </div>
             </div>
-            <div className="flex-1 text-sm text-gray-600 md:border-l md:border-gray-200 md:pl-5">
-              {item.degree}
+            <div className="flex-1 text-gray-700 md:border-l md:border-gray-200 md:pl-6 md:pr-2">
+              <p className="leading-relaxed text-base">{item.degree}</p>
             </div>
           </div>
         </CardContent>

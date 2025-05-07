@@ -113,7 +113,7 @@ export const memberPortfolios: MemberPortfolio[] = [
       { src: "/keio.png", alt: "慶應義塾大学" },
       { src: "/baycurrent.png", alt: "ベイカレントコンサルティング" },
       { src: "/livepass.png", alt: "livepass株式会社" },
-      { src: "/corp_logo.png", alt: "CodeCiao株式会社" },
+      { src: "/codeciao_new.png", alt: "CodeCiao株式会社" },
     ],
 
     detailedSkills: [
@@ -138,10 +138,8 @@ export const memberPortfolios: MemberPortfolio[] = [
           { name: "Kubernetes", level: 4, years: 3 },
           { name: "Istio", level: 4, years: 2 },
           { name: "ArgoCD", level: 4, years: 2 },
-          { name: "GitOps", level: 4, years: 2 },
           { name: "Prometheus", level: 4, years: 3 },
           { name: "Grafana", level: 4, years: 3 },
-          { name: "Elasticsearch", level: 3, years: 2 },
         ]
       },
       {
@@ -180,6 +178,11 @@ export const memberPortfolios: MemberPortfolio[] = [
           { name: "MySQL", level: 4, years: 5 },
           { name: "PostgreSQL", level: 4, years: 6 },
           { name: "DynamoDB", level: 4, years: 3 },
+          { name: "Redis", level: 4, years: 3 },
+          { name: "MongoDB", level: 4, years: 3 },
+          { name: "Elasticsearch", level: 4, years: 3 },
+          { name: "Kibana", level: 4, years: 3 },
+          { name: "Fluentd", level: 4, years: 3 },
         ]
       },
     ],
@@ -200,7 +203,7 @@ export const memberPortfolios: MemberPortfolio[] = [
       {
         company: "株式会社ベイカレントコンサルティング",
         position: "ITコンサルタント",
-        period: "2018年4月〜2021年3月",
+        period: "2016年4月〜2021年3月",
         description: "官公庁や大手企業向けにITコンサルティングや要件定義、PMOを担当"
       },
     ],
@@ -209,7 +212,7 @@ export const memberPortfolios: MemberPortfolio[] = [
       {
         institution: "慶應義塾大学",
         degree: "商学部 卒業",
-        period: "2014年4月〜2018年3月"
+        period: "2012年4月〜2016年3月"
       }
     ],
 
@@ -220,14 +223,9 @@ export const memberPortfolios: MemberPortfolio[] = [
         year: 2022
       },
       {
-        name: "情報処理安全確保支援士",
+        name: "応用情報技術者試験",
         issuedBy: "IPA",
-        year: 2021
-      },
-      {
-        name: "PMP",
-        issuedBy: "Project Management Institute",
-        year: 2020
+        year: 2019
       }
     ],
 
@@ -240,18 +238,18 @@ export const memberPortfolios: MemberPortfolio[] = [
         role: {
           position: "クラウドアーキテクト兼エンジニア",
           details: [
-            "Terraformモジュール設計によるマルチクラウド環境(GCP/AWS)でのIaC実装と複数環境(開発/ステージング/本番)の一元管理体制の確立",
-            "GoogleのGKEとAWSのEKSにおけるKubernetesクラスタ設計・運用、Istioを用いたサービスメッシュアーキテクチャによるゼロトラスト実現",
-            "ArgoCDとGitHub Actionsを組み合わせたGitOpsデプロイパイプラインの構築およびSealed Secretsによる機密情報保護の実装",
+            "Terraformモジュール設計によるマルチクラウド環境(GCP/AWS)でのIaC実装",
+            "マルチテナント&複数環境(開発/ステージング/本番)の一元管理体制の確立",
+            "GoogleのGKEとAWSのEKSにおけるKubernetesクラスタ設計・運用",
+            "ArgoCDとGitHub Actionsを組み合わせたGitOpsデプロイパイプラインの構築",
             "EKS環境でのElasticsearch/Kibana/Fluentdによる分散ログ収集基盤とPrometheus/Grafanaによる監視体制の整備",
-            "マルチテナント型エンタープライズ知識検索サービスのコンテナ化と自動スケーリング、マイクロサービス間通信の最適化設計"
           ]
         },
         industry: "業界：ITサービス/SaaS",
-        scale: "開発チーム4名、全体8名",
+        scale: "開発チーム5名、全体10名",
         technologies: [
-          "Kubernetes", "GKE", "EKS", "Terraform", "Istio", "ArgoCD", "Sealed Secrets", 
-          "Elasticsearch", "Kibana", "Fluentd", "Prometheus", "Grafana", "GitOps", 
+          "Kubernetes", "GKE", "EKS", "Terraform", "Istio", "ArgoCD", "Sealed Secrets",
+          "Elasticsearch", "Kibana", "Fluentd", "Prometheus", "Grafana", "GitOps",
           "Docker", "AWS", "GCP", "GitHub Actions"
         ]
       },
@@ -260,9 +258,9 @@ export const memberPortfolios: MemberPortfolio[] = [
         period: "2024年4月～2024年8月",
         projectContent: "AI搭載コールセンター向けCRMプラットフォームの開発",
         role: {
-          position: "PM兼エンジニア",
+          position: "エンジニア",
           details: [
-            "NestJS＋GraphQL＋Prismaを用いたCXM／Assist各マイクロサービスの設計・実装",
+            "NestJS＋GraphQL＋Prismaを用いたサービスの設計・実装",
             "音声認識API連携→自動文字起こし→AI要約・VOC生成パイプラインにカスタムプロンプト管理を導入",
             "Next.js＋TypeScriptフロントエンドで要約UI／AIチャットサイドバーを開発、Apollo Client／Zustandで状態管理",
             "zod＋i18n対応の共通ライブラリを作成し、OpenAI（または独自AI基盤）へのプロンプト送信ロジックを抽象化",
@@ -272,7 +270,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：ITサービス",
         scale: "開発チーム6名、全体10名",
         technologies: [
-          "NestJS", "GraphQL", "Prisma", "Next.js", "TypeScript", "OpenAI API", 
+          "NestJS", "GraphQL", "Prisma", "Next.js", "TypeScript", "OpenAI",
           "Apollo Client", "Zustand", "zod", "Docker", "AWS"
         ]
       },
@@ -296,7 +294,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：金融",
         scale: "開発チーム5名、全体8名",
         technologies: [
-          "Laravel", "PHP", "MySQL", "Docker", "Terraform", "AWS", "ECS", "Aurora", 
+          "Laravel", "PHP", "MySQL", "Docker", "Terraform", "AWS", "ECS", "Aurora",
           "API Gateway", "Lambda", "Python", "CodeBuild", "CodePipeline"
         ]
       },
@@ -317,7 +315,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：製造",
         scale: "開発チーム2名、全体2名",
         technologies: [
-          "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain", 
+          "Gemini", "GCP", "Cloud Run", "Pinecone", "Python", "Langchain",
           "Hugging Face", "PyTorch"
         ]
       },
@@ -339,7 +337,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：建設",
         scale: "開発チーム5名、全体5名",
         technologies: [
-          "Next.js", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify", 
+          "Next.js", "Nest.js", "React", "TypeScript", "PWA", "AWS Amplify",
           "DynamoDB", "Lambda", "GitHub Actions", "Jest", "Playwright"
         ]
       },
@@ -361,7 +359,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：不動産",
         scale: "開発チーム2名、全体2名",
         technologies: [
-          "AWS", "ECS", "Fargate", "EC2", "Docker", "CloudFormation", "CDK", "CodePipeline", "CodeBuild", 
+          "AWS", "ECS", "Fargate", "EC2", "Docker", "CloudFormation", "CDK", "CodePipeline", "CodeBuild",
           "CodeDeploy", "Route53", "ECR", "CloudWatch", "Datadog", "AquaSecurity", "IAM", "ALB"
         ]
       },
@@ -382,7 +380,7 @@ export const memberPortfolios: MemberPortfolio[] = [
         industry: "業界：通信",
         scale: "開発チーム2名、全体2名",
         technologies: [
-          "AWS", "Terraform", "IaC", "AWS Organizations", "SSO", 
+          "AWS", "Terraform", "IaC", "AWS Organizations", "SSO",
           "GitHub Actions", "CI/CD", "CloudWatch", "S3", "Lambda"
         ]
       },

@@ -36,15 +36,21 @@ import {
   // バックエンド
   SiExpress, SiNestjs, SiSpring, SiRubyonrails, SiLaravel, SiGraphql,
   
-  // DevOps
+  // DevOps関連
   SiOctopusdeploy, SiCloud66, SiDigitalocean, SiVagrant, SiElastic,
+  SiIstio, SiPrometheus, SiGrafana, SiElasticsearch, SiKibana,
+  SiFluentd, SiDatadog,
+  
+  // コミュニケーションツール
+  SiSlack, SiFigma, SiNotion, SiDiscord, SiZoom,
   
   // その他
   SiWebpack
 } from "react-icons/si";
 
 // AWS専用アイコンが不足しているものは AWSアイコン + サービス名 で対応
-import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt, FaWindows, FaCode, FaTasks, FaSitemap, FaUserCog, FaTools, FaTerminal } from "react-icons/fa";
+import { FaAws, FaQuestion, FaDatabase, FaServer, FaBrain, FaRobot, FaGoogle, FaLink, FaDocker, FaNetworkWired, FaCodeBranch, FaTheaterMasks, FaShieldAlt, FaFileAlt, FaClipboardList, FaProjectDiagram, FaCloudversify, FaGitAlt, FaWindows, FaCode, FaTasks, FaSitemap, FaUserCog, FaTools, FaTerminal, FaVideo, FaUsers, FaCat } from "react-icons/fa";
+import { FaFileWord, FaFileExcel, FaFilePowerpoint, FaEnvelope } from "react-icons/fa";
 import { VscCode } from "react-icons/vsc";
 import { IoCloudOutline } from "react-icons/io5";
 import { BsKanban, BsCodeSlash } from "react-icons/bs";
@@ -59,11 +65,16 @@ const ICON_MAP: Record<string, React.ElementType> = {
   next: SiNextdotjs,
   nextjs: SiNextdotjs,
   "next.js": SiNextdotjs,
+  nuxt: SiVuedotjs,
+  nuxtjs: SiVuedotjs,
+  "nuxt.js": SiVuedotjs,
   vue: SiVuedotjs,
   vuejs: SiVuedotjs,
   "vue.js": SiVuedotjs,
   angular: SiAngular,
   svelte: SiSvelte,
+  sveltekit: SiSvelte,
+  "svelte kit": SiSvelte,
   astro: SiAstro,
   remix: FaCode,
   tailwind: SiTailwindcss,
@@ -156,6 +167,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "aws cloudwatch": FaAws,
   cloudfront: FaAws,
   "aws cloudfront": FaAws,
+  "api gateway": FaNetworkWired,
+  "apigateway": FaNetworkWired,
+  "aws api gateway": FaNetworkWired,
+  "aws apigateway": FaNetworkWired,
   route53: SiAmazonroute53,
   "aws route53": SiAmazonroute53,
   iam: SiAmazoniam,
@@ -188,6 +203,15 @@ const ICON_MAP: Record<string, React.ElementType> = {
   docker: SiDocker,
   kubernetes: SiKubernetes,
   k8s: SiKubernetes,
+  gke: SiGooglecloud,
+  amazon_eks: SiAmazoneks,
+  eks: SiAmazoneks,
+  "google kubernetes engine": SiGooglecloud,
+  istio: SiIstio,
+  "sealed secrets": FaShieldAlt,
+  "bitnami sealed secrets": FaShieldAlt,
+  "sealed-secrets": FaShieldAlt,
+  datadog: SiDatadog,
   github: SiGithub,
   "github actions": SiGithubactions,
   terraform: SiTerraform,
@@ -243,23 +267,66 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "aws codebuild": FaCodeBranch,
   codedeploy: FaCodeBranch,
   "aws codedeploy": FaCodeBranch,
+  argocd: FaGitAlt,
+  "argo cd": FaGitAlt,
+  gitops: FaGitAlt,
+  "git ops": FaGitAlt,
   
   // エディタ・IDE
   vscode: VscCode,
   "visual studio code": VscCode,
+  
+  // オフィスツール
+  "microsoft office": FaWindows,
+  "office": FaWindows,
+  "word": FaFileWord,
+  "microsoft word": FaFileWord,
+  "excel": FaFileExcel,
+  "microsoft excel": FaFileExcel,
+  "powerpoint": FaFilePowerpoint,
+  "microsoft powerpoint": FaFilePowerpoint,
+  "ppt": FaFilePowerpoint,
+  "outlook": FaEnvelope,
+  "microsoft outlook": FaEnvelope,
+  "onenote": FaFileAlt,
+  "microsoft onenote": FaFileAlt,
+  
+  // コミュニケーションツール
+  "slack": SiSlack,
+  "figma": SiFigma,
+  "notion": SiNotion,
+  "discord": SiDiscord,
+  "zoom": SiZoom,
+  "teams": FaUsers,
+  "microsoft teams": FaUsers,
+  
+  // Webサーバー
+  "tomcat": FaCat,
+  "apache tomcat": FaCat,
   
   // その他ツール
   webpack: SiWebpack,
   vagrant: SiVagrant,
   graphql: SiGraphql,
   elastic: SiElastic,
-  elasticsearch: SiElastic,
+  elasticsearch: SiElasticsearch,
+  kibana: SiKibana,
+  fluentd: SiFluentd,
+  "fluentbit": SiFluentd,
+  "fluent-bit": SiFluentd,
+  prometheus: SiPrometheus,
+  grafana: SiGrafana,
   octopus: SiOctopusdeploy,
   "cloud 66": SiCloud66,
   jest: SiJest,
   playwright: FaTheaterMasks, // Playwright doesn't have a specific icon, using theater masks as an alternative
   pwa: SiPwa,
   "progressive web app": SiPwa,
+  
+  // 業務システム
+  kintone: FaDatabase,
+  "kintone plugin": FaDatabase,
+  "kintoneプラグイン": FaDatabase,
   
   // プロジェクトマネジメント関連
   "プロジェクトマネジメント": FaSitemap,

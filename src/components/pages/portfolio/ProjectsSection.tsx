@@ -16,8 +16,17 @@ export interface ProjectEntry {
     position: string;
     details: string[];
   };
+  /**
+   * 業界/クライアント情報
+   */
   industry: string;
+  /**
+   * プロジェクト規模/チーム構成
+   */
   scale: string;
+  /**
+   * 使用技術リスト
+   */
   technologies: string[];
 }
 
@@ -40,23 +49,7 @@ const generateRoleDetailsHtml = (position: string, details: string[]): string =>
   `;
 };
 
-/**
- * HTML形式の技術スタックを生成
- */
-const generateTechnologiesHtml = (technologies: string[]): string => {
-  return `
-    <h2>使用技術</h2>
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-      ${technologies.map(tech => `
-        <span style="display: inline-flex; align-items: center; border-radius: 9999px; 
-        background-color: rgba(236, 254, 255, 1); color: rgba(8, 145, 178, 1); font-size: 0.75rem; 
-        font-weight: 500; padding: 0.25rem 0.75rem;">
-          ${tech}
-        </span>
-      `).join('')}
-    </div>
-  `;
-};
+// 技術スタックはTechStackDisplayコンポーネントで表示するため、HTML生成関数は不要になりました
 
 /**
  * 技術名の配列をTechInfo配列に変換
@@ -90,10 +83,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
               duration={project.period}
               client={project.industry}
               team={project.scale}
-              content={`
-                ${generateRoleDetailsHtml(project.role.position, project.role.details)}
-                ${generateTechnologiesHtml(project.technologies)}
-              `}
+              content={generateRoleDetailsHtml(project.role.position, project.role.details)}
               technologies={convertToTechInfo(project.technologies)}
             />
           </ScrollReveal>
