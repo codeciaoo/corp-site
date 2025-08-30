@@ -148,22 +148,22 @@ const ServiceComparisonTable = () => {
               className={`rounded-2xl border ${plan.borderColor} shadow-lg overflow-hidden`}
             >
               {/* ヘッダー部分 */}
-              <div className={`${plan.bgColor} px-6 py-8`}>
-                <div className="flex items-center space-x-4">
+              <div className={`${plan.bgColor} px-6 py-6 md:py-8`}>
+                <div className="flex items-center space-x-3 md:space-x-4">
                   <motion.div
                     whileHover={{ scale: 1.05, rotate: 5 }}
                     transition={{ type: "spring", stiffness: 500 }}
-                    className={`flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-r ${plan.gradientFrom} ${plan.gradientTo} p-3 text-white shadow-md`}
+                    className={`flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-xl bg-gradient-to-r ${plan.gradientFrom} ${plan.gradientTo} p-2 md:p-3 text-white shadow-md`}
                   >
                     {React.cloneElement(plan.icon, {
-                      className: "h-10 w-10",
+                      className: "h-8 w-8 md:h-10 md:w-10",
                     })}
                   </motion.div>
                   <div>
-                    <h3 className="mb-1 text-2xl font-bold text-gray-900">
+                    <h3 className="mb-1 text-xl md:text-2xl font-bold text-gray-900 leading-tight">
                       {plan.title}
                     </h3>
-                    <p className={`font-medium ${plan.color}`}>
+                    <p className={`text-sm md:text-base font-medium ${plan.color}`}>
                       {plan.subtitle}
                     </p>
                   </div>
