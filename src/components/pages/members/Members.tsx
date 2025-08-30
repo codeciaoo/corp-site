@@ -1,9 +1,8 @@
 import type React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { membersContent } from "./membersContent";
-import { memberPortfolios, getPortfolioByName } from "../portfolio/data";
 
 // Types
 interface MediaItem {
@@ -46,18 +45,12 @@ const Skill: React.FC<SkillProps> = ({ children }) => (
 
 interface MemberCardProps {
   member: TeamMember;
-  hasDetailPage?: boolean;
 }
 
 const MemberCard: React.FC<MemberCardProps> = ({
   member,
-  hasDetailPage = false,
 }) => {
-  // ポートフォリオページが存在するかチェック
-  const portfolio = getPortfolioByName(member.name);
-  const hasMemberPortfolio = !!portfolio;
-  const memberSlug = portfolio?.slug;
-  const showDetailLink = hasDetailPage || hasMemberPortfolio;
+  // 詳細プロフィールへの動線は表示しない
 
   return (
     <div
@@ -86,15 +79,6 @@ const MemberCard: React.FC<MemberCardProps> = ({
               </h2>
             </div>
             
-            {showDetailLink && memberSlug && (
-              <a
-                href={`/members/${memberSlug}`}
-                className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100"
-              >
-                詳細プロフィール
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            )}
           </div>
 
           <div className="space-y-6">
