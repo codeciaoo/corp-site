@@ -55,7 +55,7 @@ const CompanyProfile = () => {
                 label: "社員数",
                 value: (
                   <div>
-                    <p>社員：2人</p>
+                    <p>社員：4人</p>
                     <p>業務委託：5名</p>
                     <a
                       href="/careers"
@@ -89,39 +89,47 @@ const CompanyProfile = () => {
                     items: [
                       "ECサイト・業務システムの開発実績",
                       "IoTデータ可視化システムの構築実績",
-                      "生成AIを活用した安全管理システムの開発実績"
-                    ]
+                      "生成AIを活用した安全管理システムの開発実績",
+                    ],
                   },
                   {
                     title: "生成AI開発/導入支援",
                     items: [
                       "OpenAI・Geminiを活用したシステム開発",
                       "RAGによる社内文書検索システムの構築",
-                      "AIモデルのファインチューニング支援"
-                    ]
+                      "AIモデルのファインチューニング支援",
+                    ],
                   },
                   {
                     title: "クラウドインテグレーション",
                     items: [
                       "AWS環境の設計・構築・運用",
                       "セキュリティ対策の実装",
-                      "クラウドリソース/コストの最適化"
-                    ]
+                      "クラウドリソース/コストの最適化",
+                    ],
                   },
                   {
                     title: "DX推進支援・CTO支援サービス",
                     items: [
                       "技術戦略の立案支援",
                       "DevOps導入・体制構築",
-                      "DX推進のための組織改革支援"
-                    ]
-                  }
+                      "DX推進のための組織改革支援",
+                    ],
+                  },
                 ].map((service, index) => (
-                  <div key={index} className="rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
-                    <h4 className="mb-4 text-lg font-medium text-teal-700">{service.title}</h4>
+                  <div
+                    key={index}
+                    className="rounded-lg border border-gray-100 bg-white p-6 shadow-sm"
+                  >
+                    <h4 className="mb-4 text-lg font-medium text-teal-700">
+                      {service.title}
+                    </h4>
                     <div className="space-y-3">
                       {service.items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-start space-x-3">
+                        <div
+                          key={itemIndex}
+                          className="flex items-start space-x-3"
+                        >
                           <span className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal-400"></span>
                           <span className="text-gray-600">{item}</span>
                         </div>
@@ -154,12 +162,14 @@ const CompanyProfile = () => {
         </CardHeader>
         <CardContent className="px-6 pb-6">
           <div className="flex flex-col items-center gap-8 md:flex-row">
-            <div className="relative h-80 w-80 overflow-hidden rounded-2xl shadow-md"> {/* 画像のスペースを広くするためにh-80とw-80に変更 */}
+            <div className="relative h-80 w-80 overflow-hidden rounded-2xl shadow-md">
+              {" "}
+              {/* 画像のスペースを広くするためにh-80とw-80に変更 */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
               <img
                 src="/president.png"
                 alt="代表取締役"
-                className="h-full w-full object-cover transition-transform duration-300 hover:scale-105 scale-110 max-h-80" // 画像エリアを広くするためにmax-hを追加
+                className="h-full max-h-80 w-full scale-110 object-cover transition-transform duration-300 hover:scale-105" // 画像エリアを広くするためにmax-hを追加
               />
             </div>
             <div className="flex-1 space-y-4 leading-relaxed text-gray-700">
@@ -178,7 +188,7 @@ const CompanyProfile = () => {
               <p className="mt-6 text-right text-lg">
                 <span className="font-bold">代表取締役社長 田原 翼</span>
               </p>
-            </div>  
+            </div>
           </div>
         </CardContent>
       </Card>
