@@ -1,0 +1,119 @@
+---
+// 01 線と塗り。このページの凡例で、主役のセクション（言い切りに --fs-d2 を使うのはここだけ）。
+// 図は置かない。塗りの量（5 つの O）を見せるのは、02 の追従する図だけ。ここには凡例の 1 行だけを置く。
+import SectionHead from "@/components/site/SectionHead.astro";
+import { LINE_FILL_BODY, SECTIONS, type SayPhrase } from "@/data/approach";
+import Rail from "./Rail.astro";
+import Say from "./Say.astro";
+
+const section = SECTIONS.lineFill;
+
+const statement: SayPhrase[] = [
+  { runs: [{ text: "線", as: "goodbye" }, { text: "は設計" }] },
+  {
+    br: true,
+    runs: [{ text: "塗り", as: "hello", delay: 420 }, { text: "は" }],
+  },
+  { runs: [{ text: "確かめた事実" }] },
+];
+---
+
+<section class="sec grid" id={section.id} aria-labelledby={`h-${section.id}`}>
+  <SectionHead
+    no={section.no}
+    en={section.en}
+    title={section.title}
+    id={`h-${section.id}`}
+  >
+    <Rail current={section.id} />
+  </SectionHead>
+  <div class="body">
+    <Say phrases={statement} size="l" />
+    <p class="lead phrase">{LINE_FILL_BODY}</p>
+
+    <p class="key mono" aria-hidden="true">
+      <span class="key__end">
+        <span class="dot"></span>
+        線 / 設計
+      </span>
+      <span class="key__arr"></span>
+      <span class="key__end">
+        <span class="dot is-on"></span>
+        塗り / 確かめた事実
+      </span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .lead {
+    margin-top: clamp(24px, 2.8vw, 40px);
+    max-width: 36em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* 凡例。線の丸から塗りの丸へ、矢印を 1 本引く（矢印の線が、本文との区切りを兼ねる） */
+  .key {
+    margin-top: clamp(40px, 5vw, 72px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--ink-2);
+  }
+
+  .key__end {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .key__arr {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .key__arr::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+    transform: translate(0, -50%) rotate(45deg);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .lead {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .key {
+      gap: 10px;
+    }
+
+    /* 凡例の鍵の語「線」「塗り」だけを --fs-verb（375px で 67.5px）にする。
+       --fs-d2 のままだと 34px で、線の文字の決まり（48px 以上）を下回る。ほかの語は --fs-d2 のまま */
+    .body :global(.say--l .fx) {
+      font-size: var(--fs-verb);
+      line-height: 1.14;
+    }
+  }
+</style>

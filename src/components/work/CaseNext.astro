@@ -1,0 +1,191 @@
+---
+// 実績の詳細の末尾。次の案件（線に塗りが満ちる題）と、一覧への戻り。
+// 次の案件へのリンクは、一覧と同じ形（題名と丸い矢印を合わせた 1 つのリンク）。
+// 丸い矢印は、広い画面では題名の右、767px 以下では状況の行の右端に置く（一覧の行と同じ）。
+// 題名は、書き手が決めた句（`|` の区切り）をひとかたまりにする。句が 1 行に収まらないときだけ、句の中の文節で折る。
+import Arrow from "@/components/site/Arrow.astro";
+import Fx from "@/components/site/Fx.astro";
+import StatusPill from "@/components/site/StatusPill.astro";
+import { withBreaks } from "./breaks";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  no: string;
+}
+
+const { project, no } = Astro.props;
+const { data } = project;
+const parts = data.title.split("|").map(part => part.trim());
+const LATIN = /[A-Za-z0-9]/;
+/** 句の終わりと、次の句の始まりが、和文と英数字の境目か（境目には、字間のアキを付ける） */
+const gapAfter = (index: number): boolean => {
+  const next = parts[index + 1];
+  if (!next) return false;
+  return LATIN.test(parts[index].slice(-1)) !== LATIN.test(next.charAt(0));
+};
+---
+
+<nav class="sec sec--tint nx" aria-label="ほかの実績">
+  <p class="nx__k mono">
+    <span>Next / 次の案件</span>
+    <span aria-hidden="true">{no}</span>
+  </p>
+  <a class="nx__a" href={`/projects/${project.id}`} data-hover>
+    <span class="nx__ttl">
+      {
+        parts.map((part, index) => (
+          <span class:list={["nx__ph", { "is-aq": gapAfter(index) }]}>
+            <Fx text={withBreaks(part)} delay={index * 160} />
+          </span>
+        ))
+      }
+    </span>
+    <span class="nx__meta mono">
+      <StatusPill status={data.status} />
+      <span>{data.industry}</span>
+    </span>
+    <span class="nx__go" aria-hidden="true"><Arrow /></span>
+  </a>
+  <a class="btn btn--lg nx__all" href="/projects">
+    実績の一覧へ
+    <Arrow />
+  </a>
+</nav>
+
+<style>
+  /* 上下の余白は、墨の帯と同じ「前の節の続き」の値 */
+  .nx {
+    --sec-bg: var(--paper-2);
+    padding-block: var(--sec-y-tight);
+  }
+
+  .nx__k {
+    display: flex;
+    gap: 14px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  /* 題名、状況と業界、丸い矢印が、1 つのリンクになる */
+  .nx__a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    margin-top: clamp(12px, 1.6vw, 22px);
+    text-decoration: none;
+  }
+
+  .nx__ttl {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.4;
+    letter-spacing: var(--ls-display);
+    --st: 30ms;
+  }
+
+  /* 書き手の句をひとかたまりにする。行より長い句は、行の幅で折り返す（中の文節で折れる） */
+  .nx__ph {
+    display: inline-block;
+    max-width: 100%;
+    text-wrap: balance;
+  }
+
+  /* 和文と英数字の境目のアキ（Fx の中の境目と同じ幅） */
+  .nx__ph.is-aq {
+    margin-right: 0.14em;
+  }
+
+  .nx__meta {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    margin-top: clamp(12px, 1.4vw, 18px);
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  /* 丸い矢印。一覧の行と同じ 44px。題名の行の右に置く */
+  .nx__go {
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    overflow: hidden;
+  }
+
+  .nx__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .nx__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+    transition: transform 0.45s var(--ease);
+  }
+
+  /* 押している間も、線の丸に塗りが満ちる */
+  .nx__a:focus-visible .nx__go::before,
+  .nx__a:active .nx__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .nx__a:active .nx__go::before {
+    transition-duration: 0.18s;
+  }
+
+  .nx__a:focus-visible .nx__go :global(.arw),
+  .nx__a:active .nx__go :global(.arw) {
+    transform: translateX(3px);
+  }
+
+  @media (hover: hover) {
+    .nx__a:hover .nx__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .nx__a:hover .nx__go :global(.arw) {
+      transform: translateX(3px);
+    }
+  }
+
+  .nx__all {
+    margin-top: clamp(32px, 4vw, 56px);
+  }
+
+  @media (max-width: 767px) {
+    .nx__a {
+      column-gap: 12px;
+    }
+
+    /* 題名は幅いっぱいを使う。丸い矢印は、状況の行の右端 */
+    .nx__ttl {
+      grid-column: 1 / -1;
+    }
+
+    .nx__go {
+      grid-row: 2;
+      margin-top: 12px;
+    }
+  }
+</style>

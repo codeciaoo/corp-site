@@ -1,0 +1,482 @@
+---
+// 03 / 担当したプロジェクト。1 件が 1 行。行は左に期間と題、右（8 列目から）に業界・役割・規模。
+// 行を押すと、担当したことと技術が開く（details 要素。JS がなくても開閉できる）。
+// はじめは全部の行を閉じておく。単体で渡すページだけ、はじめから全部開いておく。印刷するときは全部開く。
+// 767px 以下では、件数が多い人は新しい 5 件だけを出し、残りは「ほか◯件を表示」で出す。
+// JS が動かないときと、単体で渡すページでは、はじめから全部の行を出す。
+import Phrases from "@/components/site/Phrases.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import type { PortfolioProject } from "@/data/portfolios";
+
+interface Props {
+  projects: PortfolioProject[];
+  /** はじめから全部開いておく */
+  expanded?: boolean;
+}
+
+/** 狭い画面で、はじめから出す件数 */
+const TOP = 5;
+/** 件数がこの数以上のときだけ、狭い画面で残りを畳む */
+const FOLD_FROM = 8;
+
+const { projects, expanded = false } = Astro.props;
+const fold = !expanded && projects.length >= FOLD_FROM;
+/** 狭い画面で、はじめは隠れている行の数 */
+const folded = fold ? projects.length - TOP : 0;
+---
+
+<section class="sec grid" id="projects" aria-labelledby="h-projects">
+  <SectionHead
+    no="03"
+    en="Projects"
+    title="担当したプロジェクト"
+    id="h-projects"
+  />
+  <div class="body" data-projects>
+    {
+      !expanded && (
+        <div class="pj__bar">
+          <p class="pj__hint">行を押すと、担当したことと技術が開きます。</p>
+          <button class="link pj__all" type="button" data-projects-all hidden>
+            <span class="dot" aria-hidden="true" />
+            <span data-projects-all-label>すべて開く</span>
+          </button>
+        </div>
+      )
+    }
+    <ul class="pj__list">
+      {
+        projects.map((project, index) => (
+          <li class:list={["pj", { "is-more": fold && index >= TOP }]}>
+            <details class="pj__d" open={expanded}>
+              <summary class="pj__sum">
+                <span class="pj__period mono">{project.period}</span>
+                <h3 class="pj__ttl">
+                  <Phrases text={project.title} />
+                </h3>
+                <span class="pj__facts">
+                  <span class="pj__fact">
+                    <span class="mono">業界</span>
+                    <span>{project.industry}</span>
+                  </span>
+                  <span class="pj__fact">
+                    <span class="mono">役割</span>
+                    <span>{project.role}</span>
+                  </span>
+                  <span class="pj__fact pj__fact--scale">
+                    <span class="mono">規模</span>
+                    <span>{project.scale}</span>
+                  </span>
+                </span>
+                <span class="pj__ic" aria-hidden="true">
+                  <i />
+                  <i />
+                </span>
+              </summary>
+              <div class="pj__more">
+                <div class="pj__tasks">
+                  <p class="pj__k mono">担当したこと</p>
+                  <ul class="dots">
+                    {project.tasks.map(task => (
+                      <li>{task}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="pj__tech">
+                  <p class="pj__k mono">技術</p>
+                  <ul class="tags">
+                    {project.tech.map(tech => (
+                      <li>{tech}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+    {
+      folded > 0 && (
+        <button class="btn pj__rest" type="button" data-projects-rest>
+          ほか{folded}件を表示
+        </button>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  /* --left は、左の列（12 列の 4〜7 列目）の幅。右の列は 8 列目から始まる */
+  .body {
+    --left: calc((100% - 8 * var(--g)) / 9 * 4 + 3 * var(--g));
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  /* ───── 一覧の上の案内と、まとめて開閉するボタン ───── */
+  .pj__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 24px;
+    margin-bottom: 12px;
+  }
+
+  .pj__hint {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  .pj__all {
+    border: 0;
+    padding-inline: 0;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .pj__all[hidden] {
+    display: none;
+  }
+
+  .pj__all:focus-visible .dot::after,
+  .pj__all:active .dot::after {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  @media (hover: hover) {
+    .pj__all:hover .dot::after {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+
+  /* ───── 行 ───── */
+  .pj__list {
+    border-top: 1px solid var(--ink);
+  }
+
+  .pj {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pj__sum {
+    display: grid;
+    grid-template-columns: var(--left) minmax(0, 1fr) 44px;
+    grid-template-rows: auto 1fr;
+    column-gap: var(--g);
+    align-items: start;
+    padding: clamp(22px, 2.4vw, 30px) 0;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .pj__sum::-webkit-details-marker {
+    display: none;
+  }
+
+  .pj__period {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--ink-2);
+  }
+
+  /* 題に、句を区切る空白は無い。見出し用の語間（0.09em）を付けない。
+     語間があると、WebKit は 1 行に収まる題を 2 行に折る（text-wrap: balance との組み合わせ） */
+  .pj__ttl {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 6px;
+    font-feature-settings: "palt";
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    word-spacing: normal;
+    transition: color 0.3s linear;
+  }
+
+  .pj__facts {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: grid;
+    gap: 2px;
+  }
+
+  /* 項目名（等幅）と値 */
+  .pj__fact {
+    display: grid;
+    grid-template-columns: 3.4em minmax(0, 1fr);
+    align-items: baseline;
+    font-size: var(--fs-small);
+    line-height: var(--lh-list);
+  }
+
+  .pj__fact .mono {
+    color: var(--ink-2);
+  }
+
+  /* 開閉の印。線の輪の中に「＋」。開くと「－」になる。
+     ホバー、フォーカス、押している間は、下から塗りが満ちる */
+  .pj__ic {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .pj__ic::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .pj__ic i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 1.5px;
+    margin: -0.75px 0 0 -6px;
+    background: var(--ink);
+    transition: transform 0.45s var(--ease);
+  }
+
+  .pj__ic i + i {
+    transform: rotate(90deg);
+  }
+
+  .pj__d[open] .pj__ic i + i {
+    transform: none;
+  }
+
+  .pj__sum:focus-visible .pj__ttl,
+  .pj__sum:active .pj__ttl {
+    color: var(--teal-deep);
+  }
+
+  .pj__sum:focus-visible .pj__ic::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .pj__sum:active .pj__ic::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition-duration: 0.18s;
+  }
+
+  @media (hover: hover) {
+    .pj__sum:hover .pj__ttl {
+      color: var(--teal-deep);
+    }
+
+    .pj__sum:hover .pj__ic::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+
+  /* 開閉は、対応ブラウザでは高さを滑らかに変える。非対応では、すぐに切り替わる */
+  .pj__d {
+    interpolate-size: allow-keywords;
+  }
+
+  .pj__d::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.5s var(--ease),
+      content-visibility 0.5s allow-discrete;
+  }
+
+  .pj__d[open]::details-content {
+    block-size: auto;
+  }
+
+  /* ───── 開いた中身。技術は題の下（4 列目から）、担当したことは業界・役割・規模の下（8 列目から） ───── */
+  .pj__more {
+    display: grid;
+    grid-template-columns: var(--left) minmax(0, 1fr);
+    column-gap: var(--g);
+    align-items: start;
+    padding: 4px 0 clamp(28px, 3vw, 40px);
+  }
+
+  .pj__tasks {
+    grid-column: 2;
+    grid-row: 1;
+    max-width: 38em;
+  }
+
+  .pj__tech {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .pj__k {
+    color: var(--ink-2);
+  }
+
+  .pj__tasks .dots {
+    margin-top: 10px;
+  }
+
+  .pj__tech .tags {
+    margin-top: 12px;
+  }
+
+  /* 狭い画面で残りの行を出すボタン。畳んでいる間だけ出す */
+  .pj__rest {
+    display: none;
+  }
+
+  /* 1199px 以下: 左の列が狭いので、開いた中身は 4 列目から幅いっぱいに、縦に並べる */
+  @media (max-width: 1199px) {
+    .pj__more {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 22px;
+    }
+
+    .pj__tasks,
+    .pj__tech {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+
+  /* 899px 以下: 期間、題、業界・役割・規模を縦に並べる。開閉の印は右上 */
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .pj__sum {
+      grid-template-columns: minmax(0, 1fr) 44px;
+      grid-template-rows: auto auto auto;
+      column-gap: 14px;
+    }
+
+    .pj__period {
+      align-self: center;
+    }
+
+    .pj__ic {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    /* 業界・役割・規模は、横に並べる。1 つぶんが入りきらないときは、次の行へ送る */
+    .pj__facts {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 24px;
+    }
+
+    .pj__fact {
+      flex: none;
+      max-width: 100%;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 10px;
+    }
+  }
+
+  /* 767px 以下: 閉じた行は、期間と題だけ。業界・役割・規模は、開いたときに縦に並べて出す。
+     案内とボタンは 1 行に収める */
+  @media (max-width: 767px) {
+    .pj__bar {
+      flex-wrap: nowrap;
+      gap: 0 16px;
+    }
+
+    .pj__all {
+      flex: none;
+    }
+
+    .pj__sum {
+      padding: 14px 0 15px;
+    }
+
+    .pj__d:not([open]) .pj__facts {
+      display: none;
+    }
+
+    .pj__facts {
+      display: grid;
+      gap: 2px;
+    }
+
+    .pj__fact {
+      grid-template-columns: 3.4em minmax(0, 1fr);
+      column-gap: 0;
+    }
+
+    /* 畳むのは、JS が動くときだけ（動かないときは、出すボタンが働かないため） */
+    :global(html.js) .body:not([data-all]) .pj.is-more {
+      display: none;
+    }
+
+    :global(html.js) .body:not([data-all]) .pj__rest {
+      display: inline-flex;
+      margin-top: 20px;
+    }
+  }
+</style>
+
+<script>
+  // まとめて開閉するボタン、狭い画面で残りの行を出すボタン、印刷の前に全部開く処理。
+  // 行ごとの開閉は details 要素に任せる
+  const root = document.querySelector<HTMLElement>("[data-projects]");
+  const rows = root ? Array.from(root.querySelectorAll("details")) : [];
+  const button = root?.querySelector<HTMLButtonElement>("[data-projects-all]");
+  const label = button?.querySelector<HTMLElement>("[data-projects-all-label]");
+  const rest = root?.querySelector<HTMLButtonElement>("[data-projects-rest]");
+
+  const allOpen = (): boolean => rows.every(row => row.open);
+
+  /** 狭い画面で畳んでいた行を出す */
+  const showRest = (): void => {
+    root?.setAttribute("data-all", "");
+  };
+
+  const sync = (): void => {
+    if (label) label.textContent = allOpen() ? "すべて閉じる" : "すべて開く";
+  };
+
+  if (button) {
+    button.hidden = false;
+    button.addEventListener("click", () => {
+      const open = !allOpen();
+      if (open) showRest();
+      rows.forEach(row => {
+        row.open = open;
+      });
+      sync();
+    });
+    rows.forEach(row => row.addEventListener("toggle", sync));
+    sync();
+  }
+
+  rest?.addEventListener("click", () => {
+    showRest();
+    // 新しく出た最初の行へ、フォーカスを移す
+    root?.querySelector<HTMLElement>(".is-more summary")?.focus();
+  });
+
+  addEventListener("beforeprint", () => {
+    showRest();
+    rows.forEach(row => {
+      row.open = true;
+    });
+  });
+</script>

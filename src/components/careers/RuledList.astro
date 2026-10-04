@@ -1,0 +1,46 @@
+---
+// 罫線で区切った行の一覧。見出しの丸は、塗り（必須、確かなこと）か線（歓迎）。
+// 採用ページと職種の詳細ページの一覧は、すべてこの部品で組む（文字の大きさ、行の高さ、最後の行の罫線をそろえる）。
+interface Props {
+  title: string;
+  items: string[];
+  /** solid: 塗りの丸 ／ line: 線の丸 */
+  mark?: "solid" | "line";
+  /** 見出しの階層（既定は h3） */
+  level?: "h3" | "h4";
+}
+
+const { title, items, mark = "solid", level: Heading = "h3" } = Astro.props;
+---
+
+<div class="rl">
+  <Heading class="rl__h t-h4">
+    <span class:list={["dot", { "is-on": mark === "solid" }]} aria-hidden="true"
+    ></span>
+    {title}
+  </Heading>
+  <ul class="rl__items">
+    {items.map(item => <li>{item}</li>)}
+  </ul>
+</div>
+
+<style>
+  .rl {
+    min-width: 0;
+  }
+
+  .rl__h {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .rl__items li {
+    padding: 13px 0 14px;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-body);
+    line-height: var(--lh-list);
+  }
+</style>

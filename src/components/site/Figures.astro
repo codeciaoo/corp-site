@@ -1,0 +1,155 @@
+---
+// 規模の数字。欧文の線の数字に、下から塗りが満ちる。
+import Fx from "./Fx.astro";
+
+interface Figure {
+  value: string;
+  unit: string;
+  label: string;
+  /** おおよその数のとき、数字の前に「約」を付ける */
+  approx?: boolean;
+}
+
+interface Props {
+  items: Figure[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="fg" data-reveal>
+  {
+    items.map((item, index) => (
+      <div class="fg__item">
+        <dt class="fg__label">{item.label}</dt>
+        <dd class="fg__value">
+          {item.approx && <span class="fg__approx">約</span>}
+          <Fx text={item.value} en reveal={false} delay={index * 120} />
+          <span class="fg__unit">{item.unit}</span>
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .fg {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+
+  .fg__item {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    padding: 22px 16px 22px 0;
+    border-right: 1px solid var(--rule);
+  }
+
+  .fg__item + .fg__item {
+    padding-left: 18px;
+  }
+
+  .fg__item:last-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .fg__value {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    font-feature-settings: "tnum";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    --st: 60ms;
+  }
+
+  .fg__approx,
+  .fg__unit {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-body);
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+  }
+
+  .fg__label {
+    margin-top: 12px;
+    font-size: var(--fs-caption);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1023px) {
+    .fg {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fg__item,
+    .fg__item + .fg__item {
+      padding: 20px 14px 20px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .fg__item:nth-child(2n),
+    .fg__item + .fg__item:nth-child(2n) {
+      padding-left: 18px;
+      padding-right: 0;
+      border-right: 0;
+    }
+
+    .fg__value {
+      flex-wrap: nowrap;
+      gap: 0 6px;
+      font-size: var(--fs-d3);
+    }
+
+    .fg__approx,
+    .fg__unit {
+      font-size: var(--fs-caption);
+      white-space: nowrap;
+    }
+  }
+
+  /* 狭い画面では、1 行に 1 つ、数字を画面の主役の大きさ（--fs-num）で置く */
+  @media (max-width: 767px) {
+    .fg {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fg__item,
+    .fg__item + .fg__item,
+    .fg__item:nth-child(2n),
+    .fg__item + .fg__item:nth-child(2n) {
+      padding: 18px 0 20px;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* 最後の行の下には罫線を引かない（次の図や一覧の罫線と二重になる） */
+    .fg__item:last-child {
+      border-bottom: 0;
+    }
+
+    .fg__value {
+      gap: 0 8px;
+      font-size: var(--fs-num);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .fg__approx,
+    .fg__unit {
+      font-size: var(--fs-h4);
+    }
+
+    .fg__label {
+      margin-top: 8px;
+    }
+  }
+</style>

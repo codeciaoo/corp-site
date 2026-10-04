@@ -1,0 +1,716 @@
+---
+// 02 5 つの工程。このページの見せ場。
+// 工程を読み進めると、横に留まる大きな O が 0 → 25 → 50 → 75 → 100% と塗られていく。
+// 動詞の塗りの量も、O の図と同じにする（01「線を引く」は線のまま、02「書く」は下から 25%、
+// 03「確かめる」は 50%、04「止める」は 75%、05「決める」で塗り切る）。
+// 本文の「書いただけのコードは線のまま。確かめる工程を通るたびに塗りが増える」と合わせるため。
+import Fx from "@/components/site/Fx.astro";
+import Glyph from "@/components/site/Glyph.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { FLOW_STEPS, glyphLevel, SECTIONS } from "@/data/approach";
+import { splitFxHtml } from "@/lib/fx";
+import Rail from "./Rail.astro";
+
+const section = SECTIONS.flow;
+const last = FLOW_STEPS.length - 1;
+const pad = (value: number): string => String(value).padStart(2, "0");
+const total = pad(FLOW_STEPS.length);
+---
+
+<section
+  class="sec sec--ink flow grid"
+  id={section.id}
+  aria-labelledby={`h-${section.id}`}
+>
+  <SectionHead
+    no={section.no}
+    en={section.en}
+    title={section.title}
+    id={`h-${section.id}`}
+  >
+    <Rail current={section.id} />
+  </SectionHead>
+
+  <div class="body">
+    <!-- 留まる図。JS が動かないときは、最終状態（100%）のまま -->
+    <div
+      class="stage fx"
+      data-flow-stage
+      data-state="solid"
+      style={`--s:${last};--to:1`}
+      aria-hidden="true"
+    >
+      <p class="stage__top mono">
+        <span class="stage__name">Fill / 塗りの量</span>
+        <span class="stage__count">
+          <span class="odo">
+            <span class="odo__in">
+              {FLOW_STEPS.map((_, index) => <span>{pad(index + 1)}</span>)}
+            </span>
+          </span>
+          <span>/ {total}</span>
+        </span>
+      </p>
+
+      <div class="stage__fig">
+        <ol class="ruler">
+          {
+            FLOW_STEPS.map((step, index) => (
+              <li
+                class:list={[
+                  "ruler__tick",
+                  "is-on",
+                  { "is-now": index === last },
+                ]}
+                data-flow-tick
+                style={`--y:${100 - step.percent}%`}
+              >
+                <span class="ruler__txt">
+                  <span class="ruler__no">{step.percent}</span>
+                  <span class="ruler__lab">{step.stage}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="stage__o" data-glyphs="2">
+          <Glyph name="o" />
+        </div>
+      </div>
+
+      <p class="stage__read">
+        <span class="stage__noun odo">
+          <span class="odo__in">
+            {FLOW_STEPS.map(step => <span>{step.stage}</span>)}
+          </span>
+        </span>
+        <span class="stage__unit mono" aria-hidden="true">塗り</span>
+        <span class="stage__pct odo">
+          <span class="odo__in">
+            {FLOW_STEPS.map(step => <span>{step.percent}%</span>)}
+          </span>
+        </span>
+        <span class="stage__hint">
+          <b class="mono">Scroll</b> 工程ごとに塗りが増える
+        </span>
+      </p>
+    </div>
+
+    <ol class="steps">
+      {
+        FLOW_STEPS.map((step, index) => (
+          <li
+            class="step"
+            data-flow-step
+            data-level={glyphLevel(step.percent / 100)}
+          >
+            <p class="step__top mono">
+              <span>
+                <b>{pad(index + 1)}</b> / {total}
+              </span>
+              <span>{step.stage}</span>
+            </p>
+            <div class="step__head">
+              <p
+                class="step__verb"
+                data-part={
+                  step.percent > 0 && step.percent < 100 ? "" : undefined
+                }
+                style={`--p:${step.percent / 100}`}
+                aria-hidden="true"
+              >
+                {step.percent === 0 ? (
+                  <span
+                    class="fx"
+                    data-state="hidden"
+                    set:html={splitFxHtml(step.verb)}
+                  />
+                ) : (
+                  <Fx text={step.verb} />
+                )}
+              </p>
+              <h3 class="step__ttl">
+                <span class="sr">{step.verb} </span>
+                {step.title}
+              </h3>
+            </div>
+            <div class="step__tx">
+              <p class="step__body phrase">{step.body}</p>
+              {step.kind === "notes" ? (
+                <>
+                  <p class="step__lab mono">具体的には</p>
+                  <ul class="dots step__pts">
+                    {step.points.map(point => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <ol class="step__holds">
+                  {step.points.map((point, order) => (
+                    <li>
+                      <span class="mono" aria-hidden="true">
+                        {pad(order + 1)}
+                      </span>
+                      {point}
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  // 読んでいる工程を「いまの工程」とし、留まる図の塗りの量を切り替える。
+  // 文章は HTML と CSS だけで成り立つ。ここは図の状態を動かすだけ。
+  const setupFlow = (stage: HTMLElement, steps: HTMLElement[]): void => {
+    const reducedMotion = document.documentElement.classList.contains("rm");
+    const ticks = Array.from(
+      stage.querySelectorAll<HTMLElement>("[data-flow-tick]")
+    );
+    let current = -1;
+
+    const show = (index: number): void => {
+      if (index === current) return;
+      current = index;
+      stage.style.setProperty("--s", String(index));
+      stage.style.setProperty("--to", steps[index].dataset.level ?? "1");
+      ticks.forEach((tick, order) => {
+        tick.classList.toggle("is-on", order <= index);
+        tick.classList.toggle("is-now", order === index);
+      });
+      steps.forEach((step, order) => {
+        step.classList.toggle("is-now", order === index);
+      });
+    };
+
+    // 狭い画面で帯がヘッダーの下に留まっている間は、ヘッダーの進み具合の線（ページを送った量）を隠す。
+    // 同じティールの計器が 2 つ並んで、違う量を示さないようにする
+    const section = stage.closest("section");
+    const band = matchMedia("(max-width: 899px)");
+    const root = document.documentElement;
+    const updateBand = (): void => {
+      if (!section || !band.matches) {
+        root.classList.remove("is-band");
+        return;
+      }
+      const top = parseFloat(getComputedStyle(stage).top) || 0;
+      const rect = section.getBoundingClientRect();
+      root.classList.toggle(
+        "is-band",
+        rect.top <= top && rect.bottom > top + stage.offsetHeight
+      );
+    };
+
+    // 画面の上から 45% の線を越えた、いちばん後ろの工程が「いまの工程」
+    const update = (): void => {
+      const readingLine = innerHeight * 0.45;
+      let index = 0;
+      steps.forEach((step, order) => {
+        if (step.getBoundingClientRect().top <= readingLine) index = order;
+      });
+      show(index);
+      updateBand();
+    };
+
+    // 読み込んだ位置の状態に、動きなしで合わせる
+    stage.classList.add("no-tr");
+    update();
+    void stage.offsetWidth;
+    stage.classList.remove("no-tr");
+
+    let ticking = false;
+    const onScroll = (): void => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        update();
+      });
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+
+    if (reducedMotion) return;
+
+    // 最初に見えたとき、線を引く（工程 01）
+    stage.classList.add("is-armed");
+    const drawObserver = new IntersectionObserver(
+      entries => {
+        if (!entries[0].isIntersecting) return;
+        drawObserver.disconnect();
+        stage.classList.add("is-drawn");
+        window.setTimeout(() => {
+          stage.classList.remove("is-armed", "is-drawn");
+        }, 2200);
+      },
+      { threshold: 0.4 }
+    );
+    drawObserver.observe(stage);
+  };
+
+  const flowStage = document.querySelector<HTMLElement>("[data-flow-stage]");
+  const flowSteps = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-flow-step]")
+  );
+  if (flowStage && flowSteps.length > 0) setupFlow(flowStage, flowSteps);
+</script>
+
+<style>
+  .flow {
+    --sec-bg: var(--ink);
+  }
+
+  :global(html.is-band [data-progress]) {
+    opacity: 0;
+  }
+
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: var(--g);
+    align-items: start;
+  }
+
+  /* ───────── 工程 ───────── */
+  .steps {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .step {
+    padding: 14px 0 clamp(64px, 7.2vw, 112px);
+    border-top: 1px solid var(--rule);
+    transition: border-color 0.6s var(--ease);
+  }
+
+  .step.is-now {
+    border-top-color: var(--paper);
+  }
+
+  .step:last-child {
+    padding-bottom: 0;
+  }
+
+  .step__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--ink-2);
+  }
+
+  .step__top b {
+    font-weight: var(--fw-regular);
+    color: var(--paper);
+  }
+
+  /* 動詞の線の色は、ほかの墨の面と同じ（.fx の既定の --teal-deep。墨の面では明るい色になる） */
+  .step__verb {
+    margin-top: clamp(20px, 2.4vw, 36px);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    --st: 80ms;
+  }
+
+  /* 塗りの量（--p、0〜1）まで、下から満ちて止まる。塗りの層の上端を、字の下端から --p の高さに置く
+     （字の面は、箱の高さのおよそ 10%〜90% にある） */
+  .step__verb[data-part] :global(.fx[data-state="solid"]) {
+    --top: calc(90% - var(--p) * 80%);
+  }
+
+  /* 塗り切らない動詞は、塗りの届いていない部分の線を残す
+     （site.css は、塗り切ったら線を消す。塗りの層の縁取りは、塗りの色のまま） */
+  .step__verb[data-part] :global(.fx[data-state="solid"] .ch) {
+    -webkit-text-stroke-color: var(--line);
+  }
+
+  .step__verb[data-part] :global(.fx[data-state="solid"] .ch::after) {
+    -webkit-text-stroke-color: var(--fill);
+  }
+
+  .step__ttl {
+    margin-top: 16px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .step__tx {
+    margin-top: 12px;
+  }
+
+  .step__body {
+    max-width: 30em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .step__lab {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-2);
+  }
+
+  .step__lab::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* 箇条書きは共通の .dots（丸、字下げ、文字の大きさ、行送りは site.css が決める） */
+  .step__pts {
+    margin-top: 12px;
+  }
+
+  .step__holds {
+    margin-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* 番号と見出しの距離は、番号の列 40px ＋ 溝（NumberedRows と同じ） */
+  .step__holds li {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: 13px 0 12px;
+    border-bottom: 1px solid var(--rule);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .step__holds .mono {
+    color: var(--ink-2);
+  }
+
+  /* ───────── 留まる図 ───────── */
+  .stage {
+    grid-column: 5 / -1;
+    grid-row: 1;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+    min-width: 0;
+  }
+
+  /* 図の頭は、左の工程の列と同じ「罫線の下にラベル」。罫線の高さも左とそろえる */
+  .stage__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--paper);
+    color: var(--ink-2);
+  }
+
+  .stage__count {
+    display: inline-flex;
+    gap: 0.6em;
+    color: var(--paper);
+  }
+
+  .stage__fig {
+    position: relative;
+    margin-top: 52px;
+    padding-left: clamp(128px, 10.4vw, 156px);
+  }
+
+  .stage__o {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(100%, calc(100svh - var(--hd) - 330px));
+    min-width: 180px;
+    margin-left: auto;
+  }
+
+  .ruler {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ruler__tick {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--y);
+    border-top: 1px solid var(--rule);
+    color: var(--ink-2);
+    transition:
+      color 0.5s var(--ease),
+      border-color 0.5s var(--ease);
+  }
+
+  .ruler__tick.is-on {
+    color: var(--paper);
+  }
+
+  .ruler__tick.is-now {
+    border-top-color: var(--paper);
+  }
+
+  .ruler__txt {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    white-space: nowrap;
+    line-height: var(--lh-heading);
+  }
+
+  .ruler__no {
+    min-width: 2.4em;
+    font-family: var(--f-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-label);
+  }
+
+  /* 墨の面の文字は 14px 以上 */
+  .ruler__lab {
+    font-size: var(--fs-small);
+  }
+
+  .stage__unit {
+    display: none;
+  }
+
+  .stage__read {
+    margin-top: 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* 段階の名前の読み出しは、狭い画面の帯でだけ出す（広い画面では目盛りが示す） */
+  .stage .stage__noun {
+    display: none;
+  }
+
+  .stage__pct {
+    font-feature-settings: "tnum";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    letter-spacing: -0.03em;
+    color: var(--teal);
+  }
+
+  .stage__hint {
+    padding-bottom: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-heading);
+    text-align: right;
+  }
+
+  .stage__hint b {
+    margin-right: 0.6em;
+    color: var(--ink-2);
+  }
+
+  /* 数字と動詞の切り替え（縦に並べて、1 行ぶんずつ送る） */
+  .odo {
+    --lh: 1;
+    display: inline-block;
+    height: calc(var(--lh) * 1em);
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+
+  .odo__in {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--s) * var(--lh) * -1em));
+    transition: transform 0.7s var(--ease);
+  }
+
+  .odo__in > span {
+    height: calc(var(--lh) * 1em);
+    line-height: var(--lh);
+    white-space: nowrap;
+  }
+
+  .stage__count .odo {
+    --lh: 1.5;
+  }
+
+  /* 線を引く: 図が最初に見えたとき、輪郭を描く */
+  .stage.is-armed .stage__o :global(.gl__line) {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1.001;
+  }
+
+  .stage.is-armed.is-drawn .stage__o :global(.gl__line) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.6s cubic-bezier(0.65, 0, 0.25, 1) 0.15s;
+  }
+
+  @media (max-width: 1199px) {
+    .stage__fig {
+      padding-left: 44px;
+    }
+
+    .ruler__lab,
+    .stage__hint {
+      display: none;
+    }
+  }
+
+  /* 狭い画面: 図は、ヘッダーの下に留まる細い帯になる */
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+      display: block;
+    }
+
+    .stage {
+      top: var(--hd);
+      z-index: 3;
+      margin-inline: calc(var(--m) * -1);
+      padding: 10px var(--m);
+      background: var(--ink);
+      border-bottom: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      grid-template-areas:
+        "o top pct"
+        "o noun pct";
+      column-gap: 14px;
+      align-items: center;
+    }
+
+    .stage__top {
+      grid-area: top;
+      padding: 0;
+      border: 0;
+    }
+
+    .ruler,
+    .stage__count {
+      display: none;
+    }
+
+    .stage__fig {
+      grid-area: o;
+      margin: 0;
+      padding: 0;
+    }
+
+    .stage__o {
+      width: 40px;
+      min-width: 0;
+    }
+
+    .stage__read {
+      display: contents;
+    }
+
+    .stage .stage__noun {
+      --lh: 1.4;
+      grid-area: noun;
+      display: block;
+      font-feature-settings: "palt";
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-h4);
+      letter-spacing: var(--ls-heading);
+    }
+
+    /* 24px に満たない字のティールは、小さい字用の色にする */
+    .stage__pct {
+      grid-area: pct;
+      font-size: var(--fs-h2);
+      color: var(--teal-deep);
+      text-align: right;
+    }
+
+    .step:first-child {
+      border-top: 0;
+      padding-top: 22px;
+    }
+
+    .step {
+      padding-bottom: 64px;
+    }
+  }
+
+  /* スマートフォン: 帯を 48px にする（上のラベルを省き、字形を 32px にして、読む場所を広く取る）。
+     何の % かが分かるように、数字の前に「塗り」を添える */
+  @media (max-width: 767px) {
+    .stage {
+      height: 48px;
+      padding-block: 0;
+      grid-template-columns: 32px minmax(0, 1fr) auto auto;
+      grid-template-areas: "o noun unit pct";
+      column-gap: 10px;
+    }
+
+    .stage__unit {
+      display: block;
+      grid-area: unit;
+      color: var(--ink-2);
+    }
+
+    .stage__top {
+      display: none;
+    }
+
+    .stage__o {
+      width: 32px;
+    }
+
+    /* 動詞を幅いっぱいに近い大きさ（--fs-verb、375px で 67.5px）で置き、工程ごとの画面の主役にする
+       （トップの「できること」と同じ考え方）。48px 以上なので、線の文字の決まりにも合う */
+    .step__verb {
+      margin-top: 18px;
+      font-size: var(--fs-verb);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .step__ttl {
+      margin-top: 14px;
+    }
+
+    .step {
+      padding-bottom: 56px;
+    }
+  }
+
+  /* 縦のタブレット: 動詞と見出しを左、本文を右に置く */
+  @media (min-width: 640px) and (max-width: 899px) {
+    .step {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--g);
+      align-items: start;
+    }
+
+    .step__top {
+      grid-column: 1 / -1;
+    }
+
+    .step__tx {
+      margin-top: clamp(20px, 2.4vw, 36px);
+      padding-top: 0.4em;
+    }
+  }
+</style>

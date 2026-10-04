@@ -1,0 +1,299 @@
+---
+// 図の形 rings: 中心の丸（steps[0]）の外に、同心の輪（steps[1]〜）を重ねる。
+// 塗りは、画面に入ると内側から外側へ順に満ちる（どれも下から上へ）。
+// 広い画面（詳細は 1200px 以上、一覧は 900px 以上）: 各輪から右へ引き出し線（罫線）を出し、
+//   線の下に「番号 / tag、label、note」を書く（サイトのほかの部分と同じ「罫線の下にラベル」）。
+// それより狭い画面: 768px 以上は輪の右に、767px 以下は輪の下に、番号つきの行を並べる。輪には同じ番号を書く。
+//
+// 寸法は、いちばん外の輪の半径を 1 とした比で決める。
+//   中心の丸 0.30、輪と輪の間 0.08、残りを輪の数で等分する。
+//   引き出し線の高さは、中心から -0.24、+0.12、+0.48、+0.84（間隔 0.36）。どの高さも、その輪の帯の中を通る
+import { pad, type DiagramData } from "./diagram";
+import DiagramText from "./DiagramText.astro";
+
+interface Props {
+  data: DiagramData;
+  size: "lg" | "sm";
+}
+
+const { data, size } = Astro.props;
+const { steps, legend } = data;
+
+const CORE = 0.3;
+const GAP = 0.08;
+const ringCount = steps.length - 1;
+const thickness = (1 - CORE - ringCount * GAP) / ringCount;
+const bands = steps.map((_, index) => {
+  if (index === 0) return { inner: 0, outer: CORE };
+  const inner = CORE + index * GAP + (index - 1) * thickness;
+  return { inner, outer: inner + thickness };
+});
+const fixed = (value: number): string => value.toFixed(4);
+const leaders = bands.map((band, index) => {
+  const y = -0.24 + index * 0.36;
+  // 引き出し線の始まり（帯のまん中の円と、その高さの線が交わる点）。中心の丸は、丸の内側の点
+  const middle = index === 0 ? 0.25 : (band.inner + band.outer) / 2;
+  const x = Math.sqrt(Math.max(middle * middle - y * y, 0));
+  return { x, y };
+});
+---
+
+<div class:list={["rg", `rg--${size}`]}>
+  <div class="rg__disc" aria-hidden="true">
+    {
+      bands.map((band, index) =>
+        index === 0 ? (
+          <span
+            class:list={["rg__core", { "is-solid": steps[0].solid }]}
+            style={`--k:0;--rout:${fixed(band.outer)}`}
+          >
+            <b class="rg__no mono">{pad(1)}</b>
+          </span>
+        ) : (
+          <span
+            class:list={["rg__ring", { "is-solid": steps[index].solid }]}
+            style={`--k:${index};--rin:${fixed(band.inner)};--rout:${fixed(band.outer)}`}
+          >
+            <b class="rg__no mono">{pad(index + 1)}</b>
+          </span>
+        )
+      )
+    }
+  </div>
+  <ol class="rg__list" aria-label={data.alt}>
+    {
+      steps.map((step, index) => (
+        <li
+          class="rg__it"
+          style={`--k:${index};--x:${fixed(leaders[index].x)};--y:${fixed(leaders[index].y)}`}
+        >
+          <i class="rg__lead" aria-hidden="true" />
+          <DiagramText
+            no={pad(index + 1)}
+            tag={step.tag}
+            label={step.label}
+            note={size === "lg" ? step.note : undefined}
+            state={step.solid ? legend.solid : legend.line}
+            size={size}
+          />
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  /* ── 基本: 輪の右に、番号つきの行（767px 以下は、輪の下） ── */
+  .rg {
+    --w: 320px; /* 輪の直径 */
+    --gap: clamp(40px, 4.4vw, 72px); /* 輪と文字の列の間 */
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--w) minmax(0, 1fr);
+    column-gap: var(--gap);
+    align-items: center;
+  }
+
+  @media (max-width: 767px) {
+    .rg {
+      --w: min(360px, calc(100vw - 2 * var(--m)));
+      display: block;
+    }
+  }
+
+  .rg__disc {
+    position: relative;
+    width: var(--w);
+    aspect-ratio: 1;
+  }
+
+  /* 中心の丸と輪。外の縁と内の縁に 1.5px の線。塗りは帯の形で、下から満ちる */
+  .rg__core,
+  .rg__ring {
+    position: absolute;
+    inset: calc((1 - var(--rout)) * 50%);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .rg__ring {
+    /* 帯の太さ（px） */
+    --t: calc(var(--w) / 2 * (var(--rout) - var(--rin)));
+  }
+
+  .rg__ring::after {
+    content: "";
+    position: absolute;
+    inset: var(--t);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1.5px var(--teal);
+  }
+
+  .rg__core.is-solid::before,
+  .rg__ring.is-solid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    clip-path: polygon(
+      0 var(--top),
+      100% var(--top),
+      100% var(--bot),
+      0 var(--bot)
+    );
+    transition: clip-path var(--dur) var(--ease)
+      calc(var(--dg-wait) + var(--k) * 300ms);
+  }
+
+  .rg__core.is-solid::before {
+    background: var(--teal);
+  }
+
+  .rg__ring.is-solid::before {
+    border: var(--t) solid var(--teal);
+  }
+
+  /* 輪の番号。帯のいちばん上（中心の丸はまん中）に置く */
+  .rg__no {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: calc(var(--t, 0px) / 2);
+    transform: translate(-50%, -50%);
+    font-weight: var(--fw-regular);
+    color: var(--ink);
+  }
+
+  .rg__core .rg__no {
+    top: 50%;
+  }
+
+  .rg__list {
+    min-width: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (max-width: 767px) {
+    .rg__list {
+      margin-top: 28px;
+    }
+  }
+
+  .rg__it {
+    position: relative;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rg__lead {
+    display: none;
+  }
+
+  /* 引き出し線の行では、label を 1 段小さく、note を 1 行にする（行の間隔が輪の帯の幅で決まるため） */
+  .rg :global(.sx__l--lg) {
+    font-size: var(--fs-h4);
+  }
+
+  /* ── 広い画面: 引き出し線 ──
+     行は、線の高さ（中心から --y）から始めて、線の下に置く。最後の行は輪の下端より下に出るので、そのぶん高さを取る */
+  @media (min-width: 900px) {
+    .rg--sm {
+      --w: 360px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .rg--sm {
+      --w: 380px;
+    }
+
+    .rg--lg {
+      --w: 560px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .rg--sm {
+      align-items: start;
+      min-height: calc(var(--w) + 36px);
+    }
+
+    .rg--sm .rg__list {
+      margin-top: 0;
+      border-bottom: 0;
+    }
+
+    .rg--sm .rg__it {
+      position: absolute;
+      left: calc(var(--w) + var(--gap));
+      right: 0;
+      top: calc(var(--w) / 2 * (1 + var(--y)));
+      padding: 10px 0 0;
+      border-top: 0;
+    }
+
+    .rg--sm .rg__lead {
+      display: block;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .rg--lg {
+      align-items: start;
+      min-height: calc(var(--w) + 56px);
+    }
+
+    .rg--lg .rg__list {
+      margin-top: 0;
+      border-bottom: 0;
+    }
+
+    .rg--lg .rg__it {
+      position: absolute;
+      left: calc(var(--w) + var(--gap));
+      right: 0;
+      top: calc(var(--w) / 2 * (1 + var(--y)));
+      padding: 12px 0 0;
+      border-top: 0;
+    }
+
+    .rg--lg .rg__lead {
+      display: block;
+    }
+
+    .rg--lg :global(.sx__n) {
+      max-width: none;
+    }
+  }
+
+  /* 引き出し線。輪の帯の中の点から、文字の列の右端まで */
+  .rg__lead {
+    position: absolute;
+    left: calc(var(--w) / 2 * (var(--x) - 1) - var(--gap));
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--ink);
+    transform-origin: 0 50%;
+    transition: transform 0.7s var(--ease)
+      calc(var(--dg-wait) + var(--k) * 300ms + 200ms);
+  }
+
+  /* 線の始まりの点。塗りの上でも見えるように、紙の色の丸に墨の縁 */
+  .rg__lead::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: -3.5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: 0 0 0 1px var(--ink);
+  }
+
+  :global(html.js:not(.rm) .dg:not(.is-live)) .rg__lead,
+  :global(.dg[data-state="hidden"]) .rg__lead {
+    transform: scaleX(0);
+  }
+</style>

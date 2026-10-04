@@ -1,0 +1,132 @@
+---
+// 04 判断の基準。2 つの言い切りと本文を、左右 2 列に並べる（左は 4 列目、右は 8 列目から）。
+// 2 つの言い切りは、どちらも 2 行に分けて組む（幅によって片方だけ 1 行になると、行の数がそろわない）。
+// 言い切りは墨の太字だけで組む（線と塗りの文字は、否定する言葉や強調したい言葉には使わない）。
+import SectionHead from "@/components/site/SectionHead.astro";
+import {
+  HONEST_BODY,
+  SECTIONS,
+  SIMPLE_BODY,
+  type SayPhrase,
+} from "@/data/approach";
+import Rail from "./Rail.astro";
+import Say from "./Say.astro";
+
+const section = SECTIONS.judgment;
+
+interface Judgment {
+  statement: SayPhrase[];
+  body: string;
+}
+
+const judgments: Judgment[] = [
+  {
+    statement: [
+      { runs: [{ text: "できていない" }] },
+      { br: true, runs: [{ text: "ことも書く" }] },
+    ],
+    body: HONEST_BODY,
+  },
+  {
+    statement: [
+      { runs: [{ text: "長く保つ" }] },
+      { br: true, runs: [{ text: "ほうを選ぶ" }] },
+    ],
+    body: SIMPLE_BODY,
+  },
+];
+---
+
+<section
+  class="sec jg grid"
+  id={section.id}
+  aria-labelledby={`h-${section.id}`}
+>
+  <SectionHead
+    no={section.no}
+    en={section.en}
+    title={section.title}
+    id={`h-${section.id}`}
+  >
+    <Rail current={section.id} />
+  </SectionHead>
+  {
+    judgments.map(judgment => (
+      <div class="jd">
+        <Say phrases={judgment.statement} />
+        <p class="jd__tx phrase">{judgment.body}</p>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  /* 2 列は同じ 2 行（言い切り、本文）を使う。言い切りの行の数が違っても、
+     言い切りは罫線の上に下ぞろえで置き、罫線と本文の頭を 2 列でそろえる */
+  .jd {
+    grid-column: 4 / 8;
+    grid-row: 1 / span 2;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+
+  .jd + .jd {
+    grid-column: 8 / -1;
+  }
+
+  .jg :global(.sh) {
+    grid-row: 1 / span 2;
+  }
+
+  /* 言い切りの下に強い区切りを引く（言い切りと本文を 1 組に見せるので、間は詰める） */
+  .jd :global(.say) {
+    align-self: end;
+    padding-bottom: clamp(28px, 3.2vw, 44px);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .jd__tx {
+    margin-top: 20px;
+    max-width: 38em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  /* 節の見出しが上に移る幅。2 列は見出しの下の 2 行を使う */
+  @media (max-width: 899px) {
+    .jd {
+      grid-column: 1 / span 6;
+      grid-row: 2 / span 2;
+    }
+
+    .jd + .jd {
+      grid-column: 7 / -1;
+    }
+
+    .jg :global(.sh) {
+      grid-row: auto;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .jd,
+    .jd + .jd {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      display: block;
+    }
+
+    .jd + .jd {
+      margin-top: 56px;
+    }
+
+    /* 1 つの節に、大きい言い切りを 2 つ並べない。2 つ目は小見出しの大きさにする（文は同じ） */
+    .jd + .jd :global(.say) {
+      font-size: var(--fs-h3);
+      line-height: var(--lh-heading);
+      letter-spacing: var(--ls-heading);
+      padding-bottom: 16px;
+    }
+  }
+</style>

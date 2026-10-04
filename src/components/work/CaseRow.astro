@@ -1,0 +1,361 @@
+---
+// 実績の一覧の 1 件。5 件とも同じ順番で組む:
+// 番号と状況 → 題名 → 業界と役割 → これまで／これから → 図。
+// 本文の段落と技術のタグは、詳細のページにだけ置く（一覧と詳細で、同じ内容を繰り返さない）。
+// 1 件目（lead）は、墨の地に「これまで → これから」だけを大きく置く（画面の点の図は詳細だけ）。
+// 2 件目からの図は、詳細と同じ工程の図を小さくしたもの（note を省く）。工程の図が無い案件だけ、帯の図（bars）を出す。
+// 帯の図（30分から5分）は、トップの実績と詳細の見せ場にあるので、一覧では繰り返さない。
+// 詳細へ進むリンクは、題名と丸い矢印を合わせた 1 つ。押せる範囲は 5 件で同じ。
+// 丸い矢印は、広い画面では題名の右、767px 以下では状況の行の右端に置く（題名が幅いっぱいを使えるように）。
+// 767px 以下では、番号を --fs-num（64〜96px）で置き、1 件ごとの画面の主役にする。
+import Arrow from "@/components/site/Arrow.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import StatusPill from "@/components/site/StatusPill.astro";
+import Bars from "./Bars.astro";
+import Diagram from "./Diagram.astro";
+import Roles from "./Roles.astro";
+import Shift from "./Shift.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  no: string;
+  /** 1 件目（主力）。墨の地に、大きく組む */
+  lead?: boolean;
+}
+
+const { project, no, lead = false } = Astro.props;
+const { data } = project;
+const headingId = `h-${project.id}`;
+---
+
+<li
+  class:list={["row", { "row--lead": lead, "sec--ink": lead }]}
+  id={project.id}
+>
+  <article class="row__in" aria-labelledby={headingId}>
+    <div class="row__rail">
+      <p class="row__no" aria-hidden="true">{no}</p>
+      <StatusPill status={data.status} invert={lead} />
+    </div>
+    <h2 class="row__ttl">
+      <a class="row__link" href={`/projects/${project.id}`}>
+        <span class="row__tx" id={headingId}>
+          <Phrases text={data.title} />
+        </span>
+        <span class="row__go" aria-hidden="true"><Arrow /></span>
+      </a>
+    </h2>
+    <dl class="row__facts">
+      <div>
+        <dt class="mono">業界</dt>
+        <dd>{data.industry}</dd>
+      </div>
+      <div>
+        <dt class="mono">役割</dt>
+        <dd><Roles text={data.role} /></dd>
+      </div>
+    </dl>
+    {
+      data.before && data.after && (
+        <div class="row__sf">
+          <Shift
+            before={data.before}
+            after={data.after}
+            size={lead ? "lg" : "md"}
+            hover={lead}
+          />
+        </div>
+      )
+    }
+    {
+      !lead && (data.bars || data.diagram) && (
+        <div class="row__fig">
+          {data.diagram ? (
+            <Diagram data={data.diagram} size="sm" />
+          ) : (
+            data.bars && <Bars data={data.bars} size="sm" />
+          )}
+        </div>
+      )
+    }
+  </article>
+</li>
+
+<style>
+  /* 1 件は、ほかのページの節と同じ扱い。区切りの罫線は画面の幅いっぱい、上下の余白は「前の節の続き」の値 */
+  .row {
+    --row-pt: var(--sec-y-tight);
+    padding-inline: var(--m);
+    border-top: 1px solid var(--rule);
+  }
+
+  .row--lead {
+    --sec-bg: var(--ink);
+  }
+
+  /* 墨の地と、そのすぐ下の行は、地の色の変わり目が区切りになる。罫線は出さない */
+  .row--lead,
+  .row--lead + .row {
+    border-top: 0;
+  }
+
+  /* 12 列。番号と状況は 1〜3 列目、題名から下（これまで → これから、図）は 4 列目から */
+  .row__in {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+    padding-block: var(--row-pt) var(--sec-y-tight);
+  }
+
+  .row__rail {
+    grid-column: 1 / span 3;
+    grid-row: 1 / span 2;
+    display: grid;
+    justify-items: start;
+    align-content: start;
+    gap: 22px;
+  }
+
+  /* 番号は、ほかのページのセクション番号（SectionHead）と同じ大きさ */
+  .row__no {
+    font-feature-settings: "tnum";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d2);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    --st: 90ms;
+  }
+
+  .row__ttl {
+    grid-column: 4 / -1;
+    grid-row: 1;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+  }
+
+  .row--lead .row__ttl {
+    font-size: var(--fs-d3);
+    letter-spacing: var(--ls-display);
+  }
+
+  /* 題名と丸い矢印が、1 つのリンクになる（トップページの実績と同じ形） */
+  .row__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+
+  .row__tx {
+    text-wrap: balance;
+  }
+
+  .row__go {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    overflow: hidden;
+    transition: color 0.3s linear;
+  }
+
+  .row__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .row__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+    transition: transform 0.45s var(--ease);
+  }
+
+  /* 押している間も、線の丸に塗りが満ちる（ホバーのない端末でも起きるように） */
+  .row__link:focus-visible .row__go::before,
+  .row__link:active .row__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .row__link:active .row__go::before {
+    transition-duration: 0.18s;
+  }
+
+  .row__link:focus-visible .row__go,
+  .row__link:active .row__go {
+    color: var(--ink);
+  }
+
+  .row__link:focus-visible .row__go :global(.arw),
+  .row__link:active .row__go :global(.arw) {
+    transform: translateX(3px);
+  }
+
+  @media (hover: hover) {
+    .row__link:hover .row__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .row__link:hover .row__go {
+      color: var(--ink);
+    }
+
+    .row__link:hover .row__go :global(.arw) {
+      transform: translateX(3px);
+    }
+  }
+
+  /* 業界と役割。項目名（等幅）と値を 1 行に並べる */
+  .row__facts {
+    grid-column: 4 / -1;
+    grid-row: 2;
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 32px;
+    font-size: var(--fs-small);
+    line-height: 1.7;
+  }
+
+  .row__facts div {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .row__facts dt {
+    flex: none;
+    color: var(--ink-2);
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  /* 役割の行は、残りの幅いっぱいに広げる。
+     WebKit は中身の幅を少し狭く見積もるので、幅を中身に合わせると、1 行に入る役割が折り返してしまう */
+  .row__facts div:last-child {
+    flex: 1 1 auto;
+  }
+
+  .row__facts dd {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .row__sf {
+    grid-column: 4 / -1;
+    grid-row: 3;
+    margin-top: clamp(32px, 3.6vw, 52px);
+  }
+
+  /* 1 件目の「これまで → これから」は、幅いっぱいに大きく置く */
+  .row--lead .row__sf {
+    grid-column: 1 / -1;
+    margin-top: clamp(48px, 6.4vw, 96px);
+  }
+
+  /* 図。「これまで → これから」の下に、同じ 4〜12 列目で置く。
+     工程の名前（label）は語の途中で折れないので、横に 4 工程を並べるには 9 列ぶんの幅が要る */
+  .row__fig {
+    grid-column: 4 / -1;
+    grid-row: 4;
+    margin-top: clamp(40px, 4.4vw, 64px);
+  }
+
+  @media (max-width: 1023px) {
+    /* 1 列に積む。番号と状況は 1 行に並べる */
+    .row__in {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .row__rail,
+    .row__ttl,
+    .row__facts,
+    .row__sf,
+    .row--lead .row__sf,
+    .row__fig {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .row__sf {
+      margin-top: 32px;
+    }
+
+    .row__rail {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* 番号の幅をそろえて、状況のピルを 5 件で同じ位置から始める */
+    .row__no {
+      min-width: 1.35em;
+    }
+
+    .row__ttl {
+      margin-top: 18px;
+    }
+
+    .row__link {
+      column-gap: 12px;
+    }
+
+    .row__facts {
+      margin-top: 12px;
+      gap: 2px 24px;
+    }
+
+    .row__fig {
+      margin-top: 40px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* 番号を画面の主役にする（64〜96px）。状況のピルは番号の下。
+       丸い矢印を、番号の行の右端に置く。題名は幅いっぱいを使う（題名と同じ 1 つのリンクのまま） */
+    .row__rail {
+      display: grid;
+      justify-items: start;
+      gap: 14px;
+      min-height: 44px;
+      padding-right: 56px;
+    }
+
+    .row__no {
+      min-width: 0;
+      font-size: var(--fs-num);
+      line-height: 0.82;
+      letter-spacing: -0.04em;
+    }
+
+    .row__link {
+      display: block;
+    }
+
+    .row__go {
+      position: absolute;
+      top: var(--row-pt);
+      right: 0;
+    }
+
+    .row__ttl {
+      margin-top: 22px;
+    }
+  }
+</style>

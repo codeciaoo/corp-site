@@ -1,0 +1,157 @@
+---
+// 募集している仕事の一覧。
+// 職種名と、行の右端の丸い矢印が、1 つのリンクになる（トップページの実績の行と同じ形）。
+// 1 行に置くのは、区分、職種名、ひとこと、要点の帯（契約形態、働き方、稼働など）だけ。
+// 必須の条件、歓迎する経験、報酬の詳しい内容は、職種の詳細ページだけに置く（同じ内容を 2 ページに置かない）。
+import Facts from "./Facts.astro";
+import Arrow from "@/components/site/Arrow.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { POSITIONS } from "@/data/careers";
+---
+
+<section
+  class="sec sec--tint grid"
+  id="positions"
+  aria-labelledby="h-positions"
+>
+  <SectionHead
+    no="02"
+    en="Positions"
+    title="募集している仕事"
+    id="h-positions"
+  />
+  <div class="body">
+    <ul class="ps">
+      {
+        POSITIONS.map((position, index) => (
+          <li class="ps__row">
+            <p class="ps__top mono">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <span>{position.kind}</span>
+            </p>
+            <h3 class="ps__ttl t-d3">
+              <a class="ps__link" href={`/careers/${position.slug}`}>
+                <span class="ps__tx">
+                  <span class="ps__name">
+                    <Phrases text={position.heading} />
+                  </span>
+                  <span class="sr">（{position.kind}）</span>
+                </span>
+                <span class="ps__go" aria-hidden="true">
+                  <Arrow />
+                </span>
+              </a>
+            </h3>
+            <p class="ps__sum">{position.summary}</p>
+            <div class="ps__facts">
+              <Facts facts={position.facts} size="sm" />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .ps {
+    border-top: 1px solid var(--ink);
+  }
+
+  .ps__row {
+    padding: clamp(28px, 3.4vw, 48px) 0 clamp(40px, 4.6vw, 64px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ps__top {
+    display: flex;
+    gap: 14px;
+    color: var(--ink-2);
+  }
+
+  /* 職種名はリンクなので、ティールの太字で置く。線→塗りの動きは付けない（「確かめた事実」ではないため） */
+  .ps__ttl {
+    margin-top: 10px;
+  }
+
+  .ps__name {
+    color: var(--teal);
+  }
+
+  /* 職種名と、行の右端の丸い矢印が、1 つのリンクになる */
+  .ps__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+
+  .ps__go {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ps__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .ps__link:focus-visible .ps__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  /* 押している間も、線に塗りが満ちる（ホバーのない端末でも起きる） */
+  .ps__link:active .ps__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition-duration: 0.18s;
+  }
+
+  /* ホバーの塗りは、ホバーできる端末だけ */
+  @media (hover: hover) {
+    .ps__link:hover .ps__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+
+  .ps__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+  }
+
+  .ps__sum {
+    margin-top: 14px;
+    max-width: 34em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .ps__facts {
+    margin-top: clamp(24px, 2.8vw, 36px);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

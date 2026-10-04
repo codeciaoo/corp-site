@@ -1,0 +1,91 @@
+---
+// お問い合わせフォーム。/api/contact へ JSON で company、name、email、service、message を送る。
+import Field from "@/components/forms/Field.astro";
+import Form from "@/components/forms/Form.astro";
+import { LIMITS, SERVICE_OPTIONS } from "@/components/forms/schema";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<Form
+  id={id}
+  label="お問い合わせフォーム"
+  submit="送信する"
+  doneTitle="送信しました"
+  doneBody="内容を確認して、CodeCiaoから連絡します。"
+>
+  <Field
+    form={id}
+    name="company"
+    label="会社名"
+    required
+    autocomplete="organization"
+    maxlength={LIMITS.company}
+    missing="会社名を入力してください。"
+  />
+  <Field
+    form={id}
+    name="name"
+    label="お名前"
+    required
+    autocomplete="name"
+    maxlength={LIMITS.name}
+    missing="お名前を入力してください。"
+  />
+  <Field
+    form={id}
+    name="email"
+    type="email"
+    label="メールアドレス"
+    required
+    autocomplete="email"
+    maxlength={LIMITS.email}
+    missing="メールアドレスを入力してください。"
+    invalid="メールアドレスの形式を確かめてください。入力例はname@example.comです。"
+  />
+  <Field
+    form={id}
+    name="service"
+    type="select"
+    label="相談したいこと"
+    required
+    options={SERVICE_OPTIONS}
+    missing="相談したいことを選んでください。"
+  />
+  <Field
+    form={id}
+    name="message"
+    type="textarea"
+    label="相談の内容"
+    required
+    maxlength={LIMITS.message}
+    missing="相談の内容を入力してください。"
+  />
+
+  <Fragment slot="note">
+    送信すると、<a class="inline" href="/privacy-policy">個人情報保護方針</a
+    >に同意したものとして扱います。
+  </Fragment>
+
+  <p class="next" slot="done">
+    <a class="btn" href="/projects">実績の一覧へ</a>
+    <a class="link" href="/">
+      <span class="dot" aria-hidden="true"></span>
+      トップへ
+    </a>
+  </p>
+</Form>
+
+<style>
+  .next {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+  }
+</style>

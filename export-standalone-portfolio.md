@@ -20,15 +20,11 @@ STANDALONE=true pnpm build
 1. HTMLファイル: `dist/members/tahara/index.html`
 2. CSSファイル: `dist/_astro/`ディレクトリ内の全CSSファイル
 3. JSファイル: `dist/_astro/`ディレクトリ内の全JSファイル
-4. 画像ファイル: 
-   - `dist/president.png`
-   - `dist/keio.png`
-   - `dist/baycurrent.png`
-   - `dist/livepass.png`
-   - `dist/codeciao_new.png`
-   - `dist/ipa.jpg`
-   - `dist/sap.jpg`
-   - その他必要な画像ファイル
+4. 画像ファイル:
+   - `dist/members/tahara.webp`
+   - `dist/favicon.svg` などのアイコン
+
+2026年10月の刷新で、このページは新しいデザイン（Astroだけ。ReactとTailwindは使わない）に作り直しました。ヘッダーとフッターを出さない指定は `STANDALONE=true` のビルドだけです（`?standalone=true` は廃止）。所属組織のロゴは使っていません。
 
 ## 3. ファイル構造を再編成する
 

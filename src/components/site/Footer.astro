@@ -1,0 +1,155 @@
+---
+import Glyph from "./Glyph.astro";
+import { COMPANY, FOOTER_NAV } from "@/data/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="ft">
+  <div class="ft__top">
+    <p class="ft__say">
+      <span class="mono">Ciao</span>
+      こんにちはも さよならも Ciao
+    </p>
+    <nav aria-label="フッターメニュー">
+      <ul class="ft__nav">
+        {
+          FOOTER_NAV.map(item => (
+            <li>
+              <a href={item.href}>
+                <span class="dot" aria-hidden="true" />
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div
+    class="ft__wm"
+    data-wordmark
+    data-glyphs="1.5"
+    role="img"
+    aria-label="CODECIAO"
+  >
+    <Glyph name="c" fill={1} />
+    <Glyph name="o" fill={1} />
+    <Glyph name="d" fill={1} />
+    <Glyph name="e" fill={1} />
+    <span class="ft__gap"></span>
+    <Glyph name="c" class="is-wave" index={0} />
+    <Glyph name="i" class="is-wave" index={1} />
+    <Glyph name="a" class="is-wave" index={2} />
+    <Glyph name="o" class="is-wave" index={3} />
+  </div>
+
+  <div class="ft__row mono">
+    <p>{COMPANY.name}</p>
+    <p class="ft__addr">
+      <span>{COMPANY.postalCode} {COMPANY.street}</span>
+      <span>{COMPANY.building}</span>
+    </p>
+    <p>© {year} CodeCiao Inc.</p>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    padding: clamp(64px, 8vw, 112px) var(--m) 28px;
+    border-top: 1px solid var(--ink);
+  }
+
+  .ft__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px 48px;
+    flex-wrap: wrap;
+  }
+
+  .ft__say {
+    display: grid;
+    gap: 10px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .ft__say .mono {
+    color: var(--ink-2);
+  }
+
+  .ft__nav {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0 44px;
+  }
+
+  .ft__nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  .ft__wm {
+    display: flex;
+    gap: 1.2%;
+    margin-top: clamp(56px, 8vw, 112px);
+  }
+
+  .ft__gap {
+    flex: 0 0 0.4%;
+  }
+
+  .ft__wm :global(.gl--a) {
+    margin: 0 -0.7% 0 -0.5%;
+  }
+
+  .ft__wm :global(.is-wave) {
+    cursor: crosshair;
+  }
+
+  .ft__row {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    gap: 6px 24px;
+    flex-wrap: wrap;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  /* 住所は、番地までと建物名のあいだでだけ折り返す */
+  .ft__addr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1em;
+  }
+
+  .ft__addr span {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .ft__nav {
+      grid-template-columns: repeat(2, auto);
+      gap: 0 28px;
+    }
+
+    .ft__row {
+      flex-direction: column;
+    }
+  }
+</style>

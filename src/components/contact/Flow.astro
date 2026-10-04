@@ -1,0 +1,164 @@
+---
+// フォームの横に置く、送ったあとの流れ。いまいる工程（最初の 1 つ）だけが塗り、これからの工程は線。
+// 既定は、お問い合わせのページの「相談から開始まで」。採用ページの応募フォームでは「選考の流れ」に使う
+// （2 つのフォームの横を同じ型にする）。どちらの流れも、置くのはそのページだけ。
+import { FLOW } from "@/data/home";
+import { CONTACT_EMAIL } from "@/data/site";
+
+interface Props {
+  title?: string;
+  steps?: { title: string; body: string }[];
+  /** 見出しの id（ほかのページからのリンクの行き先） */
+  id?: string;
+  /** 末尾にメールアドレスを出す */
+  mail?: boolean;
+}
+
+const {
+  title = "相談から開始まで",
+  steps = FLOW,
+  id,
+  mail = true,
+} = Astro.props;
+---
+
+<div class="cf">
+  <h3 class="cf__head t-h4" id={id}>{title}</h3>
+  <ol class="cf__list">
+    {
+      steps.map((step, index) => (
+        <li class="cf__step">
+          <span
+            class:list={["dot", { "is-on": index === 0 }]}
+            aria-hidden="true"
+          />
+          <p class="cf__no mono">
+            {String(index + 1).padStart(2, "0")}
+            {index === 0 && <span class="cf__now">いまここ</span>}
+          </p>
+          <p class="cf__ttl t-h4">{step.title}</p>
+          <p class="cf__body">{step.body}</p>
+        </li>
+      ))
+    }
+  </ol>
+
+  {
+    mail && (
+      <p class="cf__mail">
+        <span class="mono">Mail</span>
+        <a class="inline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .cf__head {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .cf__list {
+    padding-top: 22px;
+  }
+
+  .cf__step {
+    position: relative;
+    padding: 0 0 24px 28px;
+  }
+
+  .cf__step:last-child {
+    padding-bottom: 0;
+  }
+
+  .cf__step .dot {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 11px;
+    height: 11px;
+    background: var(--paper);
+  }
+
+  /* 工程をつなぐ線 */
+  .cf__step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 15px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .cf__no {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-2);
+  }
+
+  .cf__now {
+    padding: 3px 7px 4px;
+    border-radius: 99px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--f-sans);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: 0.08em;
+  }
+
+  .cf__ttl {
+    margin-top: 4px;
+  }
+
+  .cf__body {
+    margin-top: 6px;
+    max-width: 32em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--ink-2);
+  }
+
+  .cf__mail {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+  }
+
+  .cf__mail .mono {
+    color: var(--ink-2);
+  }
+
+  /* 押す対象は高さ 44px 以上 */
+  .cf__mail a {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 1199px) and (min-width: 600px) {
+    .cf__list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--g);
+    }
+
+    .cf__step,
+    .cf__step:last-child {
+      padding-bottom: 24px;
+    }
+
+    .cf__step::before {
+      display: none;
+    }
+  }
+</style>

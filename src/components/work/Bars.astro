@@ -1,0 +1,261 @@
+---
+// 2 つの数を、帯の長さで比べる図（これまで → これから）。承認済みの数字だけに使う。帯の長さは数の比のとおり。
+// これまで: 線の数字と線の帯（塗りが上へ抜けて、線が残る）。数字は 48px 以上なので線の文字にしてよい
+// これから: 塗りの数字と塗りの帯（線に、下から塗りが満ちる）
+// 数字は Inter の太字。900px 以上は --fs-d2、899px 以下は --fs-num（64〜96px）。
+// xs は、番号付きの行（NumberedRows）の本文の列に入れる小さい図。数字は --fs-d3、どの幅でも数字と帯を横に並べる。
+//   48px を下回る幅では、これまでの数字は線ではなく細い字になる（site.css の Fx の仕組み）。
+// 帯は、ボタンと同じカプセル形。数字の列と帯の列の 2 列（899px 以下は、数字の下に帯）。
+// 中に Fx があるので、外側の figure には data-pre を付けない（付けると、中の Fx が動かない）。
+import Fx from "@/components/site/Fx.astro";
+import type { CollectionEntry } from "astro:content";
+
+type BarsData = NonNullable<CollectionEntry<"projects">["data"]["bars"]>;
+
+interface Props {
+  data: BarsData;
+  /** lg: 詳細（12 列） ／ sm: 一覧（12 列の 4〜12 列目） ／ xs: 番号付きの行の本文の列 */
+  size?: "lg" | "sm" | "xs";
+}
+
+const { data, size = "lg" } = Astro.props;
+const longest = Math.max(data.before, data.after);
+const width = (value: number): string =>
+  `${((value / longest) * 100).toFixed(2)}%`;
+---
+
+<figure class:list={["bs", `bs--${size}`]} data-reveal>
+  <!-- 図の題は、等幅の見た目のまま、文節で折り返す（クラス mono を付けると、折り返しの処理から外れて
+       「Fig. /」だけが 1 行目に残る）。凡例は短いので mono のまま -->
+  <figcaption class="bs__cap">
+    <span>Fig. / {data.caption}</span>
+    <span class="bs__legend mono">
+      <span><i class="bs__ic" aria-hidden="true"></i>これまで</span>
+      <span><i class="bs__ic is-on" aria-hidden="true"></i>これから</span>
+    </span>
+  </figcaption>
+  <div class="bs__body" role="img" aria-label={data.alt}>
+    <div class="bs__row">
+      <p class="bs__v">
+        <Fx text={String(data.before)} mode="goodbye" en reveal={false} />
+        <span class="bs__u">{data.unit}</span>
+      </p>
+      <span class="bs__track">
+        <i
+          class="bs__bar fx"
+          data-pre="solid"
+          data-post="gone"
+          data-state="gone"
+          style={`--w:${width(data.before)}`}></i>
+      </span>
+    </div>
+    <div class="bs__row is-after">
+      <p class="bs__v">
+        <Fx
+          text={String(data.after)}
+          mode="hello"
+          en
+          reveal={false}
+          delay={520}
+        />
+        <span class="bs__u">{data.unit}</span>
+      </p>
+      <span class="bs__track">
+        <i
+          class="bs__bar fx"
+          data-pre="hidden"
+          data-post="solid"
+          data-state="solid"
+          style={`--w:${width(data.after)}`}></i>
+      </span>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .bs {
+    --bar: 32px; /* 帯の高さ */
+    /* 数字の列。詳細は 12 列のうち 3 列、一覧は 9 列のうち 2 列 */
+    --vcol: calc((100% - 11 * var(--g)) / 12 * 3 + 2 * var(--g));
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--ink);
+  }
+
+  .bs--sm {
+    --bar: 24px;
+    --vcol: calc((100% - 8 * var(--g)) / 9 * 2 + var(--g));
+    border-top-color: var(--rule);
+  }
+
+  .bs__cap {
+    font-family: var(--f-mono);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-regular);
+    line-height: 1.5;
+    letter-spacing: var(--ls-label);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 24px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .bs__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+  }
+
+  .bs__legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bs__ic {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .bs__ic.is-on {
+    background: var(--teal);
+  }
+
+  .bs__body {
+    display: grid;
+    gap: clamp(8px, 1.2vw, 18px);
+    margin-top: clamp(20px, 2.6vw, 40px);
+  }
+
+  .bs__row {
+    display: grid;
+    grid-template-columns: var(--vcol) minmax(0, 1fr);
+    column-gap: var(--g);
+    align-items: center;
+  }
+
+  .bs__v {
+    display: flex;
+    align-items: baseline;
+    gap: 0.1em;
+    font-feature-settings: "tnum";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d2);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    --st: 90ms;
+  }
+
+  .bs__u {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h2);
+    letter-spacing: 0.02em;
+  }
+
+  /* これまでの単位は、数字と同じ「役目を終えるもの」。細い字と補足の色 */
+  .bs__row:not(.is-after) .bs__u {
+    font-weight: var(--fw-regular);
+    color: var(--ink-2);
+  }
+
+  .bs__track {
+    display: block;
+    min-width: 0;
+  }
+
+  /* 帯。カプセル形。線の帯は縁だけ、塗りの帯は下から満ちる */
+  .bs__bar {
+    position: relative;
+    display: block;
+    width: var(--w);
+    /* 比が大きい（261 と 1 など）と帯が細い線になるので、いちばん短くても丸 1 つぶんは描く */
+    min-width: var(--bar);
+    height: var(--bar);
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .bs__bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--teal);
+    clip-path: polygon(
+      0 var(--top),
+      100% var(--top),
+      100% var(--bot),
+      0 var(--bot)
+    );
+    transition: clip-path var(--dur) var(--ease) 120ms;
+  }
+
+  .is-after .bs__bar::after {
+    transition-delay: 640ms;
+  }
+
+  /* ── xs: 番号付きの行の本文の列に入る大きさ ── */
+  /* .bs.bs--xs: 899px 以下の --bar の指定より優先する */
+  .bs.bs--xs {
+    --bar: 14px;
+    /* 数字の列は、いちばん長い「16.6%」が入る幅（帯を数字に近づける） */
+    --vcol: max(calc(var(--fs-d3) * 2.6), 100px);
+    padding-top: 10px;
+    border-top-color: var(--rule);
+  }
+
+  .bs--xs .bs__body {
+    gap: 2px;
+    margin-top: 12px;
+  }
+
+  .bs--xs .bs__v {
+    font-size: var(--fs-d3);
+  }
+
+  .bs--xs .bs__u {
+    font-size: var(--fs-h4);
+  }
+
+  @media (max-width: 899px) {
+    .bs,
+    .bs--sm {
+      --bar: 22px;
+    }
+
+    .bs__row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 10px;
+    }
+
+    .bs__row + .bs__row {
+      margin-top: 14px;
+    }
+
+    .bs__v {
+      font-size: var(--fs-num);
+      line-height: 1;
+    }
+
+    /* xs は、狭い画面でも数字と帯を横に並べる（行の中で高さを取りすぎない） */
+    .bs--xs .bs__row {
+      grid-template-columns: var(--vcol) minmax(0, 1fr);
+      row-gap: 0;
+    }
+
+    .bs--xs .bs__row + .bs__row {
+      margin-top: 0;
+    }
+
+    .bs--xs .bs__v {
+      font-size: var(--fs-d3);
+      line-height: 1.1;
+    }
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+// O の図つきの段階（インターンの「入社後の流れ」）。段階が進むごとに、O の塗りの量が増える（線はこれから、塗りは済んだこと）。
+// 1 段階を 1 行にする。O は 4 列目、時期と見出しは 5 列目、中身は 8 列目から始まる。
+// 狭い画面では、左に O、右に時期と見出し、その下に中身を幅いっぱいに置く。
+import Glyph from "@/components/site/Glyph.astro";
+
+interface Step {
+  /** 等幅のラベル（時期） */
+  label: string;
+  title: string;
+  /** 塗りの量（0〜1） */
+  fill: number;
+  items: string[];
+}
+
+interface Props {
+  steps: Step[];
+  /** 一覧の名前（読み上げ用） */
+  label: string;
+  /** 見出しの階層（既定は h3） */
+  level?: "h3" | "h4";
+}
+
+const { steps, label, level: Heading = "h3" } = Astro.props;
+---
+
+<ol class="fs" data-glyphs="1.5" aria-label={label}>
+  {
+    steps.map((step, index) => (
+      <li
+        class="fs__step fx"
+        data-pre="hidden"
+        data-post="solid"
+        data-state="solid"
+        data-reveal
+        style={`--to:${step.fill.toFixed(3)};--d0:${index * 140}ms`}
+      >
+        <span class="fs__ring" aria-hidden="true">
+          <Glyph name="o" />
+        </span>
+        <p class="fs__lab mono">{step.label}</p>
+        <Heading class="fs__ttl t-h3">{step.title}</Heading>
+        <ul class="fs__items dots">
+          {step.items.map(item => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .fs {
+    border-top: 1px solid var(--ink);
+  }
+
+  .fs__ring {
+    display: flex;
+  }
+
+  .fs__lab {
+    color: var(--ink-2);
+  }
+
+  .fs__ttl {
+    margin-top: 6px;
+  }
+
+  /* 本文の箱（9 列）の 1 列目に O、2〜4 列目に時期と見出し、5 列目（ページの 8 列目）から中身 */
+  .fs__step {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+    column-gap: var(--g);
+    padding: clamp(24px, 2.6vw, 36px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .fs__ring {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .fs__lab,
+  .fs__ttl {
+    grid-column: 2 / span 3;
+  }
+
+  .fs__lab {
+    padding-top: 4px;
+  }
+
+  .fs__items {
+    grid-column: 5 / -1;
+    grid-row: 1 / span 2;
+    padding-top: 2px;
+  }
+
+  @media (max-width: 767px) {
+    .fs__step {
+      grid-template-columns: 60px minmax(0, 1fr);
+      grid-template-rows: none;
+      column-gap: 20px;
+      padding: 22px 0;
+    }
+
+    .fs__ring {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      width: 100%;
+    }
+
+    .fs__lab,
+    .fs__ttl {
+      grid-column: 2;
+    }
+
+    .fs__lab {
+      padding-top: 0;
+    }
+
+    /* 中身の箇条書きは、O の下から幅いっぱいに置く（右の列だけだと 1 行が短い） */
+    .fs__items {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      margin-top: 16px;
+      padding-top: 0;
+    }
+  }
+</style>

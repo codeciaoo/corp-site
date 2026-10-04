@@ -1,81 +1,407 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Section from "@/components/shared/Section";
+import PageHero from "@/components/site/PageHero.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import { COMPANY, CONTACT_EMAIL } from "@/data/site";
+import Base from "@/layouts/Base.astro";
+import { plainText } from "@/lib/fx";
+
+export const prerender = true;
+
+const no = (index: number): string => String(index + 1).padStart(2, "0");
+
+// 見出しの番号と目次を、同じ並びから作る。`|` は、見出しが入りきらない幅で折り返してよい位置
+const TITLES: string[] = [
+  "個人情報の|取得",
+  "個人情報の|利用目的",
+  "個人情報の|第三者提供",
+  "個人情報の|安全管理",
+  "個人情報の|開示・訂正・削除",
+  "お問い合わせ|窓口",
+  "本方針の|変更",
+];
+const [t1, t2, t3, t4, t5, t6, t7] = TITLES.map((heading, index) => ({
+  id: `p-${no(index)}`,
+  no: no(index),
+  heading,
+  title: plainText(heading),
+}));
+const toc = [t1, t2, t3, t4, t5, t6, t7];
+
+// 前文。条文の前に、本文と同じ列（8 列目から）に置く
+const INTRO =
+  "CodeCiao株式会社（以下「当社」といいます）は、お客様の個人情報の重要性を認識し、個人情報の保護に関する法律（以下「個人情報保護法」といいます）および関連法令を遵守し、以下のとおり個人情報保護方針を定め、個人情報の適切な管理・利用に努めます。";
 ---
 
-<Layout title="個人情報保護方針" description="CodeCiao株式会社の個人情報保護方針について説明しているページです。">
-  <Section bg="light" className="py-12">
-    <div class="mx-auto max-w-3xl">
-      <h1 class="mb-12 text-center text-2xl font-bold tracking-tight text-teal-800 sm:text-3xl md:text-4xl">
-        個人情報保護方針
-      </h1>
-      <div class="space-y-8">
-        <p class="text-base text-gray-600 leading-relaxed sm:text-lg">
-          CodeCiao株式会社（以下「当社」といいます）は、お客様の個人情報の重要性を認識し、個人情報の保護に関する法律（以下「個人情報保護法」といいます）および関連法令を遵守し、以下のとおり個人情報保護方針を定め、個人情報の適切な管理・利用に努めます。
-        </p>
+<Base
+  title="個人情報保護方針"
+  description="CodeCiao株式会社の個人情報保護方針です。"
+>
+  <PageHero en="Privacy" label="個人情報保護方針" title="個人情報|保護方針" />
 
-        <section aria-labelledby="privacy-section-1">
-          <h2 id="privacy-section-1" class="mb-4 text-2xl font-semibold text-teal-800">1. 個人情報の取得</h2>
-          <p class="mb-4 text-base text-gray-600 leading-relaxed sm:text-lg">
-            当社は、お客様から以下の個人情報を取得することがあります。
-          </p>
-          <ul class="list-disc space-y-2 pl-6 text-base text-gray-600 sm:text-lg">
+  <!-- 列の位置: 目次は 1 列目から、条文は 4 列目から。番号・見出し・本文の並びは、番号付きの行（NumberedRows）と同じ型 -->
+  <div class="sec pv grid">
+    <nav class="pv__toc" aria-label="目次" data-toc>
+      <p class="pv__toc-head mono">Contents / 目次</p>
+      <ol>
+        {
+          toc.map(item => (
+            <li>
+              <a href={`#${item.id}`}>
+                <span class="dot" aria-hidden="true" />
+                <span class="pv__toc-no mono" aria-hidden="true">
+                  {item.no}
+                </span>
+                <span>{item.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="pv__body">
+      <div class="pv__row pv__row--intro">
+        <p class="pv__intro t-lead">{INTRO}</p>
+      </div>
+
+      <section class="pv__row" aria-labelledby={t1.id}>
+        <span class="pv__no mono" aria-hidden="true">{t1.no}</span>
+        <h2 class="pv__ttl" id={t1.id}>
+          <Phrases text={t1.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>当社は、お客様から以下の個人情報を取得することがあります。</p>
+          <ul class="dots">
             <li>氏名</li>
             <li>会社名</li>
             <li>メールアドレス</li>
             <li>お問い合わせ内容</li>
           </ul>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-2">
-          <h2 id="privacy-section-2" class="mb-4 text-2xl font-semibold text-teal-800">2. 個人情報の利用目的</h2>
-          <p class="mb-4 text-base text-gray-600 leading-relaxed sm:text-lg">
-            当社は、取得した個人情報を以下の目的で利用します。
-          </p>
-          <ul class="list-disc space-y-2 pl-6 text-base text-gray-600 sm:text-lg">
+      <section class="pv__row" aria-labelledby={t2.id}>
+        <span class="pv__no mono" aria-hidden="true">{t2.no}</span>
+        <h2 class="pv__ttl" id={t2.id}>
+          <Phrases text={t2.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>当社は、取得した個人情報を以下の目的で利用します。</p>
+          <ul class="dots">
             <li>お問い合わせへの対応</li>
             <li>サービスのご案内</li>
           </ul>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-3">
-          <h2 id="privacy-section-3" class="mb-4 text-2xl font-semibold text-teal-800">3. 個人情報の第三者提供</h2>
-          <p class="text-base text-gray-600 leading-relaxed sm:text-lg">
+      <section class="pv__row" aria-labelledby={t3.id}>
+        <span class="pv__no mono" aria-hidden="true">{t3.no}</span>
+        <h2 class="pv__ttl" id={t3.id}>
+          <Phrases text={t3.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>
             当社は、お客様の同意を得ることなく、個人情報を第三者に提供することはありません。ただし、個人情報保護法その他の法令により認められる場合はこの限りではありません。
           </p>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-4">
-          <h2 id="privacy-section-4" class="mb-4 text-2xl font-semibold text-teal-800">4. 個人情報の安全管理</h2>
-          <p class="text-base text-gray-600 leading-relaxed sm:text-lg">
+      <section class="pv__row" aria-labelledby={t4.id}>
+        <span class="pv__no mono" aria-hidden="true">{t4.no}</span>
+        <h2 class="pv__ttl" id={t4.id}>
+          <Phrases text={t4.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>
             当社は、個人情報の漏洩、滅失または毀損を防止するため、適切な安全管理措置を講じます。
           </p>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-5">
-          <h2 id="privacy-section-5" class="mb-4 text-2xl font-semibold text-teal-800">5. 個人情報の開示・訂正・削除</h2>
-          <p class="text-base text-gray-600 leading-relaxed sm:text-lg">
+      <section class="pv__row" aria-labelledby={t5.id}>
+        <span class="pv__no mono" aria-hidden="true">{t5.no}</span>
+        <h2 class="pv__ttl" id={t5.id}>
+          <Phrases text={t5.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>
             お客様は、当社が保有するご自身の個人情報の開示・訂正・削除を請求することができます。ご希望される場合は、下記のお問い合わせ窓口までご連絡ください。
           </p>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-6">
-          <h2 id="privacy-section-6" class="mb-4 text-2xl font-semibold text-teal-800">6. お問い合わせ窓口</h2>
-          <p class="text-base text-gray-600 sm:text-lg">
-            CodeCiao株式会社<br />
-            <a href="mailto:assistant@codeciao.com" class="text-teal-600 hover:text-teal-700 hover:underline">
-              assistant@codeciao.com
-            </a>
-          </p>
-        </section>
+      <section class="pv__row" aria-labelledby={t6.id}>
+        <span class="pv__no mono" aria-hidden="true">{t6.no}</span>
+        <h2 class="pv__ttl" id={t6.id}>
+          <Phrases text={t6.heading} />
+        </h2>
+        <div class="pv__tx">
+          <dl class="pv__desk">
+            <div>
+              <dt>事業者の名称</dt>
+              <dd>{COMPANY.name}</dd>
+            </div>
+            <div>
+              <dt>住所</dt>
+              <dd>
+                <span class="pv__chunk">{COMPANY.postalCode}</span>
+                <span class="pv__chunk">{COMPANY.street}</span>
+                <span class="pv__chunk">{COMPANY.building}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>代表者</dt>
+              <dd>{COMPANY.representative}</dd>
+            </div>
+            <div>
+              <dt>連絡先</dt>
+              <dd>
+                <a class="inline pv__mail" href={`mailto:${CONTACT_EMAIL}`}
+                  >{CONTACT_EMAIL}</a
+                >
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-        <section aria-labelledby="privacy-section-7">
-          <h2 id="privacy-section-7" class="mb-4 text-2xl font-semibold text-teal-800">7. 本方針の変更</h2>
-          <p class="text-base text-gray-600 leading-relaxed sm:text-lg">
+      <section class="pv__row" aria-labelledby={t7.id}>
+        <span class="pv__no mono" aria-hidden="true">{t7.no}</span>
+        <h2 class="pv__ttl" id={t7.id}>
+          <Phrases text={t7.heading} />
+        </h2>
+        <div class="pv__tx">
+          <p>
             当社は、必要に応じて本方針を変更することがあります。変更後の本方針は、当社ウェブサイトに掲載された時点から効力を生じるものとします。
           </p>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
-  </Section>
-</Layout>
+  </div>
+</Base>
+
+<script>
+  // 目次の丸を、読み進めたところまで塗る
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-toc] a")
+  );
+  const heads = links.map(link => document.getElementById(link.hash.slice(1)));
+
+  const update = (): void => {
+    const line = innerHeight * 0.45;
+    let current = -1;
+    heads.forEach((head, index) => {
+      if (head && head.getBoundingClientRect().top <= line) current = index;
+    });
+    links.forEach((link, index) => {
+      link.querySelector(".dot")?.classList.toggle("is-on", index <= current);
+      if (index === current) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
+  let ticking = false;
+  addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        update();
+      });
+    },
+    { passive: true }
+  );
+  update();
+</script>
+
+<style>
+  /* 目次。左右の列とも「墨の罫線の下に中身」の順にして、罫線の高さをそろえる */
+  .pv__toc {
+    grid-column: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+    border-top: 1px solid var(--ink);
+  }
+
+  .pv__toc-head {
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .pv__toc li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pv__toc a {
+    display: grid;
+    grid-template-columns: 10px 1.8em minmax(0, 1fr);
+    column-gap: 12px;
+    align-content: center;
+    align-items: baseline;
+    min-height: 48px;
+    padding: 10px 0;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: color 0.3s linear;
+  }
+
+  .pv__toc .dot {
+    width: 10px;
+    height: 10px;
+    transform: translateY(1px);
+  }
+
+  .pv__toc-no {
+    color: var(--ink-2);
+  }
+
+  /* いま読んでいる条文は字の色で示す（実績の詳細の目次と同じ）。押したときも同じ色にする */
+  .pv__toc a:focus-visible,
+  .pv__toc a:active,
+  .pv__toc a[aria-current] {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .pv__toc a:hover {
+      color: var(--teal-deep);
+    }
+  }
+
+  /* 条文。番号（40px の列）・見出し・本文を 1 行に並べる。本文は 12 列の 8 列目から（NumberedRows と同じ） */
+  .pv__body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    border-top: 1px solid var(--ink);
+  }
+
+  .pv__row {
+    display: grid;
+    grid-template-columns:
+      40px minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: clamp(24px, 2.6vw, 36px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 前文は、条文の本文と同じ列（8 列目から）に置く */
+  .pv__intro {
+    grid-column: 3;
+    min-width: 0;
+  }
+
+  .pv__no {
+    color: var(--ink-2);
+  }
+
+  .pv__ttl {
+    font-feature-settings: "palt";
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+    scroll-margin-top: calc(var(--hd) + 24px);
+  }
+
+  .pv__tx {
+    min-width: 0;
+    max-width: 34em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .pv__tx > * + * {
+    margin-top: 14px;
+  }
+
+  /* 6. お問い合わせ窓口: 名称・住所・代表者・連絡先。項目名と値の型は、会社ページの会社概要と同じ */
+  .pv__desk > div {
+    display: grid;
+    grid-template-columns: 7em minmax(0, 1fr);
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pv__desk > div:first-child {
+    padding-top: 0;
+  }
+
+  /* 最後の行の下には、条文の行の罫線が来る。罫線を 2 本続けない */
+  .pv__desk > div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .pv__desk dt {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-label);
+    color: var(--ink-2);
+  }
+
+  .pv__desk dd {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .pv__chunk {
+    display: inline-block;
+  }
+
+  /* メールアドレスは、押せる範囲を上下に広げて 44px 以上にする（行の高さは変わらない） */
+  .pv__desk a {
+    padding-block: 10px;
+  }
+
+  @media (max-width: 899px) {
+    .pv__toc {
+      grid-column: 1 / -1;
+      position: static;
+      margin-bottom: 48px;
+    }
+
+    .pv__body {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pv__row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 8px;
+    }
+
+    .pv__intro {
+      grid-column: 1;
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+
+    .pv__desk > div {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 12px 0;
+    }
+
+    .pv__desk dt {
+      font-size: var(--fs-caption);
+    }
+  }
+
+  /* 押せる高さを 44px にする */
+  .pv__mail {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

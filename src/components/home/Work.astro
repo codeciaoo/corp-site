@@ -1,0 +1,261 @@
+---
+import Arrow from "@/components/site/Arrow.astro";
+import Figures from "@/components/site/Figures.astro";
+import Bars from "@/components/work/Bars.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import StatusPill from "@/components/site/StatusPill.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+
+const { projects } = Astro.props;
+const [flagship, ...rest] = projects;
+---
+
+<section class="sec sec--tint grid wk" aria-labelledby="h-work">
+  <SectionHead no="04" en="Work" title="実績" id="h-work" big />
+  <div class="body">
+    <article class="flag">
+      <p class="flag__top mono">
+        <span aria-hidden="true">01</span>
+        <StatusPill status={flagship.data.status} />
+        <span>{flagship.data.industry}</span>
+      </p>
+      <h3 class="flag__ttl">
+        <a class="flag__link" href={`/projects/${flagship.id}`}>
+          <span class="flag__tx">
+            <Phrases text={flagship.data.title} />
+          </span>
+          <span class="case__go" aria-hidden="true">
+            <Arrow />
+          </span>
+        </a>
+      </h3>
+      <p class="flag__sum phrase">{flagship.data.summary}</p>
+      {flagship.data.figures && <Figures items={flagship.data.figures} />}
+    </article>
+
+    <ul class="cases">
+      {
+        rest.map((project, index) => (
+          <li class="cases__item">
+            <a class="case" href={`/projects/${project.id}`}>
+              <span class="case__no mono" aria-hidden="true">
+                {String(index + 2).padStart(2, "0")}
+              </span>
+              <span class="case__main">
+                <span class="case__ttl">
+                  <Phrases text={project.data.title} />
+                </span>
+                <span class="case__meta mono">
+                  <StatusPill status={project.data.status} />
+                  <span>{project.data.industry}</span>
+                </span>
+              </span>
+              <span class="case__go" aria-hidden="true">
+                <Arrow />
+              </span>
+            </a>
+            {/* 帯の図（承認済みの数字）がある案件は、行の直下に一覧と同じ図を置く。図はリンクの外 */}
+            {project.data.bars && (
+              <div class="case__fig">
+                <Bars data={project.data.bars} size="sm" />
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <a class="btn btn--lg" href="/projects">
+      実績をすべて見る
+      <Arrow />
+    </a>
+  </div>
+</section>
+
+<style>
+  .wk {
+    --sec-bg: var(--paper-2);
+  }
+
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .flag__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .flag__ttl {
+    margin-top: 20px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.4;
+    letter-spacing: var(--ls-display);
+  }
+
+  .flag__tx {
+    max-width: 16em;
+  }
+
+  /* 題名と、行の右端の丸い矢印が、1 つのリンクになる（02 以降の行と同じ形） */
+  .flag__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .flag__link:hover .case__go::before,
+  .flag__link:focus-visible .case__go::before,
+  .flag__link:active .case__go::before,
+  .case:active .case__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .flag__sum {
+    margin-top: 22px;
+    max-width: 38em;
+    font-size: var(--fs-body);
+    line-height: 1.95;
+  }
+
+  .flag :global(.fg) {
+    margin-top: clamp(36px, 4.6vw, 60px);
+  }
+
+  .cases {
+    margin-top: clamp(56px, 7vw, 96px);
+    border-top: 1px solid var(--ink);
+  }
+
+  /* 区切りの罫線は行（li）に引く。帯の図がある行は、図の下に罫線が来る */
+  .cases__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .case {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    padding: 22px 0 20px;
+    text-decoration: none;
+    transition: padding 0.5s var(--ease);
+  }
+
+  /* 図は題名と同じ列から始める（番号の列 40px ＋ 溝） */
+  .case__fig {
+    padding: 8px 0 clamp(28px, 3vw, 40px) calc(40px + var(--g));
+  }
+
+  .case__no {
+    color: var(--ink-2);
+  }
+
+  .case__main {
+    display: grid;
+    gap: 4px;
+  }
+
+  .case__ttl {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .case__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    margin-top: 4px;
+    color: var(--ink-2);
+  }
+
+  .case__go {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .case__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .case:hover .case__go::before,
+  .case:focus-visible .case__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .case:hover,
+  .case:focus-visible {
+    padding-left: 12px;
+  }
+
+  .case__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+  }
+
+  .body > .btn {
+    margin-top: clamp(32px, 4vw, 48px);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .case__fig {
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .case {
+      grid-template-columns: 2em minmax(0, 1fr) auto;
+      column-gap: 10px;
+    }
+
+    /* 番号は、題名の 1 行目にそろえる（題名が 2 行になると、真ん中では浮いて見える） */
+    .case__no {
+      align-self: start;
+      padding-top: calc(
+        (var(--fs-h3) * var(--lh-heading) - var(--fs-label) * 1.5) / 2
+      );
+    }
+
+    .case__fig {
+      padding: 4px 0 28px;
+    }
+  }
+</style>

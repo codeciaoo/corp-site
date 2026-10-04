@@ -1,0 +1,131 @@
+---
+// ページ内の目次。ヒーローの下端に、ラベル「Contents / 目次」と、罫線で区切った 5 行を置く。
+// 12 列のうち、ラベルは 1 列目、番号と欧文は 4 列目、節の名前は 8 列目から始める
+// （4 列目と 8 列目は、下のセクションの本文と補足の位置）。
+import { SECTION_LIST } from "@/data/approach";
+---
+
+<nav class="ix" aria-label="このページの目次">
+  <p class="ix__head mono">Contents / 目次</p>
+  <ol class="ix__list">
+    {
+      SECTION_LIST.map(section => (
+        <li>
+          <a class="ix__a" href={`#${section.id}`}>
+            <span class="dot" aria-hidden="true" />
+            <span class="ix__no mono">{section.no}</span>
+            <span class="ix__en mono" aria-hidden="true">
+              {section.en}
+            </span>
+            <span class="ix__ttl">
+              {section.title.split("|").map(part => (
+                <span class="pb">{part.trim()}</span>
+              ))}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .ix {
+    margin-top: clamp(44px, 5.6vw, 80px);
+    border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+  }
+
+  /* 罫線の下にラベル（02 の工程の頭と同じ順番）。1 行目の番号と同じ高さに置く */
+  .ix__head {
+    grid-column: 1 / span 3;
+    padding-top: 17px;
+    color: var(--ink-2);
+  }
+
+  .ix__list {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .ix__list li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 押す対象は高さ 44px 以上。最後の列は 9 列のうち後ろ 5 列で、ページの 8 列目から始まる */
+  .ix__a {
+    display: grid;
+    grid-template-columns:
+      10px 1.8em minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: 12px;
+    align-content: center;
+    align-items: baseline;
+    min-height: 48px;
+    padding: 10px 0;
+    text-decoration: none;
+    transition: color 0.3s linear;
+  }
+
+  .ix__a .dot {
+    width: 10px;
+    height: 10px;
+    transform: translateY(1px);
+  }
+
+  .ix__no,
+  .ix__en {
+    color: var(--ink-2);
+  }
+
+  .ix__ttl {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.06em;
+  }
+
+  .pb {
+    display: inline-block;
+  }
+
+  /* 句の間は空白で区切る（1 行に収まるときも、間が詰まらないようにする） */
+  .pb:not(:last-child) {
+    margin-right: 0.5em;
+  }
+
+  /* 押したときの反応。丸に塗りが満ち（共通の .dot）、節の名前の色が変わる。
+     ホバーのない端末でも、押している間は同じ反応を返す */
+  .ix__a:focus-visible,
+  .ix__a:active {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .ix__a:hover {
+      color: var(--teal-deep);
+    }
+  }
+
+  /* 狭い画面: ラベルを上に置き、1 件を 1 行にして縦に並べる（欧文は省く） */
+  @media (max-width: 899px) {
+    .ix {
+      display: block;
+    }
+
+    .ix__head {
+      padding: 14px 0 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .ix__a {
+      grid-template-columns: 10px 1.8em minmax(0, 1fr);
+    }
+
+    .ix__en {
+      display: none;
+    }
+  }
+</style>

@@ -1,11 +1,38 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import MembersComponent from "@/components/pages/members/Members";
-import Section from "@/components/shared/Section";
+import MemberSheet from "@/components/members/MemberSheet.astro";
+import Cta from "@/components/site/Cta.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import PageIndex from "@/components/site/PageIndex.astro";
+import { MEMBERS } from "@/data/members";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+// 目次（つくり方・実績・会社と同じ型）。写真は各メンバーの欄に 1 回だけ出す（冒頭には並べない）。
+// 個人のポートフォリオ（/members/<slug>）へのリンクは置かない（e73b1c8 で外している）
+const INDEX = MEMBERS.map(member => ({
+  no: member.no,
+  href: `#${member.slug}`,
+  title: member.name,
+  note: member.role,
+}));
 ---
 
-<Layout title="メンバー紹介">
-  <Section bg="light">
-    <MembersComponent client:load />
-  </Section>
-</Layout>
+<Base title="メンバー" description="CodeCiaoのメンバーを紹介します。">
+  <PageHero
+    en="Members"
+    label="メンバー"
+    title="つくる人"
+    lead="CodeCiaoは社員と業務委託のパートナーで開発しています。このページでは中心になる3人を紹介します。"
+  >
+    <PageIndex items={INDEX} />
+  </PageHero>
+
+  {
+    MEMBERS.map((member, index) => (
+      <MemberSheet member={member} tint={index % 2 === 1} />
+    ))
+  }
+
+  <Cta lead="相談には、このページのメンバーが直接答えます。" />
+</Base>

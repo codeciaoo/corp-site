@@ -46,3 +46,14 @@ dist
 
 standalone-portfolio
 tahara-portfolio/node_modules
+# scripts/build-fonts.mjs が生成する
+src/assets/fonts
+src/styles/fonts.generated.css
+src/styles/fonts.rest.generated.css
+
+.playwright-cli
+
+# 審査と確認用の画像（大きいので入れない）
+design/qa/
+design/shots/
+design/progress/

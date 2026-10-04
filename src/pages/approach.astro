@@ -1,0 +1,29 @@
+---
+import AiRules from "@/components/approach/AiRules.astro";
+import Flow from "@/components/approach/Flow.astro";
+import Handover from "@/components/approach/Handover.astro";
+import Index from "@/components/approach/Index.astro";
+import Judgment from "@/components/approach/Judgment.astro";
+import LineFill from "@/components/approach/LineFill.astro";
+import Cta from "@/components/site/Cta.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import { HERO } from "@/data/approach";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+---
+
+<Base
+  title="つくり方"
+  description="AIエージェントがコードを書き、別のAIと自動のチェックが確かめ、人が決めます。CodeCiaoの開発の進め方です。"
+>
+  <PageHero en={HERO.en} label={HERO.label} title={HERO.title} lead={HERO.lead}>
+    <Index />
+  </PageHero>
+  <LineFill />
+  <Flow />
+  <AiRules />
+  <Judgment />
+  <Handover />
+  <Cta lead="この進め方を自社の開発に取り入れたい方も、相談してください。" />
+</Base>

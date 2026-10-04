@@ -1,0 +1,504 @@
+---
+// 職種の詳細ページの本文。冒頭、目次、番号付きのセクション、末尾の「応募する」。
+// 塗りの丸は必須や確かなこと、線の丸は歓迎すること。短い項目の一覧は、すべて罫線の行（RuledList）で組む。
+// 列の位置: 本文は 12 列の 4 列目から、右に置くものは 8 列目から始める。
+// 報酬の帯（pay）がある節（募集要項）は、帯と条件の一覧を 12 列いっぱいに置く
+// （そのページの見せ場。帯の値と一覧は 1 列目と 8 列目から）。
+// 冒頭は共通の PageHero と同じ余白と位置で組む。違いは、ラベルが採用ページへ戻るパンくずになっていること
+// （実績の詳細の CaseHead と同じ型。丸は線）。
+// 選考の流れは採用ページの応募フォームの横にだけ置き、ここからはリンクにする。
+import Facts from "./Facts.astro";
+import FlowSteps from "./FlowSteps.astro";
+import Pay from "./Pay.astro";
+import RuledList from "./RuledList.astro";
+import Arrow from "@/components/site/Arrow.astro";
+import Fx from "@/components/site/Fx.astro";
+import NumberedRows from "@/components/site/NumberedRows.astro";
+import PageIndex from "@/components/site/PageIndex.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import type { Position } from "@/data/careers";
+
+interface Props {
+  position: Position;
+}
+
+const { position } = Astro.props;
+const pad = (value: number): string => String(value).padStart(2, "0");
+const columns = Array.from({ length: 12 }, (_, index) => index);
+
+// 目次。番号・欧文・名前は、各節の SectionHead と同じ
+const index = position.sections.map((section, order) => ({
+  no: pad(order + 1),
+  href: `#${section.id}`,
+  en: section.en,
+  title: section.title,
+}));
+---
+
+<header class="pd">
+  <div class="pd__grid" aria-hidden="true">
+    {columns.map(index => <i style={`--k:${index}`} />)}
+  </div>
+  <div class="pd__in">
+    <nav class="pd__lab mono" aria-label="パンくず">
+      <ol class="pd__crumb">
+        <li>
+          <a href="/careers">
+            <span class="dot" aria-hidden="true"></span>
+            Careers / 採用
+          </a>
+        </li>
+        <li aria-current="page">
+          <span aria-hidden="true">/</span>
+          {position.kind}
+        </li>
+      </ol>
+    </nav>
+    <h1 class="pd__ttl t-d1">
+      <Fx text={position.heading} />
+    </h1>
+    <p class="pd__lead t-lead">{position.lead}</p>
+
+    <div class="pd__facts">
+      <Facts facts={position.facts} />
+    </div>
+    <PageIndex items={index} />
+  </div>
+</header>
+
+{
+  position.sections.map((section, order) => (
+    <section
+      class:list={[
+        "sec grid",
+        { "sec--tint": order % 2 === 1, "sec--wide": section.pay },
+      ]}
+      id={section.id}
+      aria-labelledby={`h-${section.id}`}
+    >
+      <SectionHead
+        no={pad(order + 1)}
+        en={section.en}
+        title={section.title}
+        id={`h-${section.id}`}
+      />
+      {section.pay && (
+        <div class="pd__pay">
+          <Pay pay={section.pay} />
+        </div>
+      )}
+      <div class="body">
+        {section.blocks.map(block => {
+          if (block.type === "text") {
+            return (
+              <div class="bk bk--text">
+                {block.paragraphs.map(paragraph => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            );
+          }
+          if (block.type === "list") {
+            return (
+              <div class="bk bk--list">
+                <RuledList title={block.title} items={block.items} />
+              </div>
+            );
+          }
+          if (block.type === "conditions") {
+            return (
+              <div class="bk bk--terms">
+                <RuledList title="必須の条件" items={block.required} />
+                <RuledList
+                  title="歓迎する経験"
+                  items={block.preferred}
+                  mark="line"
+                />
+              </div>
+            );
+          }
+          if (block.type === "terms") {
+            return (
+              <div class="bk bk--terms">
+                {block.rows.map(row => (
+                  <RuledList title={row.term} items={row.items} />
+                ))}
+              </div>
+            );
+          }
+          if (block.type === "rows") {
+            return (
+              <div class="bk bk--rows">
+                <NumberedRows items={block.items} label={block.label} />
+              </div>
+            );
+          }
+          return (
+            <div class="bk bk--phases">
+              <h3 class="bk__h t-h3">{block.title}</h3>
+              <FlowSteps
+                level="h4"
+                label={block.title}
+                steps={block.items.map((phase, step) => ({
+                  label: phase.period,
+                  title: phase.title,
+                  items: phase.items,
+                  fill: (step + 1) / block.items.length,
+                }))}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  ))
+}
+
+<!-- 末尾: 応募する。条件を 1 行で示す見出し、選考の流れへのリンク、応募のボタン -->
+<section class="sec sec--ink apply" aria-labelledby="h-apply">
+  <p class="apply__lab mono">Entry / 応募する</p>
+  <h2 class="apply__ttl t-d1" id="h-apply">
+    <Fx text={position.apply} />
+  </h2>
+
+  <div class="apply__flow grid">
+    <p class="apply__flow-head mono">Selection / 選考の流れ</p>
+    <div class="apply__flow-body">
+      <a class="link" href="/careers#selection">
+        <span class="dot" aria-hidden="true"></span>
+        選考の流れを読む
+      </a>
+    </div>
+  </div>
+
+  <div class="apply__row">
+    <p class="apply__body t-lead">
+      「応募する」を押すと、この職種を選んだ状態で応募フォームが開きます。
+    </p>
+    <div class="apply__act">
+      <a
+        class="btn btn--lg btn--solid"
+        href={`/careers?position=${position.slug}#entry`}
+      >
+        応募する
+        <Arrow />
+      </a>
+      <a class="link" href="/careers#positions">
+        <span class="dot" aria-hidden="true"></span>
+        募集している仕事の一覧へ
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ───── 冒頭。余白と位置は PageHero と同じ値 ───── */
+  .pd {
+    position: relative;
+    padding: clamp(56px, 8vw, 128px) var(--m) clamp(56px, 7vw, 104px);
+    overflow: clip;
+  }
+
+  .pd__grid {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--m) - var(--g) / 2);
+    right: calc(var(--m) - var(--g) / 2);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    pointer-events: none;
+  }
+
+  .pd__grid i {
+    border-left: 1px solid var(--rule-2);
+    transform-origin: 50% 0;
+  }
+
+  .pd__grid i:last-child {
+    border-right: 1px solid var(--rule-2);
+  }
+
+  :global(html.js:not(.rm)) .pd__grid i {
+    transform: scaleY(0);
+  }
+
+  :global(html.js.is-go:not(.rm)) .pd__grid i {
+    transform: none;
+    transition: transform 1.2s var(--ease) calc(var(--k) * 40ms);
+  }
+
+  .pd__in {
+    position: relative;
+  }
+
+  .pd__lab {
+    color: var(--ink-2);
+  }
+
+  .pd__crumb,
+  .pd__crumb li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 押す対象の高さは 44px。上下に広げたぶんを打ち消して、行の高さは変えない */
+  .pd__crumb a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-block: -13px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .pd__ttl {
+    margin-top: clamp(18px, 2.4vw, 32px);
+    --st: 52ms;
+  }
+
+  /* リードは 12 列の 8 列目から始める（PageHero と同じ） */
+  .pd__lead {
+    margin-top: clamp(24px, 3.4vw, 48px);
+    margin-left: calc((100% - var(--g) * 11) / 12 * 7 + var(--g) * 7);
+    max-width: 31em;
+  }
+
+  .pd__facts {
+    margin-top: clamp(36px, 4.6vw, 64px);
+  }
+
+  /* 目次は要点の帯のすぐ下に続ける（2 つの帯の間を空けすぎない） */
+  .pd__in :global(.pi) {
+    margin-top: clamp(28px, 3vw, 44px);
+  }
+
+  /* ───── セクション ───── */
+  /* 本文の箱は 4 列目から 12 列目までの 9 列。中の左は 4 列（4〜7 列目）、右は 5 列（8〜12 列目） */
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: var(--g);
+    row-gap: clamp(44px, 5vw, 68px);
+    align-items: start;
+  }
+
+  .bk {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  /* 一覧が 2 つ続くとき、文章と一覧が 1 つずつのときは、左右に並べる */
+  .bk--list,
+  .bk--text:first-child:nth-last-child(2) {
+    grid-column: 1 / span 4;
+  }
+
+  .bk--list + .bk--list,
+  .bk--text:first-child:nth-last-child(2) + .bk--list {
+    grid-column: 5 / -1;
+  }
+
+  .bk--text {
+    max-width: 36em;
+    display: grid;
+    gap: 1em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* 一覧の上の罫線は FlowSteps が引く */
+  .bk__h {
+    padding-bottom: 14px;
+  }
+
+  /* 条件の一覧（必須の条件と歓迎する経験、契約や勤務の条件）。罫線の一覧（RuledList）を 2 列に並べる。
+     左は 4〜7 列目、右は 8〜12 列目 */
+  .bk--terms {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: var(--g);
+    row-gap: clamp(36px, 4vw, 52px);
+    align-items: start;
+  }
+
+  .bk--terms > :global(*) {
+    grid-column: 1 / span 4;
+  }
+
+  .bk--terms > :global(:nth-child(2n)) {
+    grid-column: 5 / -1;
+  }
+
+  /* ───── 報酬の帯がある節。見出しの下に、帯と条件の一覧を 12 列いっぱいに置く（会社の「目指すこと」と同じ型）。
+     見出しは追従させない（追従すると帯に重なる） ───── */
+  .sec--wide > :global(.sh) {
+    grid-row: 1;
+    position: static;
+  }
+
+  .pd__pay {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+    margin-top: clamp(40px, 4.4vw, 64px);
+  }
+
+  .sec--wide .body {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    margin-top: clamp(48px, 5.6vw, 80px);
+  }
+
+  .sec--wide .bk--terms {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .sec--wide .bk--terms > :global(*) {
+    grid-column: 1 / span 7;
+  }
+
+  .sec--wide .bk--terms > :global(:nth-child(2n)) {
+    grid-column: 8 / -1;
+  }
+
+  /* ───── 末尾: 応募する。見出しとボタンの配置は、共通の Cta（ページ末尾の呼びかけ）と同じ。
+     余白は、ほかのセクションと同じ（上下とも --sec-y） ───── */
+  .apply {
+    --sec-bg: var(--ink);
+  }
+
+  .apply__lab {
+    color: var(--ink-2);
+  }
+
+  .apply__ttl {
+    margin-top: 14px;
+    --st: 52ms;
+  }
+
+  /* 選考の流れ。罫線で挟んだ 1 行の帯。ラベルは 1 列目、採用ページの選考の流れへのリンクは 4 列目から */
+  .apply__flow {
+    margin-top: clamp(40px, 5vw, 72px);
+    align-items: center;
+    padding: 22px 0;
+    border-top: 1px solid var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .apply__flow-head {
+    grid-column: 1 / span 3;
+    color: var(--ink-2);
+  }
+
+  .apply__flow-body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .apply__row {
+    margin-top: clamp(40px, 5vw, 72px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 28px 48px;
+    flex-wrap: wrap;
+  }
+
+  .apply__body {
+    max-width: 30em;
+  }
+
+  .apply__act {
+    display: flex;
+    align-items: center;
+    gap: 16px 28px;
+    flex-wrap: wrap;
+  }
+
+  /* 幅が狭くなったら、本文の箱と同じ位置（4 列目、899px 以下は左端）から始める（PageHero と同じ） */
+  @media (max-width: 1023px) {
+    .pd__lead {
+      margin-left: calc((100% - var(--g) * 11) / 12 * 3 + var(--g) * 3);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .pd__lead {
+      margin-left: 0;
+    }
+
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    /* 見出しの下の余白（40px）は SectionHead が取る */
+    .pd__pay {
+      margin-top: 0;
+    }
+
+    .apply__flow {
+      padding: 16px 0 18px;
+    }
+
+    .apply__flow-head,
+    .apply__flow-body {
+      grid-column: 1 / -1;
+    }
+
+    .apply__flow-head {
+      margin-bottom: 10px;
+    }
+
+    .bk--text {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pd__grid i:nth-child(n + 5) {
+      display: none;
+    }
+
+    .pd__grid i:nth-child(4) {
+      border-right: 1px solid var(--rule-2);
+    }
+
+    .pd__lead {
+      margin-left: 0;
+    }
+
+    .body,
+    .bk--terms,
+    .sec--wide .body,
+    .sec--wide .bk--terms {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bk--terms > :global(*),
+    .bk--terms > :global(:nth-child(2n)),
+    .sec--wide .bk--terms > :global(*),
+    .sec--wide .bk--terms > :global(:nth-child(2n)) {
+      grid-column: 1 / -1;
+    }
+
+
+    .bk--list,
+    .bk--list + .bk--list,
+    .bk--text:first-child:nth-last-child(2),
+    .bk--text:first-child:nth-last-child(2) + .bk--list {
+      grid-column: 1 / -1;
+    }
+
+    .apply__body {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+</style>

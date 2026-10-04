@@ -1,0 +1,165 @@
+---
+// 図の形 rule: 1 本の罫線の上に、工程の丸を順に置く。丸の下に「番号 / tag、label、note」。
+// 罫線は、塗りの丸どうしの間は実線、線の丸（まだのもの）へ向かう区間は点線。
+// 767px 以下は、縦の罫線に丸を縦に並べ、文字を丸の右に置く。
+import { pad, type DiagramData } from "./diagram";
+import DiagramText from "./DiagramText.astro";
+
+interface Props {
+  data: DiagramData;
+  size: "lg" | "sm";
+}
+
+const { data, size } = Astro.props;
+const { steps, legend } = data;
+---
+
+<ol
+  class:list={["rl", `rl--${size}`]}
+  style={`--n:${steps.length}`}
+  aria-label={data.alt}
+>
+  {
+    steps.map((step, index) => {
+      const next = steps[index + 1];
+      return (
+        <li class="rl__st" style={`--k:${index}`}>
+          <span
+            class:list={["rl__dot", { "is-solid": step.solid }]}
+            aria-hidden="true"
+          />
+          {next && (
+            <span
+              class:list={["rl__seg", { "is-dot": !next.solid }]}
+              aria-hidden="true"
+            />
+          )}
+          <DiagramText
+            no={pad(index + 1)}
+            tag={step.tag}
+            label={step.label}
+            note={size === "lg" ? step.note : undefined}
+            state={step.solid ? legend.solid : legend.line}
+            size={size}
+          />
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .rl {
+    --d: 48px; /* 丸の直径 */
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    column-gap: var(--g);
+  }
+
+  .rl--sm {
+    --d: 36px;
+  }
+
+  .rl__st {
+    position: relative;
+    min-width: 0;
+    padding-top: calc(var(--d) + clamp(18px, 1.8vw, 26px));
+    padding-right: 8px;
+  }
+
+  /* 丸。線はまだのもの、塗りは確かめたもの（下から満ちる） */
+  .rl__dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--d);
+    height: var(--d);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .rl__dot.is-solid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--teal);
+    clip-path: polygon(
+      0 var(--top),
+      100% var(--top),
+      100% var(--bot),
+      0 var(--bot)
+    );
+    transition: clip-path var(--dur) var(--ease)
+      calc(var(--dg-wait) + var(--k) * var(--dg-step));
+  }
+
+  /* 罫線。丸の右端から、次の丸の左端まで */
+  .rl__seg {
+    position: absolute;
+    left: var(--d);
+    right: calc(-1 * var(--g));
+    top: calc(var(--d) / 2 - 0.5px);
+    height: 1px;
+    background: var(--ink);
+    transform-origin: 0 50%;
+    transition: transform 0.6s var(--ease) calc(var(--k) * var(--dg-step));
+  }
+
+  /* まだのものへ向かう区間は点線 */
+  .rl__seg.is-dot {
+    background: repeating-linear-gradient(
+      90deg,
+      var(--ink) 0 2px,
+      transparent 2px 7px
+    );
+  }
+
+  :global(html.js:not(.rm) .dg:not(.is-live)) .rl__seg,
+  :global(.dg[data-state="hidden"]) .rl__seg {
+    transform: scaleX(0);
+  }
+
+  /* 縦に並べる。丸は左、文字は右。罫線は丸の下端から、次の丸の上端まで */
+  @media (max-width: 767px) {
+    .rl {
+      --d: 32px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rl--sm {
+      --d: 26px;
+    }
+
+    .rl__st {
+      padding: calc(var(--d) / 2 - 9px) 0 28px calc(var(--d) + 16px);
+    }
+
+    .rl__st:last-child {
+      padding-bottom: 0;
+    }
+
+    .rl__seg {
+      left: calc(var(--d) / 2 - 0.5px);
+      right: auto;
+      top: var(--d);
+      bottom: 0;
+      width: 1px;
+      height: auto;
+      transform-origin: 50% 0;
+    }
+
+    .rl__seg.is-dot {
+      background: repeating-linear-gradient(
+        180deg,
+        var(--ink) 0 2px,
+        transparent 2px 7px
+      );
+    }
+
+    :global(html.js:not(.rm) .dg:not(.is-live)) .rl__seg,
+    :global(.dg[data-state="hidden"]) .rl__seg {
+      transform: scaleY(0);
+    }
+  }
+</style>

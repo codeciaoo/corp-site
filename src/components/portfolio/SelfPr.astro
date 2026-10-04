@@ -1,0 +1,96 @@
+---
+// 04 / 自己PR。本人の言葉の段落と、署名。墨の面は、このページでここだけ。
+// 文章は 12 列の 4 列目から（ほかのページの本文と同じ位置）。署名は 8 列目から。
+import Role from "@/components/members/Role.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+
+interface Props {
+  paragraphs: string[];
+  name: string;
+  role: string;
+}
+
+const { paragraphs, name, role } = Astro.props;
+---
+
+<section class="sec sec--ink grid" id="profile" aria-labelledby="h-profile">
+  <SectionHead no="04" en="Profile" title="自己PR" id="h-profile" />
+  <div class="body">
+    <div class="pr__tx">
+      {paragraphs.map(paragraph => <p>{paragraph}</p>)}
+    </div>
+    <p class="pr__sign">
+      <span class="pr__role"><Role role={role} /></span>
+      <span class="pr__name">{name}</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: clamp(32px, 4vw, 56px);
+  }
+
+  .pr__tx {
+    grid-column: 1 / -1;
+    max-width: 36em;
+    display: grid;
+    gap: 1.2em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* 署名は 12 列の 8 列目から */
+  .pr__sign {
+    grid-column: 5 / -1;
+    padding-top: 20px;
+    border-top: 1px solid var(--paper);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 4px 18px;
+    text-align: right;
+  }
+
+  .pr__role {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  .pr__name {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-label);
+    /* 姓と名の間で折り返さない */
+    white-space: nowrap;
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .pr__tx {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+
+    .pr__sign {
+      grid-column: 8 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pr__sign {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

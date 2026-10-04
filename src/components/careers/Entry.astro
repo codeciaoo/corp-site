@@ -1,0 +1,123 @@
+---
+// 応募フォームのセクション。/careers#entry で来る（職種のページからは /careers?position=…#entry）。
+// 列の位置は、お問い合わせのページと同じ。見出しと入力の進み具合の輪は 1〜3 列目、フォームは 4 列目から、
+// 送ったあとの「選考の流れ」は 8 列目から始める。選考の流れを置くのは、このページのここだけ
+// （職種のページは、ここへのリンク）。
+// 狭い画面では、見出し → フォーム → 選考の流れの順。職種のページから来た人は、着いた画面でお名前の欄が見える。
+import EntryForm from "./EntryForm.astro";
+import Flow from "@/components/contact/Flow.astro";
+import Meter from "@/components/forms/Meter.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { SELECTION } from "@/data/careers";
+
+interface Props {
+  /** 節の番号 */
+  no: string;
+}
+
+const { no } = Astro.props;
+const FORM_ID = "entry-form";
+---
+
+<section class="sec en grid" id="entry" aria-labelledby="h-entry">
+  <div class="en__top">
+    <SectionHead no={no} en="Entry" title="応募する" id="h-entry" />
+    <Meter form={FORM_ID} total={4} />
+  </div>
+
+  <div class="en__form">
+    <p class="en__lead t-lead">
+      応募する方は次のフォームに必要事項を入力して、送ってください。CodeCiaoが内容を確認して、面接の案内を送ります。
+    </p>
+    <EntryForm id={FORM_ID} />
+  </div>
+
+  <div class="en__side">
+    <Flow title="選考の流れ" steps={SELECTION} id="selection" mail={false} />
+  </div>
+</section>
+
+<style>
+  /* 見出しと、入力の進み具合の輪。フォームの横に留まる */
+  .en__top {
+    grid-column: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+    --mt-size: clamp(56px, 5vw, 72px);
+  }
+
+  .en__top :global(.sh) {
+    position: static;
+  }
+
+  .en__top :global(.mt) {
+    margin-top: 32px;
+  }
+
+  .en__form {
+    grid-column: 4 / span 4;
+    min-width: 0;
+  }
+
+  .en__lead {
+    margin-bottom: clamp(36px, 4vw, 52px);
+  }
+
+  /* 送信が済んだら、入力の案内は出さない */
+  .en__form:has(:global([data-done]:not([hidden]))) .en__lead {
+    display: none;
+  }
+
+  .en__side {
+    grid-column: 8 / -1;
+    min-width: 0;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+  }
+
+  /* 横に並べる幅がないときは、選考の流れをフォームの下に置く（お問い合わせのページと同じ） */
+  @media (max-width: 1199px) {
+    .en__top {
+      grid-row: 1 / span 2;
+    }
+
+    .en__form {
+      grid-column: 4 / -1;
+    }
+
+    .en__side {
+      grid-column: 4 / -1;
+      position: static;
+      margin-top: clamp(56px, 8vw, 80px);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .en__top {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      position: static;
+      margin-bottom: 36px;
+    }
+
+    .en__top :global(.sh) {
+      margin-bottom: 0;
+    }
+
+    .en__top :global(.mt) {
+      margin-top: 24px;
+    }
+
+    .en__form,
+    .en__side {
+      grid-column: 1 / -1;
+    }
+
+    .en__lead {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+</style>

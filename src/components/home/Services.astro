@@ -1,0 +1,295 @@
+---
+// できること。12 列を 3 列ずつ使い、4 つを横に並べる（1199px 以下は 2 × 2、767px 以下は 1 列）。
+// 1 つの列に、動詞、題名、最初の 1 文、関係するページへのリンク（題名と丸い矢印で 1 つ）を置く。
+// 動詞は墨の塗り。「できること」は確かめた事実でも「これから」でもないので、線→塗りとティールは使わない。
+import Arrow from "@/components/site/Arrow.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { SERVICES, type Service } from "@/data/home";
+import { getPublishedProjects } from "@/lib/projects";
+
+interface Related {
+  href: string;
+  en: string;
+  /** リンクの文字。`|` は折り返してよい位置（実績の題名と同じ） */
+  text: string;
+}
+
+const projects = await getPublishedProjects();
+
+const relatedOf = (service: Service): Related | undefined => {
+  if (!service.related) return undefined;
+  const { href, label } = service.related;
+  const id = href.match(/^\/projects\/([^/#]+)$/)?.[1];
+  if (id) {
+    const project = projects.find(entry => entry.id === id);
+    if (!project) throw new Error(`できること: 実績 ${id} がありません`);
+    return { href, en: "Work / 実績", text: project.data.title };
+  }
+  if (!label) throw new Error(`できること: ${href} のリンクの文字がありません`);
+  return { href, en: "Approach / つくり方", text: label };
+};
+
+const items = SERVICES.map(service => ({
+  ...service,
+  summary: `${service.body.split("。")[0]}。`,
+  link: relatedOf(service),
+}));
+---
+
+<section class="sec grid svs" id="services" aria-labelledby="h-services">
+  <SectionHead no="02" en="Services" title="できること" id="h-services" big />
+  <ol class="sv">
+    {
+      items.map(item => (
+        <li class="sv__col" data-reveal>
+          {/* 番号は付けない（動詞で見分けられる。「01」がページに何度も出ないように） */}
+          <p class="sv__top mono">{item.en}</p>
+          <p class="sv__verb" aria-hidden="true">
+            {item.verb}
+          </p>
+          <h3 class="sv__ttl">
+            <span class="sr">{item.verb} </span>
+            {item.title}
+          </h3>
+          <p class="sv__sum">{item.summary}</p>
+          {item.link && (
+            <a class="sv__link" href={item.link.href}>
+              <span class="sv__lk">
+                <span class="sv__en mono">{item.link.en}</span>
+                <span class="sv__tx">
+                  <Phrases text={item.link.text} />
+                </span>
+              </span>
+              <span class="sv__go" aria-hidden="true">
+                <Arrow />
+              </span>
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  /* 4 つの列は見出しの下に置くので、見出しを追従させない（追従すると 1 列目に重なる） */
+  .svs > :global(.sh) {
+    position: static;
+  }
+
+  .sv {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--g);
+    margin-top: clamp(40px, 4vw, 56px);
+    border-top: 1px solid var(--ink);
+  }
+
+  /* 列の間の罫線は、溝の真ん中に引く（文字は 1・4・7・10 列目から始まる）。
+     5 つの段（ラベル、動詞、題名、1 文、リンク）を subgrid で 4 列にそろえる（題名やリンクの頭が同じ高さに来る） */
+  .sv__col {
+    position: relative;
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    align-content: start;
+    min-width: 0;
+    padding-top: 22px;
+  }
+
+  .sv__col + .sv__col::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--g) / -2);
+    border-left: 1px solid var(--rule);
+  }
+
+  .sv__top {
+    display: flex;
+    gap: 12px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .sv__verb {
+    margin-top: 18px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.1;
+    letter-spacing: var(--ls-display);
+    white-space: nowrap;
+  }
+
+  .sv__ttl {
+    margin-top: 22px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .sv__sum {
+    margin-top: 10px;
+    margin-bottom: 28px;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  /* 関係するページへのリンク。題名と丸い矢印で 1 つ。4 列の下端にそろえる */
+  .sv__link {
+    align-self: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    column-gap: 12px;
+    align-items: center;
+    min-height: 44px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+  }
+
+  .sv__lk {
+    display: grid;
+    gap: 2px;
+  }
+
+  .sv__en {
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .sv__tx {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    letter-spacing: var(--ls-heading);
+  }
+
+  .sv__go {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    overflow: hidden;
+  }
+
+  .sv__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .sv__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+    transition: transform 0.45s var(--ease);
+  }
+
+  /* 押している間も、線の丸に塗りが満ちる（ホバーのない端末でも起きるように） */
+  .sv__link:focus-visible .sv__go::before,
+  .sv__link:active .sv__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .sv__link:active .sv__go::before {
+    transition-duration: 0.18s;
+  }
+
+  .sv__link:focus-visible .sv__go :global(.arw),
+  .sv__link:active .sv__go :global(.arw) {
+    transform: translateX(3px);
+  }
+
+  @media (hover: hover) {
+    .sv__link:hover .sv__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .sv__link:hover .sv__go :global(.arw) {
+      transform: translateX(3px);
+    }
+  }
+
+  /* 見出しが上に移る幅。見出しの下の余白（40px）だけで離す */
+  @media (max-width: 899px) {
+    .sv {
+      margin-top: 0;
+    }
+  }
+
+  /* 1 列が 260px を下回る幅では 2 × 2（題名とリンクの文字が細かく折れるため）。動詞は 1 段大きくする。
+     同じページの「つくり方」の 5 列と同じ幅で切り替える */
+  @media (max-width: 1199px) {
+    .sv {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sv__col:nth-child(n + 3) {
+      margin-top: 36px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .sv__col:nth-child(odd)::before {
+      content: none;
+    }
+
+    .sv__col + .sv__col:nth-child(n + 3)::before {
+      top: 0;
+    }
+
+    .sv__verb {
+      font-size: var(--fs-d2);
+    }
+  }
+
+  /* 1 列。動詞を幅いっぱいに近い大きさ（--fs-verb、64〜72px）で置き、1 つずつ画面の主役にする */
+  @media (max-width: 767px) {
+    .sv {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sv__col,
+    .sv__col:nth-child(n + 3) {
+      margin-top: 0;
+      padding: 20px 0 28px;
+    }
+
+    .sv__col + .sv__col {
+      border-top: 1px solid var(--rule);
+    }
+
+    .sv__col + .sv__col::before {
+      content: none;
+    }
+
+    .sv__verb {
+      margin-top: 10px;
+      font-size: var(--fs-verb);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .sv__ttl {
+      margin-top: 16px;
+    }
+
+    .sv__sum {
+      margin-bottom: 20px;
+    }
+  }
+</style>

@@ -1,11 +1,42 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import CompanyProfile from "@/components/pages/about/CompanyProfile";
-import Section from "@/components/shared/Section";
+import Company from "@/components/about/Company.astro";
+import Message from "@/components/about/Message.astro";
+import Name from "@/components/about/Name.astro";
+import Purpose from "@/components/about/Purpose.astro";
+import Team from "@/components/about/Team.astro";
+import Cta from "@/components/site/Cta.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import PageIndex from "@/components/site/PageIndex.astro";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+// 目次。番号・欧文・名前は、各節の SectionHead と同じ
+const SECTIONS = [
+  { no: "01", href: "#name", en: "Name", title: "Ciaoの2つの意味" },
+  { no: "02", href: "#vision", en: "Vision", title: "目指すこと" },
+  { no: "03", href: "#message", en: "Message", title: "代表メッセージ" },
+  { no: "04", href: "#company", en: "Company", title: "会社概要" },
+  { no: "05", href: "#members", en: "Members", title: "メンバー" },
+];
 ---
 
-<Layout title="会社概要" description="会社概要ページです。">
-  <Section bg="light">
-    <CompanyProfile client:load />
-  </Section>
-</Layout>
+<Base
+  title="会社"
+  description="CodeCiao株式会社の考え方、代表メッセージ、会社概要です。"
+>
+  <PageHero
+    en="About"
+    label="会社"
+    title="作って終わりに|しない"
+    lead="CodeCiaoは2024年2月に設立したソフトウェア会社です。仕事の出来は、納品した後に使われ続けるかどうかで測ります。"
+  >
+    <PageIndex items={SECTIONS} />
+  </PageHero>
+  <Name />
+  <Purpose />
+  <Message />
+  <Company />
+  <Team />
+  <Cta lead="作って終わりにしない相手を探している方は、声をかけてください。" />
+</Base>

@@ -1,0 +1,40 @@
+---
+// 役割の並び（「A / B / C」）。役割 1 つずつを折り返さない箱に入れ、区切りの「/」は箱の終わりに付ける。
+// 行の先頭に「/」が来ない。行の長さはそろえるので、最後の 1 語だけが次の行に落ちない。
+interface Props {
+  /** 「 / 」で区切った役割 */
+  text: string;
+}
+
+const { text } = Astro.props;
+const roles = text
+  .split("/")
+  .map(role => role.trim())
+  .filter(Boolean);
+---
+
+<span class="roles">
+  {
+    roles.map((role, index) => (
+      <>
+        {index > 0 && " "}
+        <span class="nb">
+          {role}
+          {index < roles.length - 1 && <span class="roles__sep"> /</span>}
+        </span>
+      </>
+    ))
+  }
+</span>
+
+<style>
+  .roles {
+    display: block;
+    text-wrap: balance;
+  }
+
+  /* 区切りの前後のアキ。空白の字幅に頼らず、どの書体でも同じ幅にする */
+  .roles__sep {
+    margin-inline: 0.1em 0.12em;
+  }
+</style>

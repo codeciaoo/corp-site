@@ -1,29 +1,76 @@
 ---
-import ProjectList from "@/components/projects/ProjectList";
-import Section from "@/components/shared/Section";
-import Layout from "@/layouts/Layout.astro";
-import { getCollection } from "astro:content";
+import Cta from "@/components/site/Cta.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import CaseIndex from "@/components/work/CaseIndex.astro";
+import CaseRow from "@/components/work/CaseRow.astro";
+import Base from "@/layouts/Base.astro";
+import { getPublishedProjects } from "@/lib/projects";
 
-const projects = await getCollection("projects");
-const sortedProjects = projects.sort(
-  (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
-);
+export const prerender = true;
+
+const projects = await getPublishedProjects();
+const number = (index: number): string => String(index + 1).padStart(2, "0");
 ---
 
-<Layout title="開発実績 | CodeCiao" description="CodeCiaoの開発・技術支援の実績のご紹介">
-  <Section bg="light">
-    <ProjectList
-      client:load
-      projects={sortedProjects.map(project => ({
-        title: project.data.title,
-        summary: project.data.summary,
-        publishedDate: project.data.publishedDate,
-        cover: project.data.cover?.src,
-        coverAlt: project.data.coverAlt,
-        href: `/projects/${project.id}`,
-        tags: project.data.tags,
-      }))}
-      itemsPerPage={15}
-    />
-  </Section>
-</Layout>
+<Base
+  title="実績"
+  description="CodeCiaoがつくってきたシステムを、置き換えたものと進め方と一緒に紹介します。"
+>
+  <div class="top">
+    <PageHero
+      en="Work"
+      label="実績"
+      title="これまでと これから"
+      lead="社名は載せていません。契約上、公開できない案件が多いためです。その代わりに、置き換えたものと進め方を書いています。"
+    >
+      <CaseIndex projects={projects} />
+    </PageHero>
+  </div>
+
+  <ul class="rows">
+    {
+      projects.map((project, index) => (
+        <CaseRow project={project} no={number(index)} lead={index === 0} />
+      ))
+    }
+  </ul>
+
+  <Cta
+    lead="似た状況の方は、現在のやり方を教えてください。置き換える範囲と進め方を一緒に決めます。"
+  />
+</Base>
+
+<style>
+  /* 見出しの 1 句目「これまでと、」は、塗りが上へ抜けて線が残る。2 句目「これから。」は、線に塗りが満ちる */
+  .top :global(.fx .ph:first-child) {
+    --top: var(--lo);
+    --bot: var(--lo);
+  }
+
+  .top :global(.fx .ph:first-child .ch) {
+    -webkit-text-stroke-color: var(--line);
+  }
+
+  :global(html.js:not(.rm)) .top :global(.fx:not(.is-live) .ph:first-child),
+  .top :global(.fx[data-state="hidden"] .ph:first-child) {
+    --top: var(--lo);
+    --bot: var(--hi);
+  }
+
+  /* --fs-d1 が 48px を下回る幅（648px 以下）では、1 句目を線の文字にしない。
+     細い字と補足の色で控えめに置く（線の文字は、小さいと画数の多い字がつぶれる） */
+  @media (max-width: 648px) {
+    .top :global(.fx .ph:first-child .ch) {
+      color: var(--ink-2);
+      font-weight: var(--fw-regular);
+      -webkit-text-stroke-width: 0;
+    }
+
+    .top :global(.fx .ph:first-child .ch::before),
+    .top :global(.fx .ph:first-child .ch::after) {
+      content: none;
+    }
+  }
+
+  /* 5 件の一覧。1 件目だけ墨の地（左右の余白と、上下の余白は、行のほうで取る） */
+</style>

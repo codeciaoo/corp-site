@@ -1,0 +1,300 @@
+---
+// 「これまで → これから」の一覧。左（これまで）は普通の文字で控えめに、右（これから）は線に塗りが満ちる。
+// 線の文字は 48px 未満だと画数の多い字がつぶれるので、この大きさの「これまで」には使わない。
+import Arrow from "./Arrow.astro";
+import Fx from "./Fx.astro";
+import Phrases from "./Phrases.astro";
+import type { BeforeAfter } from "@/data/home";
+
+interface Props {
+  items: BeforeAfter[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="ba">
+  <p class="ba__head mono" aria-hidden="true">
+    <span>No.</span>
+    <span class="ba__lab"><i class="ba__ic"></i>Goodbye / これまで</span>
+    <span></span>
+    <span class="ba__lab"><i class="ba__ic is-solid"></i>Hello / これから</span>
+    <span></span>
+  </p>
+  <ol class="ba__list">
+    {
+      items.map((item, index) => (
+        <li class="ba__row" data-reveal>
+          <span class="ba__no mono" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span class="ba__b">
+            <span class="ba__f mono">{item.field}</span>
+            <span class="ba__before">
+              <Phrases text={item.before} />
+            </span>
+          </span>
+          <span
+            class="ba__arr"
+            data-pre="hidden"
+            data-post="solid"
+            data-state="solid"
+            aria-hidden="true"
+          >
+            <i />
+          </span>
+          <span class="sr">から</span>
+          <a class="ba__a" href={item.href}>
+            <Fx text={item.after} mode="hello" reveal={false} delay={420} />
+          </a>
+          <span class="ba__go" aria-hidden="true">
+            <Arrow />
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  /* この一覧は 12 列の 4 列目から置く前提（9 列ぶんの幅）。「これから」は後ろ 5 列、つまりページの 8 列目から始める */
+  .ba__head,
+  .ba__row {
+    display: grid;
+    grid-template-columns:
+      40px minmax(0, 1fr) 64px
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g) - 44px - var(--g))
+      44px;
+    column-gap: var(--g);
+  }
+
+  /* 行の全体が、その対を詳しく書いたページへのリンクになる。右端の丸い矢印が、押せる合図 */
+  .ba__row {
+    position: relative;
+  }
+
+  .ba__a {
+    text-decoration: none;
+  }
+
+  .ba__a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .ba__go {
+    /* 丸は見た目だけ。行の全体に広げたリンクの面をふさがない */
+    pointer-events: none;
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ba__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+  }
+
+  .ba__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .ba__row:has(.ba__a:focus-visible) .ba__go::before,
+  .ba__row:has(.ba__a:active) .ba__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  @media (hover: hover) {
+    .ba__row:hover .ba__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+
+  .ba__lab {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .ba__ic {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .ba__ic.is-solid {
+    background: var(--teal);
+  }
+
+  /* 「これまで」は、役目を終えるものとして控えめに置く（細い字、補足の色、ひとまわり小さく） */
+  .ba__before {
+    display: block;
+    margin-top: 0.2em;
+    font-weight: var(--fw-regular);
+    font-size: var(--fs-h3);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .ba__head {
+    padding: 12px 0 10px;
+    border-bottom: 1px solid var(--ink);
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .ba__row {
+    align-items: start;
+    padding: 20px 0 22px;
+    border-bottom: 1px solid var(--rule);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+  }
+
+  .ba__no {
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+
+  .ba__f {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink-2);
+    text-transform: none;
+    font-weight: var(--fw-regular);
+  }
+
+  .ba__a {
+    padding-top: calc(var(--fs-label) * 1.5 + 4px);
+  }
+
+  .ba__arr {
+    position: relative;
+    height: 14px;
+    margin-top: calc(var(--fs-label) * 1.5 + 4px + 0.675em - 7px);
+  }
+
+  .ba__arr i {
+    position: absolute;
+    left: 0;
+    /* 線は山形の先まで届かせる（離れていると、矢印に見えない） */
+    right: 2px;
+    top: 50%;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: var(--ink);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    transition: transform 0.7s var(--ease) 120ms;
+  }
+
+  .ba__arr::after {
+    content: "";
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-top: 1.5px solid var(--ink);
+    border-right: 1.5px solid var(--ink);
+    transform: translate(0, -50%) rotate(45deg) scale(0);
+    transition: transform 0.35s var(--ease) 0.7s;
+  }
+
+  .ba__arr[data-state="solid"] i {
+    transform: scaleX(1);
+  }
+
+  .ba__arr[data-state="solid"]::after {
+    transform: translate(0, -50%) rotate(45deg) scale(1);
+  }
+
+  :global(html.js:not(.rm)) .ba__arr:not(.is-live) i {
+    transform: scaleX(0);
+  }
+
+  :global(html.js:not(.rm)) .ba__arr:not(.is-live)::after {
+    transform: translate(0, -50%) rotate(45deg) scale(0);
+  }
+
+  /* 字が 24px を下回る幅では、ティールを読みやすい濃いほうにする（--fs-h2 は 1044px 未満で 24px 未満）。
+     --fill は .fx 自身が持つので、.fx に直接指定する */
+  @media (max-width: 1049px) {
+    .ba__row :global(.fx) {
+      --fill: var(--teal-deep);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ba__head {
+      display: none;
+    }
+
+    .ba__list {
+      border-top: 1px solid var(--ink);
+    }
+
+    .ba__row {
+      grid-template-columns: 2em 1.6em minmax(0, 1fr) 44px;
+      row-gap: 4px;
+      column-gap: 10px;
+      font-size: var(--fs-h3);
+      padding: 16px 0 14px;
+    }
+
+    .ba__before {
+      margin-top: 0;
+      font-size: var(--fs-lead);
+    }
+
+    .ba__no {
+      grid-row: 1 / span 2;
+    }
+
+    .ba__b {
+      grid-column: 2 / 4;
+    }
+
+    .ba__arr {
+      grid-column: 2;
+      grid-row: 2;
+      height: 12px;
+      margin-top: calc(0.675em - 6px);
+    }
+
+    /* 丸い矢印は「これまで」の行の右端に上げ、「これから」は右端まで使う（狭い列で 3 行に折れないように） */
+    /* 「これから」が 1 行のときも、リンクの箱を 44px 以上にする。
+       上下に広げたぶんを負の余白で打ち消して、行の高さは変えない */
+    .ba__a {
+      grid-column: 3 / -1;
+      grid-row: 2;
+      min-height: 44px;
+      padding-block: 8px;
+      margin-block: -8px;
+    }
+
+    .ba__go {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+</style>

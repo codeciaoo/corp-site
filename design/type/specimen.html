@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>書体の比較</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=BIZ+UDPGothic:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#f5f1e8;color:#11201f;padding:40px 48px;font-family:"Inter","Noto Sans JP",sans-serif}
+.row{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:36px 0;border-top:1px solid rgba(17,32,31,.2)}
+.meta{font:500 12px/1.6 "Geist Mono",monospace;color:#4e5b59;letter-spacing:.04em}
+.meta b{display:block;color:#11201f;font-size:13px;margin-bottom:6px}
+.h{font-size:64px;line-height:1.22;letter-spacing:0;font-feature-settings:"palt"}
+.h .hi{color:#009a9a}
+.h .bye{color:transparent;-webkit-text-stroke:1.5px #0b6b6b}
+.s{margin-top:22px;font-size:36px;line-height:1.45;font-feature-settings:"palt";letter-spacing:.01em}
+.b{margin-top:18px;font-size:16px;line-height:1.95;letter-spacing:.04em;max-width:38em;font-weight:400;text-autospace:normal}
+.l{margin-top:16px;display:flex;gap:28px;align-items:baseline;font:500 11px/1.5 "Geist Mono",monospace;letter-spacing:.06em;color:#4e5b59;text-transform:uppercase}
+.n{font-size:56px;line-height:1;letter-spacing:-.02em;color:#009a9a;font-feature-settings:"tnum"}
+.n small{font-size:15px;color:#11201f;letter-spacing:.04em;margin-left:6px}
+.a{font-family:"Inter","Noto Sans JP",sans-serif}
+.z{font-family:"Inter","Zen Kaku Gothic New",sans-serif}
+.i{font-family:"IBM Plex Sans","IBM Plex Sans JP",sans-serif}
+.u{font-family:"Inter","BIZ UDPGothic",sans-serif}
+.g{font-family:"Geist","Noto Sans JP",sans-serif}
+.w7{font-weight:700}.w9{font-weight:900}.w6{font-weight:600}
+</style>
+</head>
+<body>
+<div class="row"><div class="meta"><b>A  Noto Sans JP 700 + Inter</b>見出し 700 / 本文 400</div><div class="a">
+<p class="h w7"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w7">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+<p class="b">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。実装はAIエージェントが担当します。書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。</p>
+<p class="l"><span>01 / Approach / つくり方</span><span class="n w7">190<small>画面</small></span><span class="n w7">2.8<small>万件</small></span></p>
+</div></div>
+
+<div class="row"><div class="meta"><b>B  Noto Sans JP 900 + Inter</b>見出し 900 / 本文 400</div><div class="a">
+<p class="h w9"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w9">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+</div></div>
+
+<div class="row"><div class="meta"><b>C  Zen Kaku Gothic New 700 + Inter</b>見出し 700 / 本文 500</div><div class="z">
+<p class="h w7"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w7">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+<p class="b" style="font-weight:500">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。実装はAIエージェントが担当します。書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。</p>
+<p class="l"><span>01 / Approach / つくり方</span><span class="n w7">190<small>画面</small></span><span class="n w7">2.8<small>万件</small></span></p>
+</div></div>
+
+<div class="row"><div class="meta"><b>D  Zen Kaku Gothic New 900 + Inter</b>見出し 900</div><div class="z">
+<p class="h w9"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w9">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+</div></div>
+
+<div class="row"><div class="meta"><b>E  IBM Plex Sans JP 700 + IBM Plex Sans</b>見出し 700 / 本文 400</div><div class="i">
+<p class="h w7"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w7">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+<p class="b">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。実装はAIエージェントが担当します。書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。</p>
+<p class="l"><span>01 / Approach / つくり方</span><span class="n w7">190<small>画面</small></span><span class="n w7">2.8<small>万件</small></span></p>
+</div></div>
+
+<div class="row"><div class="meta"><b>F  BIZ UDPGothic 700 + Inter</b>見出し 700 / 本文 400</div><div class="u">
+<p class="h w7"><span class="hi">こんにちは、新しい仕組み。</span><br><span class="bye">さよなら、これまでのやり方。</span></p>
+<p class="s w7">新しい仕組みを迎えると、これまでのやり方が終わります。</p>
+<p class="b">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。実装はAIエージェントが担当します。書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。</p>
+</div></div>
+
+<div class="row"><div class="meta"><b>G  Noto Sans JP 700 + Geist</b>欧文を Geist に</div><div class="g">
+<p class="s w7">まずは、Ciaoから。JavaとStrutsをAIが調べる。</p>
+<p class="b">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。Java 17から25、Jakarta EE、Strutsの移行を、Claude Codeのプラグインにしました。</p>
+<p class="l"><span>01 / Approach / つくり方</span><span class="n w7">190<small>画面</small></span><span class="n w7">2.8<small>万件</small></span></p>
+</div></div>
+<div class="row"><div class="meta"><b>A'  Noto Sans JP 700 + Inter</b>欧文を Inter に（比較）</div><div class="a">
+<p class="s w7">まずは、Ciaoから。JavaとStrutsをAIが調べる。</p>
+<p class="b">CodeCiaoは、紙やExcel、手作業で回してきた業務を長く使えるシステムに置き換えるソフトウェア会社です。Java 17から25、Jakarta EE、Strutsの移行を、Claude Codeのプラグインにしました。</p>
+</div></div>
+</body>
+</html>

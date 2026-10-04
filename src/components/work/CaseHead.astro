@@ -1,0 +1,326 @@
+---
+// 実績の詳細の冒頭。パンくず、題（墨）、状況、要約、概要の表（業界・期間・役割）。
+// 状況は、字形 o の塗りの量で大きく示し、言葉は状況のピル（StatusPill）で出す（塗りの量は同じ対応）。
+// 概要の表は、題の下の 1〜7 列目に置く（項目名は 1 列目、値は 4 列目から）。右の要約と同じ高さに並ぶ。
+// 余白、ラベルの位置、題の開始位置、リードの開始列（8 列目）は、ほかのページの冒頭（PageHero）と同じ値にする。
+import Glyph from "@/components/site/Glyph.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import StatusPill from "@/components/site/StatusPill.astro";
+import { statusLevel } from "@/lib/status";
+import Roles from "./Roles.astro";
+
+interface Props {
+  no: string;
+  title: string;
+  summary: string;
+  status: string;
+  industry: string;
+  period: string;
+  /** 「 / 」で区切った役割 */
+  role: string;
+}
+
+const { no, title, summary, status, industry, period, role } = Astro.props;
+const columns = Array.from({ length: 12 }, (_, index) => index);
+const level = statusLevel(status);
+---
+
+<header class="ch">
+  <div class="ch__grid" aria-hidden="true">
+    {columns.map(index => <i style={`--k:${index}`} />)}
+  </div>
+  <div class="ch__in">
+    <nav class="ch__lab mono" aria-label="パンくず">
+      <ol class="ch__crumb">
+        <li>
+          <a href="/projects">
+            <span class="dot" aria-hidden="true"></span>
+            Work / 実績
+          </a>
+        </li>
+        <li aria-current="page">
+          <span aria-hidden="true">/</span>
+          <span class="sr">案件</span>
+          {no}
+        </li>
+      </ol>
+    </nav>
+    <div class="ch__main">
+      <h1 class="ch__ttl"><Phrases text={title} /></h1>
+      <div
+        class="ch__st fx"
+        data-pre="hidden"
+        data-post="solid"
+        data-state="solid"
+        data-reveal
+        style={level !== undefined ? `--to:${level}` : undefined}
+      >
+        {
+          level !== undefined && (
+            <span class="ch__o" data-glyphs="1.5" aria-hidden="true">
+              <Glyph name="o" />
+            </span>
+          )
+        }
+        <p class="ch__stx">
+          <span class="mono">Status / 状況</span>
+          <StatusPill status={status} />
+        </p>
+      </div>
+      <p class="ch__sum">{summary}</p>
+      <dl class="ch__facts">
+        <div>
+          <dt class="mono">業界</dt>
+          <dd>{industry}</dd>
+        </div>
+        <div>
+          <dt class="mono">期間</dt>
+          <dd>{period}</dd>
+        </div>
+        <div>
+          <dt class="mono">役割</dt>
+          <dd><Roles text={role} /></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<style>
+  .ch {
+    position: relative;
+    padding: clamp(56px, 8vw, 128px) var(--m) clamp(56px, 7vw, 104px);
+    overflow: clip;
+  }
+
+  .ch__grid {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--m) - var(--g) / 2);
+    right: calc(var(--m) - var(--g) / 2);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    pointer-events: none;
+  }
+
+  .ch__grid i {
+    border-left: 1px solid var(--rule-2);
+    transform-origin: 50% 0;
+  }
+
+  .ch__grid i:last-child {
+    border-right: 1px solid var(--rule-2);
+  }
+
+  :global(html.js:not(.rm)) .ch__grid i {
+    transform: scaleY(0);
+  }
+
+  :global(html.js.is-go:not(.rm)) .ch__grid i {
+    transform: none;
+    transition: transform 1.2s var(--ease) calc(var(--k) * 40ms);
+  }
+
+  .ch__in {
+    position: relative;
+  }
+
+  /* ラベルの行。高さは PageHero のラベルと同じ 1 行ぶん（リンクのはみ出しは打ち消す） */
+  .ch__lab {
+    display: block;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .ch__crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ch__crumb li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 押す対象の高さは 44px。上下に広げたぶんを打ち消して、行の高さは変えない */
+  .ch__crumb a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-block: -13px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  /* 題は 1〜7 列目、状況と要約は 8 列目から（PageHero のリードと同じ列） */
+  .ch__main {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+    align-items: start;
+    margin-top: clamp(18px, 2.4vw, 32px);
+  }
+
+  /* 題が 1 行でも 2 行でも、下の要約が同じ位置から始まるように、2 行ぶんの高さを取る */
+  .ch__ttl {
+    grid-column: 1 / span 7;
+    grid-row: 1;
+    min-height: 2.8em;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.4;
+    letter-spacing: var(--ls-display);
+    text-wrap: balance;
+  }
+
+  /* 状況。字形 o の塗りの量が、どこまで動いているかを示す */
+  .ch__st {
+    grid-column: 8 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 1.7vw, 24px);
+    /* 題の 1 行目の字の上端に、字形の上端をそろえる */
+    margin-top: 0.5em;
+  }
+
+  .ch__o {
+    flex: none;
+    display: flex;
+    width: clamp(96px, 9vw, 128px);
+  }
+
+  .ch__stx {
+    display: grid;
+    justify-items: start;
+    gap: 10px;
+    min-width: 0;
+    color: var(--ink-2);
+  }
+
+  .ch__stx .mono {
+    text-transform: none;
+  }
+
+  .ch__sum {
+    grid-column: 8 / -1;
+    grid-row: 2;
+    margin-top: clamp(24px, 3.4vw, 48px);
+    max-width: 31em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* 概要の表。題の下の 1〜7 列目。項目名は 1 列目、値は 4 列目から。行の区切りは罫線。
+     1 行目の値と、右の要約の 1 行目の高さをそろえる */
+  .ch__facts {
+    grid-column: 1 / span 7;
+    grid-row: 2;
+    align-self: start;
+    margin-top: calc(
+      clamp(24px, 3.4vw, 48px) +
+        (var(--fs-lead) * var(--lh-lead) - var(--fs-h4) * var(--lh-heading)) /
+        2 - 14px
+    );
+    border-top: 1px solid var(--rule);
+  }
+
+  .ch__facts div {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: 13px 0 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ch__facts dt {
+    grid-column: 1 / span 3;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .ch__facts dd {
+    grid-column: 4 / -1;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  @media (max-width: 1023px) {
+    /* 状況 → 題 → 要約 の順に積む */
+    .ch__st {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      margin-top: 4px;
+    }
+
+    .ch__ttl {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      min-height: 0;
+      margin-top: clamp(22px, 3.4vw, 32px);
+    }
+
+    /* 要約と概要の表は、本文の箱と同じ位置（4 列目、899px 以下は左端）から始める。PageHero のリードと同じ */
+    .ch__sum {
+      grid-column: 4 / -1;
+      grid-row: 3;
+    }
+
+    .ch__facts {
+      grid-column: 4 / -1;
+      grid-row: 4;
+      margin-top: clamp(24px, 3.4vw, 32px);
+    }
+
+    /* 項目名の列は、字の幅で決める（12 列の位置には合わせない） */
+    .ch__facts div {
+      grid-template-columns: 4.4em minmax(0, 1fr);
+    }
+
+    .ch__facts dt,
+    .ch__facts dd {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .ch__sum,
+    .ch__facts {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ch__grid i:nth-child(n + 5) {
+      display: none;
+    }
+
+    .ch__grid i:nth-child(4) {
+      border-right: 1px solid var(--rule-2);
+    }
+
+    .ch__main {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ch__st,
+    .ch__ttl,
+    .ch__sum,
+    .ch__facts {
+      grid-column: 1;
+    }
+
+    .ch__sum {
+      margin-top: 20px;
+    }
+  }
+</style>

@@ -1,0 +1,244 @@
+---
+import Fx from "@/components/site/Fx.astro";
+import Glyph from "@/components/site/Glyph.astro";
+
+const columns = Array.from({ length: 12 }, (_, index) => index);
+---
+
+<section class="hero" data-hero aria-label="CodeCiao">
+  <div class="hero__grid" aria-hidden="true">
+    {columns.map(index => <i style={`--k:${index}`} />)}
+  </div>
+
+  <div class="hero__in">
+    <h1 class="hero__h1">
+      <span class="pair" data-hero-part>
+        <span class="pair__lab mono" aria-hidden="true">
+          <span class="pair__ic is-solid"></span>
+          Hello / Ciao, new systems.
+        </span>
+        <Fx
+          class="pair__jp"
+          text="こんにちは 新しい仕組み"
+          mode="hello"
+          reveal={false}
+        />
+      </span>
+      <span class="pair" data-hero-part>
+        <span class="pair__lab mono" aria-hidden="true">
+          <span class="pair__ic"></span>
+          Goodbye / Ciao, old ways.
+        </span>
+        <Fx
+          class="pair__jp"
+          text="さよなら これまでのやり方"
+          mode="goodbye"
+          reveal={false}
+        />
+      </span>
+    </h1>
+
+    <p class="hero__lead phrase">
+      Ciao（チャオ）は出会いにも別れにも使うイタリア語のあいさつです。CodeCiaoはソフトウェア会社です。紙やExcel、手作業で続けてきた業務を、長く使えるシステムに置き換えます。
+    </p>
+
+    <div class="ciao-wrap">
+      <div class="ciao" data-ciao data-glyphs="2" role="img" aria-label="CIAO">
+        <Glyph name="c" index={0} />
+        <Glyph name="i" index={1} />
+        <Glyph name="a" index={2} />
+        <Glyph name="o" index={3} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: calc(100svh - var(--hd));
+    padding: 0 var(--m) clamp(20px, 3.4vh, 36px);
+    display: flex;
+    flex-direction: column;
+    overflow: clip;
+  }
+
+  .hero__grid {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--m) - var(--g) / 2);
+    right: calc(var(--m) - var(--g) / 2);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    pointer-events: none;
+  }
+
+  .hero__grid i {
+    border-left: 1px solid var(--rule-2);
+    transform-origin: 50% 0;
+  }
+
+  .hero__grid i:last-child {
+    border-right: 1px solid var(--rule-2);
+  }
+
+  :global(html.js:not(.rm)) .hero__grid i {
+    transform: scaleY(0);
+  }
+
+  :global(html.js.is-go:not(.rm)) .hero__grid i {
+    transform: none;
+    transition: transform 1.4s var(--ease) calc(var(--k) * 40ms);
+  }
+
+  .hero__in {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+    column-gap: var(--g);
+    padding-top: clamp(24px, 4.4vh, 48px);
+  }
+
+  .hero__h1 {
+    grid-column: 1 / span 7;
+    display: grid;
+    gap: clamp(14px, 2.4vh, 26px);
+    font-weight: inherit;
+  }
+
+  .pair {
+    display: block;
+  }
+
+  .pair__lab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-2);
+    margin-bottom: clamp(6px, 1vh, 12px);
+    text-transform: none;
+    /* ラベルは 1 行で置く（Safari は、見出しの行そろえの指定を引き継いで 2 行に折ることがある） */
+    white-space: nowrap;
+  }
+
+  /* 番号は置かない（節の番号と重なるため）。丸の塗りと線で「こんにちは／さよなら」を示す */
+  .pair__ic {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .pair__ic.is-solid {
+    background: var(--teal);
+  }
+
+  .pair :global(.pair__jp) {
+    display: block;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-hero);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    --st: 46ms;
+  }
+
+  /* リードは、下層ページと同じ 8 列目から、同じ大きさで置く */
+  .hero__lead {
+    grid-column: 8 / -1;
+    align-self: start;
+    padding-top: 4px;
+    font-size: var(--fs-lead);
+    line-height: 1.95;
+  }
+
+  .ciao-wrap {
+    grid-column: 1 / -1;
+    align-self: end;
+    position: relative;
+    margin-top: clamp(40px, 6vh, 64px);
+  }
+
+  .ciao {
+    display: flex;
+    gap: 2.37%;
+    width: 100%;
+    touch-action: manipulation;
+  }
+
+  .ciao :global(.gl) {
+    cursor: crosshair;
+  }
+
+  .ciao :global(.gl--a) {
+    margin: 0 -2.1% 0 -1.5%;
+  }
+
+  /* 線は、起動時に描く。JS が動かなくても 3 秒後には出す */
+  :global(html.js:not(.rm)) .ciao :global(.gl__line) {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1.001;
+    animation: line-fallback 1.3s var(--ease) 3s forwards;
+  }
+
+  @keyframes line-fallback {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .hero__h1 {
+      grid-column: 1 / -1;
+    }
+
+    .hero__lead {
+      grid-column: 1 / span 8;
+      margin-top: 28px;
+      max-width: 36em;
+    }
+
+    .hero__in {
+      grid-template-rows: auto auto 1fr;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+    .hero__grid i:nth-child(n + 5) {
+      display: none;
+    }
+
+    .hero__grid i:nth-child(4) {
+      border-right: 1px solid var(--rule-2);
+    }
+
+    .hero__h1 {
+      gap: 22px;
+    }
+
+    .hero__lead {
+      grid-column: 1 / -1;
+      margin-top: 26px;
+    }
+
+    /* 線の文字が 38px になる。線が細く見えるので、少し太くして字間を広げる。
+       48px 未満の字は線を引かない共通の決まり（site.css の --fx-big）があるが、ここは例外にする。
+       「さよなら これまでのやり方」はほぼかなで、38px でも字の中がつぶれない（SYSTEM.md「かなだけの語は線のままでよい」）。
+       コンセプトの「線と塗り」を、スマートフォンの最初の画面で見せるため */
+    .pair :global(.fx) {
+      --stroke: 1.1px;
+      --fx-big: 1px;
+      letter-spacing: 0.02em;
+    }
+
+    .ciao-wrap {
+      margin-top: 44px;
+    }
+
+  }
+</style>

@@ -1,0 +1,227 @@
+---
+// 01 / 社名の由来。Ciao の 2 つの意味と、ロゴの線と塗り。
+// ロゴの図は、画面に入ると CODE に下から塗りが満ち（こんにちは）、CIAO の塗りが上へ抜ける（さよなら）。
+// 線と塗りの意味の説明文は「つくり方」のページだけに置く。ここは凡例と、つくり方へのリンクだけ。
+import Fx from "@/components/site/Fx.astro";
+import Glyph from "@/components/site/Glyph.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+---
+
+<section class="sec grid" id="name" aria-labelledby="h-name">
+  <SectionHead no="01" en="Name" title="Ciaoの2つの意味" id="h-name" />
+  <div class="body">
+    <p class="say t-d2">
+      <span class="ln">
+        <span class="ph"><Fx text="こんにちは" delay={200} hover />も</span>
+      </span>
+      <span class="ln">
+        <span class="ph"
+          ><Fx text="さよなら" mode="goodbye" delay={700} hover />も</span
+        >
+        <span class="ph"><span class="say__en" lang="it">Ciao</span></span>
+      </span>
+    </p>
+    <p class="sub">
+      Ciao（チャオ）は出会いにも別れにも使うイタリア語のあいさつです。CodeCiaoは新しいシステムをつくるだけでなく、それまでのやり方を終わらせる作業も担当します。
+    </p>
+
+    <figure class="lg">
+      <p class="lg__top mono" aria-hidden="true">
+        <span>Fig. / Logo</span>
+        <span>Fill / Line</span>
+      </p>
+      <div
+        class="lg__wm"
+        data-glyphs="1.5"
+        role="img"
+        aria-label="CodeCiaoのロゴ。CODEは塗り、CIAOは線で描いています"
+      >
+        <div class="lg__col lg__col--code">
+          <div
+            class="lg__grp fx"
+            data-pre="hidden"
+            data-post="solid"
+            data-state="solid"
+            data-reveal
+          >
+            <Glyph name="c" index={0} />
+            <Glyph name="o" index={1} />
+            <Glyph name="d" index={2} />
+            <Glyph name="e" index={3} />
+          </div>
+          <span class="lg__dim"></span>
+        </div>
+        <div class="lg__col lg__col--ciao">
+          <div
+            class="lg__grp fx"
+            data-pre="solid"
+            data-post="gone"
+            data-state="gone"
+            data-reveal
+            style="--d0:520ms"
+          >
+            <Glyph name="c" index={0} />
+            <Glyph name="i" index={1} />
+            <Glyph name="a" index={2} />
+            <Glyph name="o" index={3} />
+          </div>
+          <span class="lg__dim"></span>
+        </div>
+      </div>
+      <figcaption class="lg__keys mono">
+        <span class="lg__key lg__key--fill">
+          <span class="dot is-on" aria-hidden="true"></span>
+          塗り / 確かめた事実
+        </span>
+        <span class="lg__key lg__key--line">
+          <span class="dot" aria-hidden="true"></span>
+          線 / 設計
+        </span>
+      </figcaption>
+    </figure>
+    <a class="link lg__more" href="/approach#line-fill">
+      <span class="dot" aria-hidden="true"></span>
+      線と塗りの意味を読む
+    </a>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  /* 文字の型は .t-d2 */
+  .say {
+    --st: 60ms;
+  }
+
+  .say .ln {
+    display: block;
+  }
+
+  .say .ph {
+    display: inline-block;
+  }
+
+  /* 和文と欧文の境目のアキ。text-autospace が効かないブラウザでは、ここで付ける */
+  @supports not (text-autospace: normal) {
+    .say__en {
+      margin-right: 0.14em;
+    }
+  }
+
+  .sub {
+    margin-top: clamp(24px, 2.6vw, 36px);
+    max-width: 36em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* ロゴの図。CODE と CIAO の字の高さがそろうよう、幅の比と字間を計算で決めている */
+  .lg {
+    margin-top: clamp(56px, 7vw, 96px);
+    border-top: 1px solid var(--ink);
+  }
+
+  .lg__top {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0 0;
+    color: var(--ink-2);
+  }
+
+  .lg__wm {
+    display: flex;
+    column-gap: var(--g);
+    padding-top: clamp(32px, 4.4vw, 60px);
+  }
+
+  .lg__col {
+    min-width: 0;
+  }
+
+  .lg__col--code {
+    flex: 742.5 1 0%;
+  }
+
+  .lg__col--ciao {
+    flex: 638 1 0%;
+  }
+
+  .lg__grp {
+    display: flex;
+  }
+
+  .lg__col--code .lg__grp {
+    gap: 2.6%;
+  }
+
+  .lg__col--ciao .lg__grp {
+    gap: 3.026%;
+  }
+
+  .lg__col--ciao :global(.gl--a) {
+    margin: 0 -1.5% 0 -1.1%;
+  }
+
+  /* 寸法線 */
+  .lg__dim {
+    position: relative;
+    display: block;
+    height: 11px;
+    margin-top: clamp(16px, 2vw, 26px);
+    border-inline: 1px solid var(--ink);
+  }
+
+  .lg__dim::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  /* 凡例。「つくり方」の図の凡例と同じ書き方（丸と等幅のラベル）。CODE と CIAO の幅に合わせて置く */
+  .lg__keys {
+    display: flex;
+    column-gap: var(--g);
+    padding: 12px 0 16px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .lg__key {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lg__key--fill {
+    flex: 742.5 1 0%;
+  }
+
+  .lg__key--line {
+    flex: 638 1 0%;
+  }
+
+  .lg__more {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .sub {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+
+</style>

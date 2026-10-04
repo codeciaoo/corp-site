@@ -1,0 +1,99 @@
+---
+// 節の見出しの下に置く目次（1024px 以上）。節の見出しと一緒に左の 3 列に留まるので、読んでいる間ずっと見える。
+// いまの節までの丸を塗る（読んだ節は塗り、これからの節は線）。いまの節の名前は墨の太字。
+// 中身は冒頭の目次（Index.astro）と同じなので、読み上げとキーボードの移動からは外す（同じリンクを 6 回読ませない）。
+import { SECTION_LIST } from "@/data/approach";
+
+interface Props {
+  /** いまの節の id */
+  current: string;
+}
+
+const { current } = Astro.props;
+const now = SECTION_LIST.findIndex(section => section.id === current);
+---
+
+<div class="rl" aria-hidden="true">
+  <p class="rl__head mono">Contents / 目次</p>
+  <ol class="rl__list">
+    {
+      SECTION_LIST.map((section, index) => (
+        <li>
+          <a
+            class:list={["rl__a", { "is-now": index === now }]}
+            href={`#${section.id}`}
+            tabindex="-1"
+          >
+            <span class:list={["dot", { "is-on": index <= now }]} />
+            <span class="rl__no mono">{section.no}</span>
+            <span class="rl__ttl">{section.title.replace(/\s*\|\s*/g, " ")}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .rl {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .rl {
+      display: block;
+      margin-top: clamp(36px, 3.6vw, 52px);
+      border-top: 1px solid currentColor;
+    }
+  }
+
+  .rl__head {
+    padding: 12px 0 10px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .rl__list li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 押す対象は高さ 44px 以上 */
+  .rl__a {
+    display: grid;
+    grid-template-columns: 10px 1.8em minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 0;
+    text-decoration: none;
+    color: var(--ink-2);
+    transition: color 0.3s linear;
+  }
+
+  .rl__a .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .rl__ttl {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.06em;
+  }
+
+  .rl__a.is-now {
+    color: inherit;
+  }
+
+  /* 押したときの反応。丸に塗りが満ち（共通の .dot）、名前の色が変わる */
+  .rl__a:active {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .rl__a:hover {
+      color: var(--teal-deep);
+    }
+  }
+</style>

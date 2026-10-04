@@ -1,0 +1,534 @@
+---
+// フォームの枠。検証、送信、送信中・成功・失敗の表示を受け持つ。お問い合わせと採用応募の両方で使う。
+// 入力欄は Field.astro を slot に並べる。送信先は JSON を受ける API（/api/contact）。
+import Arrow from "@/components/site/Arrow.astro";
+import Fx from "@/components/site/Fx.astro";
+import { CONTACT_EMAIL } from "@/data/site";
+
+interface Props {
+  id: string;
+  /** 送信ボタンの文字 */
+  submit: string;
+  /** 成功したときの見出し */
+  doneTitle: string;
+  /** 成功したときの本文 */
+  doneBody: string;
+  /** フォームの名前（読み上げ用） */
+  label: string;
+  endpoint?: string;
+}
+
+const {
+  id,
+  submit,
+  doneTitle,
+  doneBody,
+  label,
+  endpoint = "/api/contact",
+} = Astro.props;
+
+const mailto = `mailto:${CONTACT_EMAIL}`;
+---
+
+<div class="fm" data-form-root>
+  <noscript>
+    <p class="fm__nojs">
+      このフォームはJavaScriptを使って送信します。JavaScriptが動かないときは、<a
+        class="inline"
+        href={mailto}>{CONTACT_EMAIL}</a
+      >へ直接送ってください。
+    </p>
+  </noscript>
+
+  <form
+    class="fm__form"
+    id={id}
+    method="post"
+    novalidate
+    aria-label={label}
+    data-endpoint={endpoint}
+  >
+    <slot />
+
+    <!-- 迷惑送信対策。人には見せない欄。値が入っていたら、API は何もしない -->
+    <div class="fm__hp" aria-hidden="true">
+      <label for={`${id}-trap`}>この欄には何も入力しないでください</label>
+      <input
+        id={`${id}-trap`}
+        name="trap_note"
+        type="text"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="fm__foot">
+      <div class="fm__fail" role="alert" data-fail></div>
+      <div class="fm__act">
+        <button
+          class="btn btn--lg btn--solid"
+          type="submit"
+          data-submit
+          data-busy="送信しています"
+        >
+          <span data-submit-label>{submit}</span>
+          <Arrow />
+        </button>
+        <!-- 899px 以下だけ: 必須の入力の数。送信ボタンの塗りと同じ量を数字で示す（入力中も画面の中に見える） -->
+        <p class="fm__count" aria-hidden="true">
+          <span class="fm__count-lab mono">必須の入力</span>
+          <span class="fm__count-num">
+            <span data-act-count>0</span><i>/</i><span data-act-total
+              >0</span
+            >
+          </span>
+        </p>
+        <p class="fm__note"><slot name="note" /></p>
+      </div>
+    </div>
+  </form>
+
+  <!-- 失敗したときの文。送信に失敗したら、上の role="alert" の中へ写す -->
+  <div hidden data-fail-source>
+    <p>
+      送信できませんでした。時間をおいてもう一度試すか、<a
+        class="inline"
+        href={mailto}>{CONTACT_EMAIL}</a
+      >へ直接送ってください。
+    </p>
+  </div>
+
+  <div class="fm__done" data-done hidden>
+    <p class="fm__done-lab mono">
+      <span class="dot is-on" aria-hidden="true"></span>
+      Sent / Ciao
+    </p>
+    <h3 class="fm__done-ttl" tabindex="-1" data-done-title>
+      <Fx text={doneTitle} reveal={false} />
+    </h3>
+    <p class="fm__done-body t-lead">{doneBody}</p>
+    <slot name="done" />
+  </div>
+
+  <p class="sr" aria-live="polite" data-live></p>
+</div>
+
+<script>
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  const isControl = (el: Element | EventTarget | null): el is Control =>
+    el instanceof HTMLInputElement ||
+    el instanceof HTMLSelectElement ||
+    el instanceof HTMLTextAreaElement;
+
+  const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null;
+
+  /** 入力欄 1 つの検証。問題がなければ空文字を返す */
+  const errorOf = (control: Control): string => {
+    const value = control.value.trim();
+    if (value === "") {
+      return control.required
+        ? (control.dataset.missing ?? "入力してください。")
+        : "";
+    }
+    return control.validity.valid
+      ? ""
+      : (control.dataset.invalid ?? "形式を確かめてください。");
+  };
+
+  const setup = (root: HTMLElement): void => {
+    const form = root.querySelector<HTMLFormElement>("form");
+    const done = root.querySelector<HTMLElement>("[data-done]");
+    const doneTitle = root.querySelector<HTMLElement>("[data-done-title]");
+    const fail = root.querySelector<HTMLElement>("[data-fail]");
+    const failSource = root.querySelector<HTMLElement>("[data-fail-source]");
+    const live = root.querySelector<HTMLElement>("[data-live]");
+    const button = root.querySelector<HTMLButtonElement>("[data-submit]");
+    const buttonLabel = root.querySelector<HTMLElement>("[data-submit-label]");
+    if (
+      !form ||
+      !done ||
+      !doneTitle ||
+      !fail ||
+      !failSource ||
+      !live ||
+      !button ||
+      !buttonLabel
+    ) {
+      return;
+    }
+
+    const controls = Array.from(form.elements)
+      .filter(isControl)
+      .filter(control => control.closest("[data-field]") !== null);
+    const required = controls.filter(control => control.required);
+    const dirty = new Set<Control>();
+    const idleLabel = buttonLabel.textContent ?? "";
+    const meter = document.querySelector<HTMLElement>(
+      `[data-meter="${form.id}"]`
+    );
+    const actCount = root.querySelector<HTMLElement>("[data-act-count]");
+    const actTotal = root.querySelector<HTMLElement>("[data-act-total]");
+    if (actTotal) actTotal.textContent = String(required.length);
+    let sending = false;
+
+    const announce = (message: string): void => {
+      live.textContent = "";
+      requestAnimationFrame(() => {
+        live.textContent = message;
+      });
+    };
+
+    /** 確かめた入力欄の丸を塗り、進み具合の輪に塗りを足す */
+    const refresh = (): void => {
+      controls.forEach(control => {
+        const ok = control.value.trim() !== "" && errorOf(control) === "";
+        control
+          .closest("[data-field]")
+          ?.querySelector(".dot")
+          ?.classList.toggle("is-on", ok);
+      });
+      const count = required.filter(control => errorOf(control) === "").length;
+      const ratio = required.length > 0 ? count / required.length : 1;
+      // 送信ボタンにも同じ量の塗りを入れる（899px 以下で、ボタンが計器になる）
+      button.style.setProperty("--ratio", ratio.toFixed(3));
+      if (actCount) actCount.textContent = String(count);
+      if (!meter) return;
+      meter.style.setProperty("--ratio", ratio.toFixed(3));
+      const text = meter.querySelector<HTMLElement>("[data-meter-count]");
+      if (text) text.textContent = String(count);
+    };
+
+    /** エラーの文を、入力欄のすぐ下に出す（空文字なら消す） */
+    const show = (control: Control, message: string): void => {
+      const field = control.closest<HTMLElement>("[data-field]");
+      const error = field?.querySelector<HTMLElement>("[data-error]");
+      if (!field || !error) return;
+      error.textContent = message;
+      error.hidden = message === "";
+      field.classList.toggle("is-invalid", message !== "");
+      if (message) control.setAttribute("aria-invalid", "true");
+      else control.removeAttribute("aria-invalid");
+    };
+
+    /**
+     * 直す入力欄へ移る。Tab での移動などでスクロールが進行中だと、フォーカスによる
+     * スクロールが打ち消されるので、次のフレームで見える位置へ送る
+     */
+    const focusField = (control: Control): void => {
+      control.focus({ preventScroll: true });
+      requestAnimationFrame(() => {
+        control.closest("[data-field]")?.scrollIntoView({ block: "center" });
+      });
+    };
+
+    const setBusy = (busy: boolean): void => {
+      sending = busy;
+      button.disabled = busy;
+      form.setAttribute("aria-busy", String(busy));
+      buttonLabel.textContent = busy
+        ? (button.dataset.busy ?? idleLabel)
+        : idleLabel;
+    };
+
+    const succeed = (): void => {
+      form.hidden = true;
+      done.hidden = false;
+      meter?.style.setProperty("--ratio", "1");
+      // 線で現れて、下から塗りが満ちる
+      void done.offsetWidth;
+      done
+        .querySelectorAll(".fx")
+        .forEach(part => part.classList.add("is-live"));
+      doneTitle.focus();
+    };
+
+    const failed = (): void => {
+      fail.replaceChildren(...failSource.cloneNode(true).childNodes);
+      button.focus();
+    };
+
+    /** API が返した入力欄ごとのエラーを出す。1 つでも出せたら true */
+    const showServerErrors = async (response: Response): Promise<boolean> => {
+      let data: unknown;
+      try {
+        data = await response.json();
+      } catch {
+        return false;
+      }
+      if (!isRecord(data) || !isRecord(data.fields)) return false;
+      const fields = data.fields;
+      const invalid = controls.filter(control => {
+        const message = fields[control.name];
+        if (typeof message !== "string") return false;
+        show(control, message);
+        return true;
+      });
+      if (invalid.length > 0) focusField(invalid[0]);
+      return invalid.length > 0;
+    };
+
+    const send = async (): Promise<void> => {
+      const payload: Record<string, string> = {};
+      new FormData(form).forEach((value, key) => {
+        if (typeof value === "string") payload[key] = value.trim();
+      });
+      fail.replaceChildren();
+      live.textContent = "";
+      setBusy(true);
+      try {
+        const response = await fetch(form.dataset.endpoint ?? "/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (response.ok) {
+          succeed();
+          return;
+        }
+        setBusy(false);
+        if (response.status === 400 && (await showServerErrors(response))) {
+          return;
+        }
+        failed();
+      } catch {
+        setBusy(false);
+        failed();
+      }
+    };
+
+    form.addEventListener("input", event => {
+      if (!isControl(event.target)) return;
+      dirty.add(event.target);
+      // エラーが出ている欄は、直ったらすぐ消す。読み上げ用の文も残さない
+      if (event.target.hasAttribute("aria-invalid")) {
+        const message = errorOf(event.target);
+        show(event.target, message);
+        if (!message) live.textContent = "";
+      }
+      refresh();
+    });
+
+    form.addEventListener("focusout", event => {
+      const control = event.target;
+      if (!isControl(control) || !controls.includes(control)) return;
+      if (!dirty.has(control)) return;
+      const message = errorOf(control);
+      show(control, message);
+      if (message) announce(message);
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      if (sending) return;
+      const invalid = controls.filter(control => {
+        const message = errorOf(control);
+        show(control, message);
+        return message !== "";
+      });
+      if (invalid.length > 0) {
+        focusField(invalid[0]);
+        announce(
+          `入力を確かめてください。直すところが${invalid.length}件あります。`
+        );
+        return;
+      }
+      void send();
+    });
+
+    // 職種のページから来たときは、希望職種を選んでおく（?position=intern など）
+    const params = new URLSearchParams(location.search);
+    form
+      .querySelectorAll<HTMLSelectElement>("select[data-prefill]")
+      .forEach(select => {
+        const value = params.get(select.name);
+        const exists = Array.from(select.options).some(
+          option => option.value === value
+        );
+        if (value && exists) select.value = value;
+      });
+
+    refresh();
+  };
+
+  document
+    .querySelectorAll<HTMLElement>("[data-form-root]")
+    .forEach(root => setup(root));
+</script>
+
+<style>
+  .fm__form {
+    display: grid;
+    row-gap: clamp(30px, 3.2vw, 44px);
+  }
+
+  .fm__form[hidden] {
+    display: none;
+  }
+
+  /* JavaScript が動かないときは、送れない入力欄を出さず、メールを案内する */
+  :global(html:not(.js)) .fm__form {
+    display: none;
+  }
+
+  .fm__nojs {
+    padding: 20px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  /* 画面の外に置く。1px の箱の中で字ごとに折り返さないようにする（折り返しの検査で数えられないように） */
+  .fm__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .fm__foot {
+    display: grid;
+    row-gap: 20px;
+    margin-top: 4px;
+  }
+
+  .fm__act {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+  }
+
+  .fm__count {
+    display: none;
+  }
+
+  /* 899px 以下: フォームの見出しの横の輪は、入力している間は画面の外に出る。
+     そこで送信ボタンを計器にする。確かめた必須の入力のぶんだけ、ボタンに下から塗りが満ち、
+     全部そろうと塗りのボタンになる。横に「必須の入力 n / 5」を置く（画面に追従する部品は足さない） */
+  @media (max-width: 899px) {
+    /* --ratio は refresh() が入れる。入る前は 0（読み込み直後に、満ちたボタンが抜ける動きを出さない） */
+    .fm__act [data-submit]::before {
+      clip-path: polygon(
+        0 calc((1 - var(--ratio, 0)) * 100%),
+        100% calc((1 - var(--ratio, 0)) * 100%),
+        100% 100%,
+        0 100%
+      );
+      transition: clip-path 0.7s var(--ease);
+    }
+
+    .fm__count {
+      display: grid;
+      gap: 4px;
+    }
+
+    .fm__count-lab {
+      color: var(--ink-2);
+    }
+
+    .fm__count-num {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-h4);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fm__count-num i {
+      font-style: normal;
+      font-size: var(--fs-small);
+      color: var(--ink-2);
+    }
+  }
+
+  /* 文字は墨のまま（ティールの塗りの上で 4.5:1 以上になる） */
+  .fm__act .btn:disabled {
+    cursor: progress;
+    opacity: 0.6;
+  }
+
+  .fm__act .btn:disabled::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .fm__note {
+    flex: 1 1 16em;
+    max-width: 26em;
+    font-size: var(--fs-caption);
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+
+  .fm__note:empty {
+    display: none;
+  }
+
+  /* 文中のリンクは、押せる範囲を上下に広げて 44px 以上にする（行の高さは変わらない） */
+  .fm__note :global(a),
+  .fm__fail :global(a),
+  .fm__nojs a {
+    padding-block: 14px;
+  }
+
+  .fm__fail:empty {
+    display: none;
+  }
+
+  .fm__fail {
+    padding: 16px 18px 17px;
+    border-left: 4px solid var(--ink);
+    background: var(--paper-2);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-list);
+  }
+
+  .fm__done {
+    padding-top: clamp(24px, 3vw, 40px);
+    border-top: 1px solid var(--ink);
+  }
+
+  .fm__done[hidden] {
+    display: none;
+  }
+
+  .fm__done-lab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-2);
+  }
+
+  .fm__done-ttl {
+    margin-top: 14px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d2);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    --st: 60ms;
+  }
+
+  .fm__done-ttl:focus-visible {
+    outline-offset: 8px;
+  }
+
+  .fm__done-body {
+    margin-top: 18px;
+    max-width: 30em;
+  }
+
+  @media (max-width: 767px) {
+    .fm__done-body {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+</style>

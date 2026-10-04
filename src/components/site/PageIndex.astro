@@ -1,0 +1,167 @@
+---
+// ページ内の目次。ヒーローの下端に、ラベル「Contents / 目次」と、罫線で区切った行を置く
+// （つくり方の目次 `approach/Index.astro`、実績の目次 `work/CaseIndex.astro` と同じ組み方）。
+// 12 列のうち、ラベルは 1 列目、番号は 4 列目、最後の列は 8 列目から始める。
+// en があるとき: 4 列目に番号と欧文、8 列目に節の名前（つくり方と同じ）。
+// en がないとき: 4 列目に番号と名前、8 列目に補足（実績と同じ）。
+interface Item {
+  no: string;
+  href: string;
+  title: string;
+  /** 欧文のラベル（狭い画面では省く） */
+  en?: string;
+  /** 名前の補足（役割など）。「 / 」で区切った値は、1 つずつ折り返さない箱に入れる */
+  note?: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="pi" aria-label="このページの目次">
+  <p class="pi__head mono">Contents / 目次</p>
+  <ol class="pi__list">
+    {
+      items.map(item => (
+        <li>
+          <a class="pi__a" href={item.href}>
+            <span class="dot" aria-hidden="true" />
+            <span class="pi__no mono" aria-hidden="true">
+              {item.no}
+            </span>
+            {item.en ? (
+              <>
+                <span class="pi__en mono" aria-hidden="true">
+                  {item.en}
+                </span>
+                <span class="pi__ttl">{item.title}</span>
+              </>
+            ) : (
+              <>
+                <span class="pi__ttl">{item.title}</span>
+                {item.note && (
+                  <span class="pi__note">
+                    {item.note.split(" / ").map((part, index, parts) => (
+                      <>
+                        <span class="nb">
+                          {index < parts.length - 1 ? `${part} /` : part}
+                        </span>{" "}
+                      </>
+                    ))}
+                  </span>
+                )}
+              </>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .pi {
+    margin-top: clamp(44px, 5.6vw, 80px);
+    border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+  }
+
+  /* 罫線の下にラベル。1 行目の番号と同じ高さに置く */
+  .pi__head {
+    grid-column: 1 / span 3;
+    padding-top: 17px;
+    color: var(--ink-2);
+  }
+
+  .pi__list {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .pi__list li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 押す対象は高さ 44px 以上。最後の列は 9 列のうち後ろ 5 列で、ページの 8 列目から始まる */
+  .pi__a {
+    display: grid;
+    grid-template-columns:
+      10px 1.8em minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: 12px;
+    align-content: center;
+    align-items: baseline;
+    min-height: 48px;
+    padding: 10px 0;
+    text-decoration: none;
+    transition: color 0.3s linear;
+  }
+
+  .pi__a .dot {
+    width: 10px;
+    height: 10px;
+    transform: translateY(1px);
+  }
+
+  .pi__no,
+  .pi__en,
+  .pi__note {
+    color: var(--ink-2);
+  }
+
+  .pi__ttl {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.06em;
+  }
+
+  .pi__note {
+    font-size: var(--fs-small);
+    line-height: var(--lh-heading);
+  }
+
+  /* 押したときの反応。丸に塗りが満ち（共通の .dot）、名前の色が変わる。
+     ホバーのない端末でも、押している間は同じ反応を返す */
+  .pi__a:focus-visible .pi__ttl,
+  .pi__a:active .pi__ttl {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .pi__a:hover .pi__ttl {
+      color: var(--teal-deep);
+    }
+  }
+
+  /* 狭い画面: ラベルを上に置く。1 件は、名前の下に補足（欧文は省く） */
+  @media (max-width: 899px) {
+    .pi {
+      display: block;
+    }
+
+    .pi__head {
+      padding: 14px 0 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .pi__a {
+      grid-template-columns: 10px 1.8em minmax(0, 1fr);
+      row-gap: 2px;
+    }
+
+    .pi__en {
+      display: none;
+    }
+
+    .pi__note {
+      grid-column: 3;
+      font-size: var(--fs-caption);
+    }
+  }
+</style>

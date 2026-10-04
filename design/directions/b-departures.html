@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeCiao — B: Departures / Arrivals</title>
+<meta name="description" content="CodeCiao コーポレートサイト刷新 方向性ボード B（発着板）">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%222%22 fill=%22%230C0C0B%22/%3E%3Crect x=%224%22 y=%223%22 width=%228%22 height=%2210%22 rx=%221%22 fill=%22%23F4A52A%22/%3E%3Crect x=%224%22 y=%227.6%22 width=%228%22 height=%22.8%22 fill=%22%230C0C0B%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --black:#0C0C0B;
+  --housing:#121211;
+  --flap:#1B1B19;
+  --rule:#2C2B27;
+  --paper:#EFE8D8;
+  --mute:#9C978B;
+  --amber:#F4A52A;
+  --teal:#039896;
+  --ink-mute:#5C574E;
+
+  --f-disp:"Archivo","Zen Kaku Gothic New",sans-serif;
+  --f-text:"Archivo","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-jp:"Zen Kaku Gothic New",sans-serif;
+  --f-mono:"IBM Plex Mono","Zen Kaku Gothic New",ui-monospace,monospace;
+
+  --m:56px;
+  --gut:24px;
+  --nav-h:64px;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--black);color:var(--paper);
+  font-family:var(--f-text);font-size:16px;line-height:1.9;letter-spacing:.04em;
+  font-kerning:normal;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+img{max-width:100%}
+a{color:inherit}
+::selection{background:var(--amber);color:var(--black)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:16px;top:-48px;z-index:100;background:var(--amber);color:var(--black);padding:8px 12px;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+.mono{font-family:var(--f-mono);font-size:11px;line-height:1.5;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+.mute{color:var(--mute)}
+.amber{color:var(--amber)}
+[lang="en"],[lang="it"]{letter-spacing:.01em}
+
+/* ───────────── Split-flap module ───────────── */
+.flap{
+  --h:40px;--w:28px;--fs:.9;--fc:var(--paper);--r:calc(var(--h)*.05);
+  position:relative;display:inline-block;flex:none;
+  width:var(--w);height:var(--h);
+  perspective:calc(var(--h)*4.2);
+  font-size:calc(var(--h)*var(--fs));line-height:1;color:var(--fc);
+  letter-spacing:0;user-select:none;
+}
+.flap>.h{position:absolute;left:0;right:0;height:50%;overflow:hidden;z-index:1;backface-visibility:hidden}
+.flap>.t{top:0;border-radius:var(--r) var(--r) 0 0;transform-origin:50% 100%;
+  background:linear-gradient(180deg,#262623 0%,#1E1E1C 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055)}
+.flap>.b{bottom:0;border-radius:0 0 var(--r) var(--r);transform-origin:50% 0;
+  background:linear-gradient(180deg,#1A1A18 0%,#151513 100%)}
+.flap>.l{visibility:hidden;z-index:3;will-change:transform}
+.flap .g{position:absolute;left:0;right:0;height:200%;display:flex;align-items:center;justify-content:center;white-space:pre}
+.flap>.t .g{top:0}
+.flap>.b .g{top:-100%}
+.flap .sd{position:absolute;inset:0;opacity:0;pointer-events:none;background:#000}
+.flap>.t.s .sd{background:linear-gradient(180deg,rgba(0,0,0,.35),#000)}
+.flap>.b.s .sd{background:linear-gradient(180deg,#000,rgba(0,0,0,.15))}
+.flap>.t.l .sd{background:linear-gradient(180deg,rgba(0,0,0,.2),#000)}
+.flap>.b.l .sd{background:linear-gradient(180deg,#000,rgba(0,0,0,.35))}
+/* hinge */
+.flap::after{content:"";position:absolute;left:0;right:0;top:50%;height:max(1px,calc(var(--h)*.014));transform:translateY(-50%);background:#050505;z-index:2}
+/* side notches where the pins sit */
+.flap::before{content:"";position:absolute;z-index:4;left:0;right:0;top:50%;height:calc(var(--h)*.11);transform:translateY(-50%);pointer-events:none;
+  background:linear-gradient(90deg,var(--under,var(--black)) 0 max(1px,calc(var(--w)*.025)),transparent 0 calc(100% - max(1px,calc(var(--w)*.025))),var(--under,var(--black)) 0)}
+.flap--en,.flap--num{font-family:var(--f-disp);font-stretch:62%;font-weight:600}
+.flap--en .g,.flap--num .g{transform:translateY(-.05em)}
+.flap--jp .g{transform:translateY(-.06em)}
+.flap--jp{font-family:var(--f-jp);font-weight:700;--fs:.6}
+.flap--panel{width:100%;font-family:var(--f-text);font-weight:500;--fs:.36;perspective:calc(var(--h)*16)}
+.flap--panel .g{justify-content:flex-start;padding:0 .95em;letter-spacing:.03em;font-feature-settings:"palt"}
+
+/* ───────────── Nav ───────────── */
+.nav{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 var(--m);background:var(--black);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.is-scrolled{border-bottom-color:var(--rule)}
+.nav__logo{display:block;line-height:0}
+.nav__logo img{height:17px;width:auto;filter:brightness(0) invert(.93) sepia(.12)}
+.nav__list{display:flex;align-items:center;gap:30px;list-style:none;margin:0;padding:0}
+.nav__list a{display:inline-flex;align-items:baseline;gap:8px;font-size:13px;line-height:1;letter-spacing:.08em;text-decoration:none;font-feature-settings:"palt";padding:8px 0;position:relative}
+.nav__list a .no{font:500 10px/1 var(--f-mono);letter-spacing:.06em;color:var(--mute)}
+.nav__list a:not(.nav__cta)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--amber);transform:scaleX(0);transform-origin:0 50%;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.nav__list a:not(.nav__cta):hover::after,.nav__list a:not(.nav__cta):focus-visible::after{transform:scaleX(1)}
+.nav__cta{background:var(--amber);color:var(--black);padding:11px 14px!important;border-radius:2px;font-weight:700}
+.nav__cta .no{color:rgba(12,12,11,.6)!important}
+.nav__menu{display:none;background:none;border:1px solid var(--rule);color:var(--paper);font:500 11px/1 var(--f-mono);letter-spacing:.14em;padding:10px 12px;border-radius:2px;cursor:pointer}
+
+/* ───────────── Hero ───────────── */
+.hero{overflow-x:clip;min-height:calc(100svh - var(--nav-h));display:flex;flex-direction:column;padding:clamp(8px,2.2svh,28px) var(--m) clamp(16px,3svh,32px)}
+.strip{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.strip__side{display:flex;align-items:center;gap:14px}
+.lamp{width:8px;height:8px;border-radius:50%;flex:none;background:var(--amber);box-shadow:0 0 0 3px rgba(244,165,42,.14),0 0 14px rgba(244,165,42,.55);transition:background .4s,box-shadow .4s}
+.lamp.is-arr{background:var(--teal);box-shadow:0 0 0 3px rgba(3,152,150,.16),0 0 14px rgba(3,152,150,.6)}
+.strip .flap--en,.strip .flap--num{--h:30px;--w:19px;--fs:.92}
+.strip .flap--jp{--h:30px;--w:28px;--fs:.62}
+.strip .flap--en{--fc:var(--amber)}
+.strip .flap--jp{--fc:var(--amber)}
+.flaps{display:inline-flex;gap:2px}
+.it{font-family:var(--f-disp);font-style:italic;font-stretch:80%;font-weight:400;font-size:15px;color:var(--mute);letter-spacing:.02em;min-width:5.2em}
+.clock{display:flex;align-items:center;gap:10px}
+.clock .flaps{gap:2px;align-items:center}
+.clock .colon{font:600 18px/1 var(--f-disp);color:var(--mute);width:8px;text-align:center}
+.clock .flap--num{--fc:var(--paper)}
+
+.board{container-type:inline-size;--gap:6px;margin-top:clamp(20px,5.6svh,60px);cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;background:none;padding:0;color:inherit;font:inherit;text-align:left;display:block;width:100%}
+.board:focus-visible{outline-offset:8px}
+.bstate{--W:calc((100cqi - 12 * var(--gap)) / 13);--H:min(calc(var(--W) / .6),19svh)}
+.row{display:flex;flex-wrap:nowrap;gap:var(--gap)}
+.grp{display:flex;gap:var(--gap)}
+.row--en .flap{--h:var(--H);--w:var(--W);--fs:.9}
+.row--jp{margin-top:calc(var(--gap) + 2px)}
+.row--jp .flap{--h:calc(var(--H) * .7);--w:var(--W);--fs:.6;--fc:var(--amber)}
+.bstate--arr{display:none}
+.subhd{display:flex;align-items:center;gap:14px;margin:28px 0 14px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.hero.is-static .bstate--arr{display:block}
+.hero.is-static .bstate{--H:min(calc(var(--W) / .6),12svh)}
+.hero.is-static .board{cursor:default}
+
+.board-hint{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:14px;color:var(--mute)}
+.board-hint i{font-style:normal;color:var(--paper)}
+.board-hint .tap{display:none}
+@media (hover:none){.board-hint .tap{display:inline}.board-hint .clk{display:none}}
+.hero.is-static .board-hint{display:none}
+.hero__foot{margin-top:auto;padding-top:clamp(24px,4svh,48px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut);align-items:end}
+.lead{grid-column:1 / span 5;margin:0;word-break:auto-phrase;font-size:clamp(16px,1.4vw,20px);line-height:1.85;letter-spacing:.05em;max-width:29em;text-wrap:pretty}
+.lead b{font-weight:500}
+.tt{grid-column:7 / span 6}
+.tt__hd,.tt__row{display:grid;grid-template-columns:44px minmax(0,1fr) 18px minmax(0,1.2fr) 112px;column-gap:8px;align-items:center}
+.tt__hd{padding:0 0 8px;color:var(--mute)}
+.tt__hd span:nth-child(2){grid-column:2}
+.tt__row{margin-top:4px}
+.tt .flap--num{--h:36px;--w:20px;--fs:.78}
+.tt .nums{display:flex;gap:2px}
+.tt .flap--panel{--h:36px;--fs:.39}
+.tt .st .flap--panel,.tt .from .flap--panel{--fc:var(--mute)}
+.tt .st.is-now .flap--panel{--fc:var(--amber)}
+.arrow{display:flex;align-items:center;justify-content:center;font:400 14px/1 var(--f-mono);color:var(--mute)}
+.hero__bar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:clamp(18px,3svh,32px);padding-top:14px;border-top:1px solid var(--rule)}
+.hero__bar a{text-decoration:none;display:inline-flex;gap:10px;align-items:center}
+.hero__bar a:hover{color:var(--amber)}
+.btn-pause{background:none;border:1px solid var(--rule);color:var(--paper);border-radius:2px;padding:8px 12px;cursor:pointer;display:inline-flex;gap:10px;align-items:center}
+.btn-pause:hover{border-color:var(--mute)}
+.btn-pause .ic{display:inline-block;width:8px;height:9px;border-left:2px solid currentColor;border-right:2px solid currentColor}
+.btn-pause[aria-pressed="true"] .ic{width:0;height:0;border:0;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.hint{color:var(--mute)}
+
+/* ───────────── Sections (board spec) ───────────── */
+.sec{overflow-x:clip;padding:clamp(96px,12vw,168px) var(--m) 0}
+.sec__rule{display:flex;justify-content:space-between;gap:16px;padding-top:12px;border-top:1px solid var(--rule);color:var(--mute)}
+.sec__rule b{color:var(--amber);font-weight:500}
+.sec__hd{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px 28px;margin:28px 0 clamp(40px,5vw,64px)}
+.sec__hd .flaps{gap:3px}
+.sec__hd .flap--en{--h:46px;--w:31px;--fs:.94}
+.sec__jp{word-break:auto-phrase;margin:0;font:700 22px/1.3 var(--f-jp);letter-spacing:.06em;font-feature-settings:"palt";padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut)}
+
+/* concept */
+.concept__big{grid-column:1 / span 10;margin:0;word-break:auto-phrase;font:700 clamp(30px,4.1vw,58px)/1.42 var(--f-text);letter-spacing:.02em;font-feature-settings:"palt";text-wrap:balance}
+.concept__big em{font-style:normal;color:var(--amber)}
+.concept__body{grid-column:6 / span 6;margin:clamp(32px,4vw,56px) 0 0;font-size:16px;line-height:1.95;letter-spacing:.05em;color:var(--paper)}
+.concept__note{grid-column:1 / span 4;margin:clamp(32px,4vw,56px) 0 0;color:var(--mute);align-self:start;font-size:13px;line-height:1.85;letter-spacing:.05em;max-width:24em}
+.concept__note b{display:block;font:500 11px/1.5 var(--f-mono);letter-spacing:.12em;color:var(--amber);margin-bottom:6px}
+
+/* palette */
+.sw-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}
+.sw{margin:0}
+.sw__chip{position:relative;aspect-ratio:3 / 4;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:12px;font:500 11px/1.4 var(--f-mono);letter-spacing:.08em}
+.sw__chip::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.55)}
+.sw__chip.is-dark::before{content:"";position:absolute;inset:0;border:1px solid var(--rule);border-radius:4px}
+.sw figcaption{padding-top:10px;font-size:13px;line-height:1.6;letter-spacing:.04em}
+.sw figcaption .mono{display:block;color:var(--mute);margin-bottom:2px}
+.ct{margin-top:clamp(40px,5vw,64px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gut)}
+.ct__row{display:grid;grid-template-columns:88px minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.ct__sample{height:44px;border-radius:3px;display:flex;align-items:center;justify-content:center;font:700 18px/1 var(--f-text);letter-spacing:.04em;font-feature-settings:"palt"}
+.ct__pair{font-size:13px;line-height:1.5}
+.ct__pair .mono{display:block;color:var(--mute);letter-spacing:.08em}
+.ct__ratio{font:600 22px/1 var(--f-disp);font-stretch:62%;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.ct__lv{font:500 10px/1 var(--f-mono);letter-spacing:.1em;padding:6px 7px;border:1px solid var(--rule);border-radius:2px;min-width:64px;text-align:center}
+.ct__lv.is-aaa{border-color:var(--amber);color:var(--amber)}
+
+/* type */
+.ty{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut);row-gap:clamp(48px,6vw,80px)}
+.ty__blk{grid-column:span 12;padding-top:16px;border-top:1px solid var(--rule)}
+.ty__spec{display:flex;flex-wrap:wrap;gap:6px 20px;color:var(--mute);margin-bottom:18px}
+.ty__spec b{color:var(--paper);font-weight:500}
+.ty-en{margin:0;font:600 clamp(72px,13.5vw,196px)/.86 var(--f-disp);font-stretch:62%;letter-spacing:-.01em}
+.ty-en span{color:var(--amber)}
+.ty-en small{display:block;margin-top:.28em;font:400 clamp(14px,1.4vw,18px)/1.5 var(--f-mono);letter-spacing:.06em;color:var(--mute);text-transform:none}
+.ty-pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
+.ty-jph{margin:0;font:700 clamp(28px,3.6vw,52px)/1.4 var(--f-jp);letter-spacing:0}
+.ty-jph.palt{font-feature-settings:"palt";letter-spacing:.02em}
+.ty-jph + .mono{margin-top:10px;display:block;color:var(--mute)}
+.ty-body{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
+.ty-body h3{margin:0 0 10px;font:500 11px/1.5 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
+.p16{margin:0;font-size:16px;line-height:1.95;letter-spacing:.05em;max-width:34em;text-wrap:pretty}
+.p14{margin:0;font-size:14px;line-height:1.9;letter-spacing:.06em;max-width:36em;color:var(--paper);text-wrap:pretty}
+.p16 + .p16,.p14 + .p14{margin-top:1em}
+.mix{position:relative;margin:0;padding:.2em 7.5em .2em 0;font:500 clamp(22px,2.6vw,36px)/1.6 var(--f-text);letter-spacing:.03em;font-feature-settings:"palt"}
+.mix .lat{font-stretch:92%;letter-spacing:.01em}
+.mix::before,.mix::after{content:"";position:absolute;left:0;right:0;height:1px;pointer-events:none}
+.mix::before{top:var(--bl,-99px);background:rgba(244,165,42,.6)}
+.mix::after{top:var(--cap,-99px);background:rgba(156,151,139,.35)}
+.mix .gl{position:absolute;right:0;font:500 10px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;transform:translateY(-130%)}
+.mix .gl--bl{top:var(--bl,-99px);color:var(--amber)}
+.mix .gl--cap{top:var(--cap,-99px);color:var(--mute)}
+.ty-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gut);margin-top:22px}
+.ty-notes p{margin:0;font-size:13px;line-height:1.85;letter-spacing:.05em;color:var(--mute)}
+.ty-notes p b{display:block;color:var(--paper);font-weight:500;margin-bottom:4px}
+
+/* motion */
+.mo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gut)}
+.mo__stage{--under:var(--housing);background:var(--housing);border-radius:4px;height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.mo__stage .tag{position:absolute;left:12px;top:10px;color:var(--mute)}
+.mo__stage .tag.r{left:auto;right:12px}
+.mo__stage .flaps{gap:3px}
+.mo1 .flap--en{--h:44px;--w:28px}
+.mo2 .flap--en{--h:132px;--w:94px;--fs:.96}
+.mo3 .flap--en{--h:44px;--w:28px;--fc:var(--amber)}
+.mo__no{margin:18px 0 6px;color:var(--amber)}
+.mo h3{word-break:auto-phrase;margin:0 0 10px;font:700 21px/1.45 var(--f-jp);letter-spacing:.04em;font-feature-settings:"palt"}
+.mo p{margin:0;font-size:14px;line-height:1.9;letter-spacing:.05em;color:var(--paper)}
+
+/* sample: before/after board */
+.ba{--under:var(--housing);background:var(--housing);border-radius:4px;padding:clamp(16px,2.4vw,32px)}
+.ba__top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+.ba__hd,.ba__row{display:grid;grid-template-columns:52px minmax(0,1fr) 22px minmax(0,1.25fr) 40px 132px;column-gap:10px;align-items:center}
+.ba__hd{color:var(--mute);padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:6px}
+.ba__row{margin-top:5px}
+.ba .flap--num{--h:42px;--w:23px;--fs:.78}
+.ba .nums{display:flex;gap:2px}
+.ba .flap--panel{--h:42px;--fs:.38}
+.ba .to .flap--panel{--fc:var(--paper)}
+.ba .from .flap--panel{--fc:var(--mute)}
+.ba .plat .flap--num{--fc:var(--amber)}
+.ba .kind .flap--panel{--fc:var(--amber)}
+
+.pl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gut);margin-top:clamp(56px,7vw,96px)}
+.pl__card{border-top:1px solid var(--rule);padding-top:20px}
+.pl__top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+.pl__top .flap--num{--h:84px;--w:58px;--fs:.98;--fc:var(--amber)}
+.pl__top .mono{color:var(--mute);text-align:right}
+.pl h3{margin:0;font:700 26px/1.4 var(--f-jp);letter-spacing:.06em;font-feature-settings:"palt"}
+.pl h3 span{font:italic 400 17px/1 var(--f-disp);font-stretch:80%;letter-spacing:.02em;color:var(--mute);margin-left:.5em}
+.pl p{margin:14px 0 0;font-size:15px;line-height:1.95;letter-spacing:.05em;text-wrap:pretty}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 0;padding:0;list-style:none}
+.tags li{font:500 11px/1 var(--f-text);letter-spacing:.05em;padding:7px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--paper);font-feature-settings:"palt"}
+
+/* ticket */
+.tk-wrap{margin-top:clamp(56px,7vw,96px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut);align-items:end}
+.tk-intro{grid-column:1 / span 3;color:var(--mute);font-size:13px;line-height:1.85;letter-spacing:.05em;margin:0}
+.tk{grid-column:4 / span 9;display:grid;grid-template-columns:minmax(0,1fr) 188px;background:var(--paper);color:var(--black);border-radius:6px;position:relative;
+  -webkit-mask:radial-gradient(circle 11px at calc(100% - 188px) 0,transparent 98%,#000) top / 100% 51% no-repeat,radial-gradient(circle 11px at calc(100% - 188px) 100%,transparent 98%,#000) bottom / 100% 51% no-repeat;
+          mask:radial-gradient(circle 11px at calc(100% - 188px) 0,transparent 98%,#000) top / 100% 51% no-repeat,radial-gradient(circle 11px at calc(100% - 188px) 100%,transparent 98%,#000) bottom / 100% 51% no-repeat}
+.tk__main{padding:26px 30px 28px}
+.tk__head{display:flex;justify-content:space-between;gap:12px;color:var(--ink-mute);padding-bottom:14px;border-bottom:1px solid rgba(12,12,11,.14)}
+.tk__head b{color:var(--black);font-weight:500}
+.tk h3{word-break:auto-phrase;margin:18px 0 0;font:700 clamp(22px,2.2vw,30px)/1.4 var(--f-jp);letter-spacing:.04em;font-feature-settings:"palt"}
+.tk__route{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 28px;margin:16px 0 4px}
+.tk__route div{display:flex;align-items:baseline;gap:14px;font:600 clamp(40px,5vw,68px)/1 var(--f-disp);font-stretch:62%;letter-spacing:0}
+.tk__route i{font:400 .45em/1 var(--f-mono);font-style:normal;color:var(--ink-mute);transform:translateY(-.3em)}
+.tk__route .after{color:#0C0C0B;background:linear-gradient(transparent 62%,rgba(244,165,42,.85) 62% 92%,transparent 92%)}
+.tk__meta{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:18px 36px;margin:20px 0 0;padding-top:16px;border-top:1px solid rgba(12,12,11,.14)}
+.tk__meta dt{color:var(--ink-mute)}
+.tk__meta dd{margin:4px 0 0;font-size:15px;line-height:1.6;font-weight:500;letter-spacing:.05em;font-feature-settings:"palt"}
+.tk__stub{border-left:2px dashed rgba(12,12,11,.22);padding:26px 22px 28px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.tk__stub .mono{color:var(--ink-mute)}
+.tk__stub .big{font:600 64px/.9 var(--f-disp);font-stretch:62%;letter-spacing:0}
+.tk__stub .big small{display:block;font:500 11px/1.4 var(--f-mono);letter-spacing:.12em;color:var(--ink-mute);margin-top:8px}
+.tk__code{height:34px;background:repeating-linear-gradient(90deg,#0C0C0B 0 2px,transparent 2px 4px,#0C0C0B 4px 5px,transparent 5px 9px,#0C0C0B 9px 12px,transparent 12px 13px);opacity:.85}
+
+/* cost / risk */
+.cr{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut)}
+.cr dl{grid-column:1 / span 12;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gut)}
+.cr__it{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:18px 0 20px;border-top:1px solid var(--rule)}
+.cr dt{font:700 15px/1.6 var(--f-jp);letter-spacing:.05em;font-feature-settings:"palt";display:flex;gap:10px;align-items:flex-start}
+.cr dt .lamp{margin-top:8px;width:6px;height:6px;box-shadow:none}
+.cr dt .lamp.ok{background:var(--paper)}
+.cr dd{margin:0;font-size:14px;line-height:1.9;letter-spacing:.05em}
+.cr dd .mono{display:block;margin-top:6px;color:var(--mute);text-transform:none;letter-spacing:.04em}
+
+.foot{margin-top:clamp(120px,14vw,200px);padding:28px var(--m) 40px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.foot .ciao{font:600 clamp(56px,9vw,128px)/.85 var(--f-disp);font-stretch:62%;letter-spacing:-.01em}
+.foot .ciao span{color:var(--amber)}
+.foot p{margin:0;color:var(--mute)}
+
+/* ───────────── Responsive ───────────── */
+@media (max-width:1180px){
+  .nav__list{gap:20px}
+  .lead{grid-column:1 / span 6}
+  .tt{grid-column:7 / span 6}
+  .tt__hd,.tt__row{grid-template-columns:44px minmax(0,1fr) 16px minmax(0,1.2fr)}
+  .tt .st,.tt__hd .st{display:none}
+  .sw-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-height:820px) and (min-width:641px){
+  .tt__row:nth-of-type(4){display:none}
+}
+@media (max-width:900px){
+  :root{--m:32px}
+  .nav__list{display:none}
+  .nav__menu{display:inline-block}
+  .nav.is-open .nav__list{display:flex;position:fixed;inset:var(--nav-h) 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--black);padding:8px var(--m) 24px;border-bottom:1px solid var(--rule)}
+  .nav.is-open .nav__list a{font-size:17px;padding:16px 0;width:100%;border-bottom:1px solid var(--rule)}
+  .nav.is-open .nav__list .nav__cta{margin-top:16px;justify-content:center;border:0}
+  .hero__foot{grid-template-columns:minmax(0,1fr);row-gap:28px}
+  .lead,.tt{grid-column:1 / -1}
+  .concept__big{grid-column:1 / -1}
+  .concept__body{grid-column:1 / -1}
+  .concept__note{grid-column:1 / -1;order:3}
+  .ct{grid-template-columns:minmax(0,1fr)}
+  .ty-pair,.ty-body,.ty-notes{grid-template-columns:minmax(0,1fr)}
+  .mo{grid-template-columns:minmax(0,1fr);row-gap:48px}
+  .pl{grid-template-columns:minmax(0,1fr);row-gap:48px}
+  .tk-intro{grid-column:1 / -1;margin-bottom:20px}
+  .tk{grid-column:1 / -1}
+  .cr dl{grid-template-columns:minmax(0,1fr)}
+  .ba__hd,.ba__row{grid-template-columns:52px minmax(0,1fr) 18px minmax(0,1.25fr)}
+  .ba .plat,.ba .kind,.ba__hd .plat,.ba__hd .kind{display:none}
+}
+@media (max-width:640px){
+  :root{--m:16px;--gut:16px;--nav-h:56px}
+  body{font-size:15px}
+  .nav__logo img{height:14px}
+  .hero{padding-top:10px}
+  .strip{padding-bottom:10px}
+  .strip{gap:12px}
+  .strip__side{gap:10px}
+  .strip .flaps{gap:1.5px}
+  .strip .flap--en,.strip .flap--num{--h:23px;--w:14px}
+  .strip .flap--jp{--h:23px;--w:21px}
+  .it,.clock--milano,.clock .mono{display:none}
+  .clock .colon{font-size:14px;width:6px}
+  .board{--gap:4px;margin-top:18px}
+  .bstate,.hero.is-static .bstate{--W:calc((100cqi - 6 * var(--gap)) / 7);--H:calc(var(--W) / .68)}
+  .row--en .flap{--fs:.94}
+  .row{flex-wrap:wrap;row-gap:var(--gap)}
+  .grp.sp{display:none}
+  .row--jp .flap{--w:calc((100cqi - 5 * var(--gap)) / 6);--h:calc((100cqi - 5 * var(--gap)) / 6 * 1.02);--fs:.66}
+  .hero__foot{padding-top:24px;row-gap:22px}
+  .lead{font-size:14.5px;line-height:1.95}
+  .tt__hd,.tt__row{grid-template-columns:40px minmax(0,1fr) 12px minmax(0,1.15fr);column-gap:6px}
+  .tt .flap--num{--h:32px;--w:18px}
+  .tt .flap--panel{--h:32px;--fs:.4}
+  .tt .flap--panel .g{padding:0 .7em}
+  .tt__row:nth-of-type(4){display:none}
+  .hero__bar{margin-top:18px}
+  .hint .long{display:none}
+  .sec__hd .flap--en{--h:34px;--w:23px}
+  .sec__jp{font-size:18px}
+  .sec__rule .r{display:none}
+  .sw-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sw__chip{aspect-ratio:5 / 4}
+  .board-hint{margin-top:10px}
+  .ct__row{grid-template-columns:64px minmax(0,1fr) auto;row-gap:8px}
+  .ct__lv{grid-column:3;justify-self:end}
+  .ct__ratio{grid-column:3;grid-row:1}
+  .ct__sample{height:40px;font-size:16px}
+  .mo2 .flap--en{--h:120px;--w:84px}
+  .mo1 .flap--en,.mo3 .flap--en{--h:36px;--w:22px}
+  .mo__stage .flaps{gap:2px}
+  .ba{padding:14px 10px}
+  .ba__hd,.ba__row{grid-template-columns:40px minmax(0,1fr) 12px minmax(0,1.15fr);column-gap:6px}
+  .ba .flap--num{--h:34px;--w:18px}
+  .ba .flap--panel{--h:34px;--fs:.38}
+  .ba .flap--panel .g{padding:0 .7em}
+  .ba__top{flex-direction:column;align-items:flex-start}
+  .pl__top .flap--num{--h:72px;--w:50px}
+  .tk{grid-template-columns:minmax(0,1fr);-webkit-mask:none;mask:none}
+  .tk__main{padding:20px 18px 22px}
+  .tk__stub{border-left:0;border-top:2px dashed rgba(12,12,11,.22);flex-direction:row;align-items:flex-end;padding:18px}
+  .tk__stub .big{font-size:52px}
+  .tk__code{width:96px;flex:none}
+  .tk__meta{grid-template-columns:1fr 1fr;gap:14px 20px}
+  .tk__meta div:last-child{grid-column:1 / -1}
+  .cr__it{grid-template-columns:minmax(0,1fr);gap:6px}
+  .mix{padding-right:0}
+  .mix .gl{display:none}
+  .foot{padding:24px var(--m) 32px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .lamp,.nav__list a::after{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#spec">ボード本文へ移動</a>
+
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top" aria-label="CodeCiao トップ"><img src="../../public/corp_logo_transparent.png" alt="CodeCiao" width="2917" height="389"></a>
+  <ul class="nav__list" id="navlist">
+    <li><a href="#"><span class="no">01</span>会社概要</a></li>
+    <li><a href="#"><span class="no">02</span>実績</a></li>
+    <li><a href="#"><span class="no">03</span>サービス</a></li>
+    <li><a href="#"><span class="no">04</span>採用</a></li>
+    <li><a class="nav__cta" href="#"><span class="no">05</span>お問い合わせ</a></li>
+  </ul>
+  <button class="nav__menu" type="button" aria-expanded="false" aria-controls="navlist">Menu</button>
+</header>
+
+<main id="top">
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="sr"><span lang="en">Ciao, legacy.</span> さよなら、古い仕組み。 <span lang="en">Ciao, next.</span> こんにちは、次の仕組み。</h1>
+
+    <div class="strip" aria-hidden="true">
+      <div class="strip__side">
+        <span class="lamp" id="lamp"></span>
+        <span class="flaps" id="lbl-en"></span>
+        <span class="flaps" id="lbl-jp"></span>
+        <span class="it" id="lbl-it" lang="it">Partenze</span>
+      </div>
+      <div class="strip__side">
+        <div class="clock"><span class="mono mute">Tokyo</span><span class="flaps" id="clk-tyo"></span></div>
+        <div class="clock clock--milano"><span class="mono mute">Milano</span><span class="flaps" id="clk-mil"></span></div>
+      </div>
+    </div>
+
+    <button class="board" id="board" type="button" aria-label="発着板の表示を、出発と到着で切り替える">
+      <span class="bstate" id="bs-main" aria-hidden="true">
+        <span class="row row--en" id="row-en"></span>
+        <span class="row row--jp" id="row-jp"></span>
+      </span>
+      <span class="bstate bstate--arr" id="bs-arr" aria-hidden="true">
+        <span class="subhd"><span class="lamp is-arr"></span><span class="mono" style="color:var(--paper)">Arrivals</span><span class="mono amber">到着</span><span class="it" lang="it">Arrivi</span></span>
+        <span class="row row--en" id="row-en2"></span>
+        <span class="row row--jp" id="row-jp2"></span>
+      </span>
+    </button>
+    <p class="board-hint mono" aria-hidden="true"><span class="clk">Click</span><span class="tap">Tap</span> the board <i>出発 ⇄ 到着</i></p>
+
+    <div class="hero__foot">
+      <p class="lead">Ciao（チャオ）は、出会いにも別れにも使うイタリア語のあいさつです。CodeCiao は、長く働いてきたシステムを丁寧に見送り、次のシステムを迎えるソフトウェア会社です。</p>
+      <div class="tt" aria-label="移行の発着（Before から After）">
+        <div class="tt__hd mono"><span>便</span><span>出発 <span lang="en">From</span></span><span></span><span>到着 <span lang="en">To</span></span><span class="st">状態</span></div>
+      </div>
+    </div>
+
+    <div class="hero__bar">
+      <a href="#spec" class="mono hint"><span aria-hidden="true">↓</span> ボードの仕様<span class="long"> — 色・書体・動き・サンプル</span></a>
+      <button class="btn-pause mono" id="pause" type="button" aria-pressed="false"><span class="ic" aria-hidden="true"></span><span class="t">動きを止める</span></button>
+    </div>
+  </section>
+
+  <!-- ─────────── Board spec ─────────── -->
+  <section class="sec" id="spec" aria-labelledby="h-concept">
+    <div class="sec__rule mono"><span><b>Bin. 00</b>　番線</span><span class="r">B — Departures / Arrivals</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="CONCEPT"></span><h2 class="sec__jp" id="h-concept">コンセプト</h2></div>
+    <div class="grid">
+      <p class="concept__big">見送りと出迎えを、一枚の発着板で。表示が変わっても、<em>Ciao</em> の 4 枚は返らない。</p>
+      <p class="concept__note"><b>B → A</b>A「Ciao の二義性」を、発着板のフラップで表す。変わる部分と変わらない部分が、動きでそのまま読める。</p>
+      <p class="concept__body">古い仕組みは出発（<span lang="en">DEPARTURES</span>）の欄に、次の仕組みは到着（<span lang="en">ARRIVALS</span>）の欄に並べます。表示が入れ替わる瞬間も、<span lang="en">CIAO</span> の 4 枚のフラップだけは止まったまま。さよならにも、こんにちはにも使えることばだからです。CodeCiao の仕事を、駅の発着板のように、1 枚ずつ確かに切り替わるものとして見せます。</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-palette">
+    <div class="sec__rule mono"><span><b>Bin. 01</b>　番線</span><span class="r">Colour / WCAG 2.2</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="PALETTE"></span><h2 class="sec__jp" id="h-palette">パレット</h2></div>
+    <div class="sw-grid">
+      <figure class="sw"><div class="sw__chip is-dark" style="background:#0C0C0B;color:#9C978B"><span>Nero</span><span>#0C0C0B</span></div><figcaption><span class="mono">Board black</span>地。発着板の筐体</figcaption></figure>
+      <figure class="sw"><div class="sw__chip is-dark" style="background:#1B1B19;color:#9C978B"><span>Flap</span><span>#1B1B19</span></div><figcaption><span class="mono">Flap face</span>フラップの面</figcaption></figure>
+      <figure class="sw"><div class="sw__chip is-dark" style="background:#2C2B27;color:#EFE8D8"><span>Rule</span><span>#2C2B27</span></div><figcaption><span class="mono">Rule</span>罫線・区切り（文字には使わない）</figcaption></figure>
+      <figure class="sw"><div class="sw__chip" style="background:#EFE8D8;color:#0C0C0B"><span>Carta</span><span>#EFE8D8</span></div><figcaption><span class="mono">Paper</span>本文・フラップの文字</figcaption></figure>
+      <figure class="sw"><div class="sw__chip" style="background:#9C978B;color:#0C0C0B"><span>Grigio</span><span>#9C978B</span></div><figcaption><span class="mono">Mute</span>補足・ラベル</figcaption></figure>
+      <figure class="sw"><div class="sw__chip" style="background:#F4A52A;color:#0C0C0B"><span>Segnale</span><span>#F4A52A</span></div><figcaption><span class="mono">Signal amber · 主役</span>和文フラップ・出発・行動</figcaption></figure>
+      <figure class="sw"><div class="sw__chip" style="background:#039896;color:#0C0C0B"><span>Teal</span><span>#039896</span></div><figcaption><span class="mono">Brand teal · ごく少量</span>到着ランプだけに使う</figcaption></figure>
+    </div>
+    <div class="ct" id="contrast">
+      <div class="ct__row" data-fg="#EFE8D8" data-bg="#0C0C0B" data-name="Paper / Board black" data-use="本文"></div>
+      <div class="ct__row" data-fg="#EFE8D8" data-bg="#1B1B19" data-name="Paper / Flap" data-use="英字フラップ"></div>
+      <div class="ct__row" data-fg="#F4A52A" data-bg="#0C0C0B" data-name="Amber / Board black" data-use="ラベル・強調"></div>
+      <div class="ct__row" data-fg="#F4A52A" data-bg="#1B1B19" data-name="Amber / Flap" data-use="和文フラップ"></div>
+      <div class="ct__row" data-fg="#9C978B" data-bg="#0C0C0B" data-name="Mute / Board black" data-use="補足テキスト"></div>
+      <div class="ct__row" data-fg="#9C978B" data-bg="#1B1B19" data-name="Mute / Flap" data-use="時刻表の出発欄"></div>
+      <div class="ct__row" data-fg="#039896" data-bg="#0C0C0B" data-name="Teal / Board black" data-use="到着ランプ"></div>
+      <div class="ct__row" data-fg="#0C0C0B" data-bg="#F4A52A" data-name="Board black / Amber" data-use="ボタン"></div>
+      <div class="ct__row" data-fg="#0C0C0B" data-bg="#EFE8D8" data-name="Board black / Paper" data-use="切符カード"></div>
+      <div class="ct__row" data-fg="#5C574E" data-bg="#EFE8D8" data-name="Ink mute / Paper" data-use="切符の補足"></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-type">
+    <div class="sec__rule mono"><span><b>Bin. 02</b>　番線</span><span class="r">Archivo · Zen Kaku Gothic New · IBM Plex Mono</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="TYPE"></span><h2 class="sec__jp" id="h-type">書体</h2></div>
+    <div class="ty">
+      <div class="ty__blk">
+        <div class="ty__spec mono"><b>EN Display</b><span>Archivo ExtraCondensed</span><span>wdth 62 / wght 600</span><span>tracking −0.01em</span><span>line-height 0.86</span></div>
+        <p class="ty-en" lang="en">Ciao, legacy.<br><span>Ciao, next.</span><small>Condensed grotesque — fits a flap module 0.68 : 1</small></p>
+      </div>
+      <div class="ty__blk">
+        <div class="ty__spec mono"><b>JP 見出し</b><span>Zen Kaku Gothic New 700</span><span>line-height 1.4</span><span>左: palt なし / 右: palt あり＋字間 0.02em</span></div>
+        <div class="ty-pair">
+          <div><p class="ty-jph">さよなら、古い仕組み。<br>こんにちは、次の仕組み。</p><span class="mono">font-feature-settings: normal</span></div>
+          <div><p class="ty-jph palt">さよなら、古い仕組み。<br>こんにちは、次の仕組み。</p><span class="mono">font-feature-settings: "palt"（見出しで採用）</span></div>
+        </div>
+      </div>
+      <div class="ty__blk">
+        <div class="ty__spec mono"><b>JP 本文</b><span>Zen Kaku Gothic New 400 + Archivo（欧文）</span><span>palt なし</span></div>
+        <div class="ty-body">
+          <div>
+            <h3>16px / line-height 1.95 / letter-spacing 0.05em</h3>
+            <p class="p16">古い Java や Struts、設計書のないシステム。ソースコードから設計を読み解き、止めずに次の基盤へ移します。</p>
+            <p class="p16">業務 SaaS を、Web・iPad・LINE までまとめてつくります。設計書を正本にして、仕様と実装がずれない状態を保ちます。</p>
+          </div>
+          <div>
+            <h3>14px / line-height 1.9 / letter-spacing 0.06em</h3>
+            <p class="p14">AI エージェントが書き、機械のチェックが確かめ、人が責任を持つ。開発の型と、解説動画・研修でチームに渡します。</p>
+            <p class="p14">Ciao（チャオ）は、出会いにも別れにも使うイタリア語のあいさつです。CodeCiao は、長く働いてきたシステムを丁寧に見送り、次のシステムを迎えるソフトウェア会社です。</p>
+          </div>
+        </div>
+      </div>
+      <div class="ty__blk">
+        <div class="ty__spec mono"><b>和欧混植</b><span>欧文 Archivo wdth 92 を先に指定</span><span>アンバー線 = ベースライン（実測）</span><span>灰線 = 欧文キャップハイト</span></div>
+        <p class="mix" id="mix"><span class="lat" lang="en">JDK 8</span> から <span class="lat" lang="en">JDK 25</span> へ。<span class="lat" lang="en">Struts</span> は <span class="lat" lang="en">JSTL</span> へ、止めずに移す。<span class="bl" aria-hidden="true"></span><span class="gl gl--cap" aria-hidden="true">Cap height</span><span class="gl gl--bl" aria-hidden="true">Baseline</span></p>
+        <div class="ty-notes">
+          <p><b>palt は見出しだけ</b>見出しと短いラベルはプロポーショナル詰め（palt）で字面を締める。本文は全角の等幅のまま、字間 0.05em で読みのリズムを保つ。</p>
+          <p><b>行間は本文 1.9〜1.95</b>暗い地では白い字が太って見えるため、明るい地より行間と字間を少し広げる。14px は字間を 0.06em に上げる。</p>
+          <p><b>ベースラインは欧文に合わせる</b>欧文を和文より先に指定し、字幅 92 に絞って和文の字面と高さを揃える。英数字の前後には半角スペースを入れる。</p>
+        </div>
+      </div>
+      <div class="ty__blk">
+        <div class="ty__spec mono"><b>Mono</b><span>IBM Plex Mono 500</span><span>11px / tracking 0.12em / uppercase</span></div>
+        <p class="mono" style="font-size:13px;margin:0">Bin. 01 · Partenze 11:42 · Platform / 番線 · Status / 状態 — 番線・時刻・ラベル専用。本文には使わない。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-motion">
+    <div class="sec__rule mono"><span><b>Bin. 03</b>　番線</span><span class="r">Web Animations · transform / opacity only</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="MOTION"></span><h2 class="sec__jp" id="h-motion">モーション原則</h2></div>
+    <div class="mo">
+      <article>
+        <div class="mo__stage mo1"><span class="tag mono">Diff only</span><span class="flaps" id="mo1" aria-hidden="true"></span></div>
+        <p class="mo__no mono">01</p>
+        <h3>変わる文字だけが返る</h3>
+        <p>差分だけを動かします。「CIAO,」と「仕組み。」は、出発でも到着でも止まったまま。動いた場所が、そのまま変化の中身になります。</p>
+      </article>
+      <article>
+        <div class="mo__stage mo2"><span class="tag mono">1 flap</span><span class="tag r mono">× 0.2 speed</span><span class="flaps" id="mo2" aria-hidden="true"></span></div>
+        <p class="mo__no mono">02</p>
+        <h3>上は落ち、下は弾む</h3>
+        <p>上半分は重力のように加速して倒れ、下半分は止め金に当たって一度だけ小さく跳ねます。途中の文字は 1 枚 0.13 秒、最後の 1 枚だけ 0.42 秒かけて着地させます。</p>
+      </article>
+      <article>
+        <div class="mo__stage mo3"><span class="tag mono">Stagger 48ms</span><span class="flaps" id="mo3" aria-hidden="true"></span></div>
+        <p class="mo__no mono">03</p>
+        <h3>読む順に、ずらして着く</h3>
+        <p>左から右へ 1 枚 48ms（初回の表示は 66ms）、行ごとに 260ms 遅らせます。全部を同時には動かさず、目が追いつく速さで文字が着地します。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-sample">
+    <div class="sec__rule mono"><span><b>Bin. 04</b>　番線</span><span class="r">Sample section</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="SERVICES"></span><h2 class="sec__jp" id="h-sample">サンプル：移行の発着と 3 つの柱</h2></div>
+
+    <div class="ba" id="ba">
+      <div class="ba__top"><span class="mono"><span class="amber">Before → After</span>　古い仕組みが出発し、次の仕組みが到着する</span><span class="mono mute">Partenze / Arrivi</span></div>
+      <div class="ba__hd mono"><span>便</span><span>出発 <span lang="en">Before</span></span><span></span><span>到着 <span lang="en">After</span></span><span class="plat">番線</span><span class="kind">種別</span></div>
+    </div>
+
+    <div class="pl">
+      <article class="pl__card">
+        <div class="pl__top"><span class="flaps" data-flap="1" data-kind="num"></span><span class="mono">Binario 1<br>Goodbye</span></div>
+        <h3>見送る<span lang="en">Goodbye</span></h3>
+        <p>古い Java や Struts、設計書のないシステム。ソースコードから設計を読み解き、止めずに次の基盤へ移します。</p>
+        <ul class="tags"><li>Java / Jakarta EE 移行</li><li>ソースからの設計書復元</li><li>クラウド移行</li></ul>
+      </article>
+      <article class="pl__card">
+        <div class="pl__top"><span class="flaps" data-flap="2" data-kind="num"></span><span class="mono">Binario 2<br>Hello</span></div>
+        <h3>迎える<span lang="en">Hello</span></h3>
+        <p>業務 SaaS を、Web・iPad・LINE までまとめてつくります。設計書を正本にして、仕様と実装がずれない状態を保ちます。</p>
+        <ul class="tags"><li>Web / iOS / LINE ミニアプリ</li><li>AWS</li><li>Terraform</li></ul>
+      </article>
+      <article class="pl__card">
+        <div class="pl__top"><span class="flaps" data-flap="3" data-kind="num"></span><span class="mono">Binario 3<br>Handover</span></div>
+        <h3>引き継ぐ<span lang="en">Handover</span></h3>
+        <p>AI エージェントが書き、機械のチェックが確かめ、人が責任を持つ。開発の型と、解説動画・研修でチームに渡します。</p>
+        <ul class="tags"><li>Claude Code</li><li>品質の自動チェック</li><li>解説動画</li><li>研修</li></ul>
+      </article>
+    </div>
+
+    <div class="tk-wrap">
+      <p class="tk-intro">実績カードは「切符」として組む。暗い板の上で唯一の紙色の面にし、出発と到着の対を主役にする。<br><span class="mono">※ 汎用のダミーです</span></p>
+      <article class="tk" aria-label="サンプル実績：基幹業務システムの Java 移行">
+        <div class="tk__main">
+          <div class="tk__head mono"><span><b>Case</b>　実績サンプル</span><span>Binario 1 · 見送る</span></div>
+          <h3>基幹業務システムの Java 移行</h3>
+          <div class="tk__route">
+            <div><span>JDK 8</span><i>→</i><span class="after">21</span></div>
+            <div><span>Struts</span><i>→</i><span class="after">JSTL</span></div>
+          </div>
+          <dl class="tk__meta">
+            <div><dt class="mono">業界</dt><dd>金融</dd></div>
+            <div><dt class="mono">期間</dt><dd>6 か月</dd></div>
+            <div><dt class="mono">担当</dt><dd>調査・移行設計・実装・テスト</dd></div>
+          </dl>
+        </div>
+        <div class="tk__stub" aria-hidden="true">
+          <span class="mono">Partenze → Arrivi</span>
+          <div class="big">CIAO<small>CodeCiao</small></div>
+          <div class="tk__code"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-risk">
+    <div class="sec__rule mono"><span><b>Bin. 05</b>　番線</span><span class="r">Cost / Risk</span></div>
+    <div class="sec__hd"><span class="flaps" data-flap="RISK"></span><h2 class="sec__jp" id="h-risk">コストとリスク</h2></div>
+    <div class="cr">
+      <dl>
+        <div class="cr__it"><dt><span class="lamp ok"></span>素材</dt><dd>撮影・イラストは不要。ロゴ PNG 1 点と Web フォント 3 ファミリだけで成立する。フラップはすべて DOM と CSS で描くので、画像の差し替え作業も発生しない。</dd></div>
+        <div class="cr__it"><dt><span class="lamp"></span>60fps</dt><dd>動かすのは transform と opacity だけ（Web Animations API）。ヒーローのフラップは 60 枚で、発着の切り替えで同時に返るのは 25 枚。画面外・タブ非表示・一時停止中はループを止める。<span class="mono">手元の計測（1440px・Chromium）では初回の 58 枚の反転中も 16.7ms／フレームを維持。リスク：1 枚が 4 層の DOM なので、板を広げすぎると要素数が増える。行数に上限を設ける。</span></dd></div>
+        <div class="cr__it"><dt><span class="lamp"></span>Lighthouse ≥ 90</dt><dd>最大のリスクは和文 Web フォントの転送量と LCP。見出しの実テキストは h1 に持ち、フラップは装飾（aria-hidden）に分ける。本番では使う字だけのサブセットを自前で配信する。<span class="mono">JS は外部ライブラリなし。CLS はフラップの寸法を CSS で先に確定させて抑える。</span></dd></div>
+        <div class="cr__it"><dt><span class="lamp ok"></span>reduced-motion</dt><dd>反転を止め、出発と到着の 2 段を同時に並べた静止の板に切り替える。時計は 1 分ごとに数字だけ差し替える。通常時も「動きを止める」ボタンで自動更新をいつでも止められる。</dd></div>
+        <div class="cr__it"><dt><span class="lamp ok"></span>375px</dt><dd>行を語の単位で折り返し、「CIAO, ／ LEGACY.」「さよなら、／ 古い仕組み。」の 2 段ずつに組み替える。フラップ 1 枚の幅は 45〜54px あり、出発と到着の切り替えはそのまま読める。</dd></div>
+        <div class="cr__it"><dt><span class="lamp"></span>モバイルで落とすもの</dt><dd>ミラノの時計、時刻表の状態列と 3 行目、ナビ項目（Menu に畳む）、仕様表の番線・種別列。差分だけが返る発着の切り替えは残す。</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="ciao" lang="en">Ciao<span>.</span></div>
+  <p class="mono">CodeCiao 株式会社 — 方向性ボード B「Departures / Arrivals」試作</p>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+
+  const DRUM_EN = Array.from(' ABCDEFGHIJKLMNOPQRSTUVWXYZ.,:-0123456789');
+  const DRUM_NUM = Array.from(' 0123456789');
+  const POOL_JP = Array.from('あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわん出発到着見送迎引継設計書移行古次仕組');
+
+  /* ── global control: pause / visibility ── */
+  const ctl = { paused: false, skip: false };
+  const isActive = () => !ctl.paused && !document.hidden;
+  async function hold(ms, vis) {
+    let t = 0;
+    while (t < ms) {
+      await sleep(100);
+      if (ctl.skip && vis === heroVis) { ctl.skip = false; return; }
+      if (isActive() && vis.on) t += 100;
+    }
+  }
+
+  /* ── split-flap module ── */
+  const FLAP_HTML = '<span class="h t s"><span class="g"></span><i class="sd"></i></span><span class="h b s"><span class="g"></span><i class="sd"></i></span><span class="h t l"><span class="g"></span><i class="sd"></i></span><span class="h b l"><span class="g"></span><i class="sd"></i></span>';
+
+  class Flap {
+    constructor(opt = {}) {
+      this.kind = opt.kind || 'en';
+      this.list = opt.list || null;
+      const n = document.createElement('span');
+      n.className = 'flap flap--' + this.kind;
+      n.setAttribute('aria-hidden', 'true');
+      n.innerHTML = FLAP_HTML;
+      this.node = n;
+      this.half = Array.from(n.children);
+      this.g = this.half.map((h) => h.firstChild);
+      this.sd = this.half.map((h) => h.lastChild);
+      this.token = 0;
+      this.value = '';
+      this.set(opt.value ?? ' ');
+    }
+    face(i, v) { if (this.g[i].textContent !== v) this.g[i].textContent = v; }
+    set(v) { this.token++; for (let i = 0; i < 4; i++) this.face(i, v); this.value = v; }
+    route(to, steps) {
+      const from = this.value;
+      if (this.kind === 'en' || this.kind === 'num') {
+        const drum = this.kind === 'num' ? DRUM_NUM : DRUM_EN;
+        const i = Math.max(0, drum.indexOf(from));
+        const j = drum.indexOf(to);
+        if (j < 0) return [to];
+        const path = [];
+        for (let k = (i + 1) % drum.length; path.length <= drum.length; k = (k + 1) % drum.length) {
+          path.push(drum[k]);
+          if (k === j) break;
+        }
+        if (path.length <= steps) return path;
+        const tail = path.slice(-2);
+        const head = path.slice(0, -2);
+        const n = Math.max(0, steps - 2);
+        const out = [];
+        for (let s = 0; s < n; s++) out.push(head[Math.min(head.length - 1, Math.floor((s + Math.random() * 0.9) * head.length / n))]);
+        return out.concat(tail);
+      }
+      const pool = this.kind === 'panel' ? this.list : POOL_JP;
+      const out = [];
+      for (let s = 0; s < steps - 1; s++) {
+        let c, guard = 0;
+        do { c = pool[Math.floor(Math.random() * pool.length)]; }
+        while ((c === to || c === from || c === out[out.length - 1]) && guard++ < 12);
+        out.push(c);
+      }
+      out.push(to);
+      return out;
+    }
+    async to(target, o = {}) {
+      if (target === this.value && !o.force) return;
+      const tk = ++this.token;
+      if (REDUCED) { this.set(target); return; }
+      if (o.delay) await sleep(o.delay);
+      if (tk !== this.token) return;
+      const path = o.force && target === this.value ? [target] : this.route(target, o.steps || 1);
+      for (let i = 0; i < path.length; i++) {
+        if (tk !== this.token) return;
+        await this.step(path[i], i === path.length - 1, o.speed || 1);
+      }
+    }
+    async step(next, final, speed) {
+      const from = this.value;
+      const [sT, sB, lT, lB] = this.half;
+      const [dT, dB, dLT, dLB] = this.sd;
+      const d1 = (final ? 120 : 58) / speed;
+      const d2 = (final ? 300 : 70) / speed;
+      this.face(0, next); this.face(1, from); this.face(2, from); this.face(3, next);
+      const anims = [];
+      const A = (el, kf, op) => { const a = el.animate(kf, Object.assign({ fill: 'forwards' }, op)); anims.push(a); return a; };
+      lT.style.visibility = 'visible';
+      const fall = A(lT, [{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-90deg)' }], { duration: d1, easing: 'cubic-bezier(.5,0,.9,.5)' });
+      A(dLT, [{ opacity: 0 }, { opacity: 0.55 }], { duration: d1, easing: 'ease-in' });
+      A(dT, [{ opacity: 0.7 }, { opacity: 0 }], { duration: d1 + d2 * 0.4, easing: 'ease-out' });
+      A(dB, [{ opacity: 0 }, { opacity: 0.28 }], { duration: d1 });
+      await fall.finished;
+      lT.style.visibility = 'hidden';
+      lB.style.visibility = 'visible';
+      const kf = final ? [
+        { transform: 'rotateX(90deg)', easing: 'cubic-bezier(.55,0,.95,.6)' },
+        { transform: 'rotateX(0deg)', offset: 0.6, easing: 'cubic-bezier(.2,.7,.4,1)' },
+        { transform: 'rotateX(11deg)', offset: 0.78, easing: 'cubic-bezier(.6,0,.85,.45)' },
+        { transform: 'rotateX(0deg)' }
+      ] : [{ transform: 'rotateX(90deg)' }, { transform: 'rotateX(0deg)' }];
+      const land = A(lB, kf, { duration: d2, easing: final ? 'linear' : 'cubic-bezier(.55,0,.95,.6)' });
+      A(dLB, final ? [{ opacity: 0.6 }, { opacity: 0, offset: 0.6 }, { opacity: 0.14, offset: 0.78 }, { opacity: 0 }] : [{ opacity: 0.6 }, { opacity: 0 }], { duration: d2 });
+      A(dB, final ? [{ opacity: 0.28 }, { opacity: 0.8, offset: 0.6 }, { opacity: 0.8 }] : [{ opacity: 0.28 }, { opacity: 0.8 }], { duration: d2 });
+      await land.finished;
+      this.face(1, next);
+      this.value = next;
+      lB.style.visibility = 'hidden';
+      anims.forEach((a) => a.cancel());
+    }
+  }
+
+  const makeFlaps = (host, str, kind, opt = {}) => Array.from(str).map((ch) => {
+    const f = new Flap(Object.assign({ kind, value: opt.blank ? ' ' : ch }, opt));
+    host.appendChild(f.node);
+    return f;
+  });
+
+  /* visibility trackers */
+  const io = (el, cb, threshold = 0.25) => {
+    const ob = new IntersectionObserver((es) => es.forEach((e) => cb(e.isIntersecting, e)), { threshold });
+    ob.observe(el);
+    return ob;
+  };
+
+  /* ───────── HERO ───────── */
+  const HERO = {
+    dep: { en: ['CIAO,', ' ', 'LEGACY.'], jp: [' さよなら、', '古い仕組み。'], lbl: 'DEPARTURES', jl: '出発', it: 'Partenze' },
+    arr: { en: ['CIAO,', ' ', 'NEXT.  '], jp: ['こんにちは、', '次の仕組み。'], lbl: 'ARRIVALS  ', jl: '到着', it: 'Arrivi' }
+  };
+  const flat = (groups) => Array.from(groups.join(''));
+
+  function buildRow(host, groups, kind, blank) {
+    const cells = [];
+    groups.forEach((g, gi) => {
+      const grp = document.createElement('span');
+      grp.className = 'grp' + (kind === 'en' && gi === 1 ? ' sp' : '');
+      host.appendChild(grp);
+      cells.push(...makeFlaps(grp, g, kind, { blank }));
+    });
+    return cells;
+  }
+
+  const hero = $('#hero');
+  const heroVis = { on: true };
+  io(hero, (v) => { heroVis.on = v; }, 0.05);
+
+  const rowEN = buildRow($('#row-en'), HERO.dep.en, 'en', !REDUCED);
+  const rowJP = buildRow($('#row-jp'), HERO.dep.jp, 'jp', !REDUCED);
+  const lblEN = makeFlaps($('#lbl-en'), HERO.dep.lbl, 'en', { blank: !REDUCED });
+  const lblJP = makeFlaps($('#lbl-jp'), HERO.dep.jl, 'jp', { blank: !REDUCED });
+  const lamp = $('#lamp');
+  const lblIT = $('#lbl-it');
+  let heroState = 'dep';
+  let heroBusy = true;
+
+  async function heroGo(state, intro) {
+    heroBusy = true;
+    const S = HERO[state];
+    const jobs = [];
+    const wave = (cells, target, base, gap, steps) => {
+      const first = cells.findIndex((c, i) => c.value !== target[i]);
+      cells.forEach((c, i) => {
+        if (c.value === target[i]) return;
+        jobs.push(c.to(target[i], { delay: base + (i - first) * gap + rand(0, 22), steps: steps() }));
+      });
+    };
+    wave(lblEN, Array.from(S.lbl), 0, intro ? 44 : 34, () => (intro ? rand(3, 5) : rand(2, 4)));
+    wave(lblJP, Array.from(S.jl), intro ? 120 : 60, 60, () => rand(2, 3));
+    wave(rowEN, flat(S.en), intro ? 160 : 120, intro ? 66 : 48, () => (intro ? rand(3, 5) : rand(3, 6)));
+    wave(rowJP, flat(S.jp), intro ? 420 : 380, intro ? 66 : 52, () => (intro ? rand(2, 4) : rand(2, 4)));
+    lamp.classList.toggle('is-arr', state === 'arr');
+    setTimeout(() => { lblIT.textContent = S.it; }, 160);
+    await Promise.all(jobs);
+    heroState = state;
+    heroBusy = false;
+  }
+
+  /* clocks (real time, Tokyo / Milano) */
+  const fmt = (tz) => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false });
+  const CLOCKS = [
+    { host: $('#clk-tyo'), f: fmt('Asia/Tokyo') },
+    { host: $('#clk-mil'), f: fmt('Europe/Rome') }
+  ];
+  CLOCKS.forEach((c) => {
+    const t = c.f.format(new Date()).replace(':', '');
+    c.cells = [];
+    Array.from(t).forEach((d, i) => {
+      if (i === 2) { const s = document.createElement('span'); s.className = 'colon'; s.textContent = ':'; c.host.appendChild(s); }
+      const f = new Flap({ kind: 'num', value: REDUCED ? d : ' ' });
+      c.host.appendChild(f.node);
+      c.cells.push(f);
+    });
+  });
+  function tickClocks(intro) {
+    CLOCKS.forEach((c, ci) => {
+      const t = Array.from(c.f.format(new Date()).replace(':', ''));
+      c.cells.forEach((f, i) => { if (f.value !== t[i]) f.to(t[i], { delay: intro ? 500 + ci * 140 + i * 60 : i * 60, steps: intro ? rand(3, 6) : 1 }); });
+    });
+  }
+
+  /* hero timetable */
+  const PAIRS = [
+    ['JDK 8', 'JDK 25'],
+    ['Java EE', 'Jakarta EE'],
+    ['Struts', 'JSTL'],
+    ['EC2', 'ECS'],
+    ['設計書なし', 'ソースから復元'],
+    ['手作業のレビュー', '機械チェック 60 種']
+  ];
+  const FROMS = PAIRS.map((p) => p[0]);
+  const TOS = PAIRS.map((p) => p[1]);
+  const STATUS = ['まもなく出発', '定刻', '定刻'];
+  const tt = $('.tt');
+  const ttRows = [];
+  for (let r = 0; r < 3; r++) {
+    const row = document.createElement('div');
+    row.className = 'tt__row';
+    row.setAttribute('aria-hidden', 'true');
+    row.innerHTML = '<span class="nums"></span><span class="from"></span><span class="arrow">→</span><span class="to"></span><span class="st' + (r === 0 ? ' is-now' : '') + '"></span>';
+    tt.appendChild(row);
+    const nums = makeFlaps(row.querySelector('.nums'), '0' + (r + 1), 'num', { blank: !REDUCED });
+    const from = new Flap({ kind: 'panel', list: FROMS, value: REDUCED ? PAIRS[r][0] : ' ' });
+    const to = new Flap({ kind: 'panel', list: TOS, value: REDUCED ? PAIRS[r][1] : ' ' });
+    const st = new Flap({ kind: 'panel', list: ['定刻', 'まもなく出発', '準備中'], value: REDUCED ? STATUS[r] : ' ' });
+    row.querySelector('.from').appendChild(from.node);
+    row.querySelector('.to').appendChild(to.node);
+    row.querySelector('.st').appendChild(st.node);
+    ttRows.push({ nums, from, to, st });
+  }
+  const ttSr = document.createElement('p');
+  ttSr.className = 'sr';
+  ttSr.textContent = PAIRS.map((p) => p[0] + ' から ' + p[1] + ' へ').join('。') + '。';
+  tt.appendChild(ttSr);
+  let ttK = 0;
+  function ttShow(k, intro) {
+    const jobs = [];
+    ttRows.forEach((row, r) => {
+      const idx = (k + r) % PAIRS.length;
+      const base = (intro ? 900 : 0) + r * 150;
+      const num = ('0' + (idx + 1)).slice(-2);
+      row.nums.forEach((f, i) => jobs.push(f.to(num[i], { delay: base + i * 50, steps: intro ? rand(2, 4) : 1 })));
+      jobs.push(row.from.to(PAIRS[idx][0], { delay: base + 110, steps: rand(2, 3) }));
+      jobs.push(row.to.to(PAIRS[idx][1], { delay: base + 190, steps: rand(2, 3) }));
+      jobs.push(row.st.to(STATUS[r], { delay: base + 270, steps: intro ? 2 : 1 }));
+    });
+    return Promise.all(jobs);
+  }
+
+  /* hero loops */
+  async function heroLoop() {
+    await heroGo('dep', true);
+    for (;;) {
+      await hold(4200, heroVis);
+      await heroGo(heroState === 'dep' ? 'arr' : 'dep');
+    }
+  }
+  async function ttLoop() {
+    await ttShow(0, true);
+    for (;;) {
+      await hold(4800, { get on() { return heroVis.on; } });
+      ttK = (ttK + 1) % PAIRS.length;
+      await ttShow(ttK);
+    }
+  }
+
+  $('#board').addEventListener('click', () => {
+    if (REDUCED || heroBusy) return;
+    ctl.skip = true;
+  });
+
+  const pauseBtn = $('#pause');
+  pauseBtn.addEventListener('click', () => {
+    ctl.paused = !ctl.paused;
+    pauseBtn.setAttribute('aria-pressed', String(ctl.paused));
+    pauseBtn.querySelector('.t').textContent = ctl.paused ? '動きを再開' : '動きを止める';
+  });
+
+  /* nav */
+  const nav = $('#nav');
+  const menuBtn = $('.nav__menu');
+  menuBtn.addEventListener('click', () => {
+    const open = !nav.classList.contains('is-open');
+    nav.classList.toggle('is-open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.textContent = open ? 'Close' : 'Menu';
+  });
+  addEventListener('scroll', () => nav.classList.toggle('is-scrolled', scrollY > 8), { passive: true });
+
+  /* ───────── Static (reduced motion) hero ───────── */
+  if (REDUCED) {
+    hero.classList.add('is-static');
+    $('#board').setAttribute('aria-disabled', 'true');
+    buildRow($('#row-en2'), HERO.arr.en, 'en', false);
+    buildRow($('#row-jp2'), HERO.arr.jp, 'jp', false);
+    pauseBtn.hidden = true;
+  }
+
+  /* ───────── Section header flaps & numbered flaps ───────── */
+  $$('[data-flap]').forEach((host) => {
+    const kind = host.dataset.kind || 'en';
+    const text = host.dataset.flap;
+    const cells = makeFlaps(host, text, kind, { blank: !REDUCED });
+    host.setAttribute('aria-hidden', 'true');
+    if (REDUCED) return;
+    let done = false;
+    io(host, (v) => {
+      if (!v || done) return;
+      done = true;
+      cells.forEach((c, i) => c.to(text[i], { delay: i * 55, steps: kind === 'num' ? rand(4, 7) : rand(3, 7) }));
+    }, 0.6);
+  });
+
+  /* ───────── Before → After board ───────── */
+  (function buildBA() {
+    const host = $('#ba');
+    const rows = [];
+    PAIRS.forEach((p, r) => {
+      const row = document.createElement('div');
+      row.className = 'ba__row';
+      row.innerHTML = '<span class="nums"></span><span class="from"></span><span class="arrow">→</span><span class="to"></span><span class="plat nums"></span><span class="kind"></span>';
+      host.appendChild(row);
+      const plat = r === 5 ? '3' : '1';
+      const kind = r === 5 ? '引き継ぐ' : '見送る';
+      const no = '0' + (r + 1);
+      const n = makeFlaps(row.querySelector('.nums'), no, 'num', { blank: !REDUCED });
+      const pl = makeFlaps(row.querySelector('.plat'), plat, 'num', { blank: !REDUCED });
+      const from = new Flap({ kind: 'panel', list: FROMS, value: REDUCED ? p[0] : ' ' });
+      const to = new Flap({ kind: 'panel', list: TOS, value: REDUCED ? p[1] : ' ' });
+      const kd = new Flap({ kind: 'panel', list: ['見送る', '迎える', '引き継ぐ'], value: REDUCED ? kind : ' ' });
+      row.querySelector('.from').appendChild(from.node);
+      row.querySelector('.to').appendChild(to.node);
+      row.querySelector('.kind').appendChild(kd.node);
+      row.setAttribute('aria-label', p[0] + ' から ' + p[1] + ' へ（' + kind + '）');
+      row.setAttribute('role', 'listitem');
+      rows.push({ n, pl, from, to, kd, no, plat, kind, p });
+    });
+    host.setAttribute('role', 'list');
+    if (REDUCED) return;
+    let done = false;
+    io(host, (v) => {
+      if (!v || done) return;
+      done = true;
+      rows.forEach((R, r) => {
+        const b = r * 170;
+        R.n.forEach((f, i) => f.to(R.no[i], { delay: b + i * 50, steps: rand(2, 4) }));
+        R.from.to(R.p[0], { delay: b + 120, steps: rand(2, 4) });
+        R.to.to(R.p[1], { delay: b + 260, steps: rand(2, 4) });
+        R.pl[0].to(R.plat, { delay: b + 380, steps: rand(3, 5) });
+        R.kd.to(R.kind, { delay: b + 440, steps: 2 });
+      });
+    }, 0.3);
+  })();
+
+  /* ───────── Motion demos ───────── */
+  function demo(hostSel, text, loopFn) {
+    const host = $(hostSel);
+    const cells = makeFlaps(host, text, 'en', {});
+    if (REDUCED) return;
+    const vis = { on: false };
+    io(host.closest('.mo__stage'), (v) => { vis.on = v; }, 0.4);
+    (async () => {
+      for (let n = 0; ; n++) {
+        await hold(n === 0 ? 900 : 1700, vis);
+        await loopFn(cells, n);
+      }
+    })();
+  }
+  demo('#mo1', 'CIAO, LEGACY.', (cells, n) => {
+    const t = Array.from(n % 2 === 0 ? 'CIAO, NEXT.  ' : 'CIAO, LEGACY.');
+    return Promise.all(cells.map((c, i) => c.to(t[i], { delay: (i - 6) * 48, steps: rand(2, 4) })));
+  });
+  const SEQ = ['I', 'A', 'O', 'C'];
+  demo('#mo2', 'C', (cells, n) => cells[0].to(SEQ[n % 4], { steps: 1, speed: 0.2 }));
+  demo('#mo3', 'ARRIVALS  ', (cells, n) => {
+    const t = Array.from(n % 2 === 0 ? 'DEPARTURES' : 'ARRIVALS  ');
+    return Promise.all(cells.map((c, i) => c.to(t[i], { delay: i * 48, steps: rand(2, 4) })));
+  });
+
+  /* ───────── Contrast (WCAG 2.x, computed) ───────── */
+  const lum = (hex) => {
+    const c = hex.match(/[0-9a-f]{2}/gi).map((h) => parseInt(h, 16) / 255).map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  $$('#contrast .ct__row').forEach((row) => {
+    const { fg, bg, name, use } = row.dataset;
+    const r = ratio(fg, bg);
+    const lv = r >= 7 ? 'AAA' : r >= 4.5 ? 'AA' : r >= 3 ? 'AA Large' : '不可';
+    row.innerHTML =
+      '<div class="ct__sample" style="color:' + fg + ';background:' + bg + ';' + (bg === '#0C0C0B' ? 'box-shadow:inset 0 0 0 1px #2C2B27' : '') + '">あ Aa</div>' +
+      '<div class="ct__pair">' + name + '<span class="mono">' + fg + ' on ' + bg + ' — ' + use + '</span></div>' +
+      '<div class="ct__ratio">' + (Math.floor(r * 100) / 100).toFixed(2) + ' : 1</div>' +
+      '<div class="ct__lv' + (lv === 'AAA' ? ' is-aaa' : '') + '">' + lv + '</div>';
+  });
+
+  /* ───────── Mixed-script baseline probe ───────── */
+  const mix = $('#mix');
+  function measureBaseline() {
+    const probe = mix.querySelector('.bl');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    const mr = mix.getBoundingClientRect();
+    const pr = probe.getBoundingClientRect();
+    const bl = pr.top - mr.top;
+    const fs = parseFloat(getComputedStyle(mix).fontSize);
+    mix.style.setProperty('--bl', bl.toFixed(1) + 'px');
+    mix.style.setProperty('--cap', (bl - fs * 0.7).toFixed(1) + 'px');
+  }
+
+  /* ───────── start ───────── */
+  const fontsReady = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), sleep(1400)]);
+  fontsReady.then(() => {
+    measureBaseline();
+    addEventListener('resize', measureBaseline, { passive: true });
+    if (REDUCED) {
+      heroBusy = false;
+      setInterval(() => tickClocks(false), 5000);
+      return;
+    }
+    heroLoop();
+    ttLoop();
+    tickClocks(true);
+    setInterval(() => { if (!ctl.paused) tickClocks(false); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+---
+// 05 / メンバー（3 人の行と、メンバーのページへのボタン）。会社概要の「体制」の続きなので、同じ面に間を詰めて置く。
+// 写真は、このページでは代表メッセージに 1 回だけ出す。3 人の写真と経歴はメンバーのページにあるので、
+// ここは名前と役割の行だけにして、行を押すとメンバーのページのその人の欄へ移る（同じ内容を 2 ページに置かない）。
+// 名前・役割・丸い矢印が 1 つのリンク（トップページの実績の行と同じ形）。
+import Role from "@/components/members/Role.astro";
+import Arrow from "@/components/site/Arrow.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { MEMBERS } from "@/data/members";
+---
+
+<section
+  class="sec sec--tint sec--tight grid"
+  id="members"
+  aria-labelledby="h-team"
+>
+  <SectionHead no="05" en="Members" title="メンバー" id="h-team" />
+  <div class="body">
+    <ul class="tm">
+      {
+        MEMBERS.map(member => (
+          <li class="tm__item">
+            <a class="tm__link" href={`/members#${member.slug}`}>
+              <span class="tm__no mono" aria-hidden="true">
+                {member.no}
+              </span>
+              <span class="tm__name t-h3">{member.name}</span>
+              <span class="tm__role">
+                <Role role={member.role} />
+              </span>
+              <span class="tm__go" aria-hidden="true">
+                <Arrow />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a class="btn btn--lg tm__more" href="/members">
+      メンバーを見る
+      <Arrow />
+    </a>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-content: start;
+  }
+
+  .tm {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    border-top: 1px solid var(--ink);
+  }
+
+  .tm__item {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 番号と名前は 12 列の 4 列目、役割は 8 列目、丸い矢印は右端 */
+  .tm__link {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+    min-height: 96px;
+    padding: 20px 0;
+    text-decoration: none;
+  }
+
+  .tm__no {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--ink-2);
+  }
+
+  .tm__name {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    padding-left: 64px;
+    /* 姓と名の間で折り返さない */
+    white-space: nowrap;
+    transition: color 0.3s linear;
+  }
+
+  .tm__role {
+    grid-column: 5 / -1;
+    grid-row: 1;
+    padding-right: 64px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  /* 行の右端の丸い矢印（トップページの実績の行と同じ形） */
+  .tm__go {
+    grid-column: -2 / -1;
+    grid-row: 1;
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .tm__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .tm__link:focus-visible .tm__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  /* 押している間も、線に塗りが満ちる（ホバーのない端末でも起きる）。短い時間で見えるよう速くする */
+  .tm__link:active .tm__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition-duration: 0.18s;
+  }
+
+  .tm__link:active .tm__name {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .tm__link:hover .tm__go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .tm__link:hover .tm__name {
+      color: var(--teal-deep);
+    }
+  }
+
+  /* ページ内ではなく、別のページの欄へ移るので、矢印は右向き */
+  .tm__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+  }
+
+  .tm__more {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: clamp(36px, 4.4vw, 56px);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* 767px 以下（4 列）: 1 行目に番号と名前、2 行目に役割。丸い矢印は 2 行の右端 */
+  @media (max-width: 767px) {
+    .tm__link {
+      grid-template-columns: 2.4em minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
+      column-gap: 12px;
+      row-gap: 4px;
+      min-height: 0;
+      padding: 18px 0 20px;
+    }
+
+    .tm__no {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: baseline;
+    }
+
+    .tm__name {
+      grid-column: 2;
+      grid-row: 1;
+      padding-left: 0;
+      align-self: baseline;
+    }
+
+    .tm__role {
+      grid-column: 2;
+      grid-row: 2;
+      padding-right: 0;
+    }
+
+    .tm__go {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: center;
+    }
+  }
+</style>

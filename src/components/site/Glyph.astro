@@ -1,0 +1,35 @@
+---
+// ロゴの字形 1 字。線の SVG と塗りの SVG を重ね、塗りを clip-path で満たす／抜く。
+interface Props {
+  name: "c" | "i" | "a" | "o" | "d" | "e";
+  index?: number;
+  /** 塗りの初期量（0〜1）。動かさない静止図で使う */
+  fill?: number;
+  /** 上から抜けた量（0〜1） */
+  drain?: number;
+  class?: string;
+}
+
+const WIDTH = { c: 172, i: 54, a: 212, o: 200, d: 188, e: 172 } as const;
+
+const { name, index = 0, fill, drain, class: className } = Astro.props;
+const w = WIDTH[name];
+const viewBox = `-8 -8 ${w + 16} 216`;
+const style = [
+  `--w:${w}`,
+  `--i:${index}`,
+  fill !== undefined ? `--b:${fill}` : null,
+  drain !== undefined ? `--a:${drain}` : null,
+]
+  .filter(Boolean)
+  .join(";");
+---
+
+<span class:list={["gl", `gl--${name}`, className]} style={style}>
+  <svg class="gl__line" viewBox={viewBox} aria-hidden="true" focusable="false"
+    ><use href={`#g-${name}`}></use></svg
+  >
+  <svg class="gl__fill" viewBox={viewBox} aria-hidden="true" focusable="false"
+    ><use href={`#g-${name}`}></use></svg
+  >
+</span>

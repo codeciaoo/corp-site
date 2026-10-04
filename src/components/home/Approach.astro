@@ -1,0 +1,176 @@
+---
+import Arrow from "@/components/site/Arrow.astro";
+import Fx from "@/components/site/Fx.astro";
+import Glyph from "@/components/site/Glyph.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { STEPS } from "@/data/home";
+
+const last = STEPS.length - 1;
+---
+
+<section class="sec sec--ink grid ap" id="approach" aria-labelledby="h-approach">
+  <SectionHead no="03" en="Approach" title="つくり方" id="h-approach" big />
+  <div class="body">
+    <p class="ap__head">
+      <Fx text="塗るのは 確かめたものだけ" />
+    </p>
+    <p class="ap__lead phrase">
+      AIエージェントが書いたコードは、別のAI・自動のチェック・担当者の順に確かめます。すべてを通過したコードだけを「できた」と報告します。
+    </p>
+
+    <ol class="steps" data-glyphs="1.5">
+      {
+        STEPS.map((step, index) => (
+          <li
+            class="step fx"
+            data-pre="hidden"
+            data-post="solid"
+            data-state="solid"
+            data-reveal
+            style={`--to:${index / last};--d0:${index * 140}ms`}
+          >
+            <span class="step__ring" aria-hidden="true">
+              <Glyph name="o" />
+            </span>
+            <p class="step__top mono">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <span>{step.verb}</span>
+            </p>
+            <h3 class="step__ttl">{step.title}</h3>
+            <p class="step__body">{step.summary}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <a class="btn btn--lg ap__link" href="/approach">
+      つくり方を詳しく見る
+      <Arrow />
+    </a>
+  </div>
+</section>
+
+<style>
+  .ap {
+    --sec-bg: var(--ink);
+  }
+
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .ap__head {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d2);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    --st: 52ms;
+  }
+
+  .ap__lead {
+    margin-top: 28px;
+    max-width: 35em;
+    font-size: var(--fs-lead);
+    line-height: 1.95;
+  }
+
+  .steps {
+    margin-top: clamp(56px, 7vw, 96px);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border-top: 1px solid var(--paper);
+  }
+
+  .step {
+    padding: 26px 18px 6px 0;
+    border-right: 1px solid var(--rule);
+    --gl-line: var(--teal);
+    --gl-fill: var(--teal);
+  }
+
+  .step + .step {
+    padding-left: 18px;
+  }
+
+  .step:last-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .step__ring {
+    display: flex;
+    width: clamp(56px, 5.4vw, 84px);
+  }
+
+  .step__top {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .step__ttl {
+    margin-top: 6px;
+    /* 5 つを横に並べるときは、見出しが 1 行でも 2 行でも、本文が同じ高さから始まるようにする */
+    min-height: calc(var(--lh-heading) * 2em);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .step__body {
+    margin-top: 10px;
+    font-size: var(--fs-small);
+    line-height: 1.9;
+    color: var(--ink-2);
+  }
+
+  .ap__link {
+    margin-top: clamp(40px, 5vw, 64px);
+    color: var(--paper);
+  }
+
+  @media (max-width: 1199px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: clamp(56px, 9vw, 76px) minmax(0, 1fr);
+      column-gap: 20px;
+      padding: 22px 0 !important;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .step__ring {
+      grid-row: 1 / span 3;
+      width: 100%;
+      align-self: start;
+    }
+
+    .step__top {
+      margin-top: 0;
+    }
+
+    .step__ttl {
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .ap__lead {
+      font-size: var(--fs-body);
+    }
+  }
+</style>

@@ -1,11 +1,106 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import ContactSection from "@/components/pages/contact/ContactSection";
-import Section from "@/components/shared/Section";
+import ContactForm from "@/components/contact/ContactForm.astro";
+import Flow from "@/components/contact/Flow.astro";
+import Meter from "@/components/forms/Meter.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+const FORM_ID = "contact-form";
 ---
 
-<Layout title="お問い合わせ">
-  <Section bg="light">
-    <ContactSection client:load />
-  </Section>
-</Layout>
+<Base
+  title="お問い合わせ"
+  description="CodeCiaoへの相談とお問い合わせを受け付けています。"
+>
+  <PageHero
+    en="Contact"
+    label="お問い合わせ"
+    title="まずは Ciaoから"
+    compact
+    lead="相談フォームの必須の入力は5項目です。CodeCiaoはヒアリングから2日以内に、進め方の提案と見積を出します。"
+  />
+
+  <!-- 列の位置: フォームは 12 列の 4 列目から、「相談から開始まで」は 8 列目から始める -->
+  <section class="sec ct grid" aria-labelledby="h-form">
+    <header class="ct__head">
+      <p class="ct__en mono">Form</p>
+      <h2 class="ct__ttl t-h3" id="h-form">相談フォーム</h2>
+      <Meter form={FORM_ID} total={5} />
+    </header>
+
+    <div class="ct__form">
+      <ContactForm id={FORM_ID} />
+    </div>
+
+    <div class="ct__side">
+      <Flow />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* 見出しの下に、入力の進み具合の輪を置く（採用の応募フォームと同じ位置と大きさ） */
+  .ct__head {
+    grid-column: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+    --mt-size: clamp(56px, 5vw, 72px);
+  }
+
+  .ct__head :global(.mt) {
+    margin-top: 32px;
+  }
+
+  .ct__en {
+    color: var(--ink-2);
+  }
+
+  .ct__ttl {
+    margin-top: 6px;
+  }
+
+  .ct__form {
+    grid-column: 4 / span 4;
+    min-width: 0;
+  }
+
+  .ct__side {
+    grid-column: 8 / -1;
+    min-width: 0;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+  }
+
+  @media (max-width: 1199px) {
+    .ct__form {
+      grid-column: 4 / -1;
+    }
+
+    .ct__side {
+      grid-column: 4 / -1;
+      position: static;
+      margin-top: clamp(56px, 8vw, 80px);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .ct__head {
+      grid-column: 1 / -1;
+      position: static;
+      margin-bottom: 36px;
+    }
+
+    .ct__head :global(.mt) {
+      margin-top: 24px;
+    }
+
+    .ct__form,
+    .ct__side {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,61 +1,26 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Services from "@/components/pages/home/Services";
-import Strengths from "@/components/pages/home/Strengths";
-import ServiceComparisonTable from "@/components/pages/home/ServiceComparisonTable";
-import HomeProjects from "@/components/pages/home/HomeProjects";
-import ContactFlow from "@/components/pages/home/ContactFlow";
-import HeroSection from "@/components/pages/home/Hero/HeroSection";
-import Solutions from "@/components/pages/home/Solutions/Solutions";
+import Approach from "@/components/home/Approach.astro";
+import Engage from "@/components/home/Engage.astro";
+import Hero from "@/components/home/Hero.astro";
+import Services from "@/components/home/Services.astro";
+import Statement from "@/components/home/Statement.astro";
+import Work from "@/components/home/Work.astro";
+import Cta from "@/components/site/Cta.astro";
+import Base from "@/layouts/Base.astro";
+import { getPublishedProjects } from "@/lib/projects";
 
-import Section from "@/components/shared/Section";
-import { getCollection } from "astro:content";
+export const prerender = true;
 
-// 全プロジェクトを取得してから日付でソート
-const allProjects = await getCollection("projects");
-const sortedProjects = allProjects.sort(
-  (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
-);
-// ソート済みのプロジェクトから最新3件を取得
-const latestProjects = sortedProjects.slice(0, 3);
+// 実績の一覧（/projects）と同じ順番と番号で、公開する実績を出す（5 件まで）
+const projects = (await getPublishedProjects()).slice(0, 5);
 ---
 
-<Layout>
-  <HeroSection client:load />
-
-  <Section bg="light" ariaLabel="解決できる課題">
-    <Solutions client:load />
-  </Section>
-
-  <Section bg="dark" ariaLabel="3つの強み">
-    <Strengths client:idle />
-  </Section>
-
-  <Section bg="light" ariaLabel="実績">
-    <HomeProjects
-      client:idle
-      projects={latestProjects.map(project => ({
-        title: project.data.title,
-        summary: project.data.summary,
-        publishedDate: project.data.publishedDate,
-        cover: project.data.cover ? project.data.cover.src : undefined,
-        coverAlt: project.data.coverAlt || "",
-        href: `/projects/${project.id}`,
-        tags: project.data.tags,
-      }))}
-    />
-    <!-- <Acheivements client:idle /> -->
-  </Section>
-
-  <Section bg="dark" ariaLabel="主要サービス">
-    <Services client:visible />
-  </Section>
-
-  <Section bg="light" ariaLabel="契約プラン">
-    <ServiceComparisonTable client:visible />
-  </Section>
-
-  <Section bg="dark" ariaLabel="お問い合わせから開始までの流れ">
-    <ContactFlow client:visible />
-  </Section>
-</Layout>
+<Base>
+  <Hero />
+  <Statement />
+  <Services />
+  <Approach />
+  <Work projects={projects} />
+  <Engage />
+  <Cta size="mega" />
+</Base>

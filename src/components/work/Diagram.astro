@@ -1,0 +1,118 @@
+---
+// 実績の図。サイトのほかの部分と同じ語彙（1px の罫線、丸、等幅のラベル、墨の太字）で描く。
+// 塗りの丸は確かめたもの（動いているもの）、線の丸はまだのもの。角の丸い四角と塗りの箱は使わない。
+// 形（form）は案件ごとに違う。どの形も「罫線の下に Fig. と凡例 → 描画 → 工程の文字」の順に組む。
+//   rule:   1 本の罫線の上に丸を並べる（767px 以下は縦の罫線）
+//   rings:  中心の丸と同心の輪。輪から右へ引き出し線を出す（899px 以下は、輪の下に番号つきの行）
+//   branch: 丸を罫線でつなぎ、最後に枝分かれする（767px 以下は縦）
+//   frame:  大きい丸の円周上に小さい丸を置く（詳細だけ）
+// 一覧（sm）と詳細（lg）は同じ図で、大きさと note の有無だけが違う。
+// 画面に入ると、罫線が伸び、塗りの丸に下から塗りが満ちる（.fx の状態を site.ts が動かす）。
+import type { DiagramData } from "./diagram";
+import DiagramBranch from "./DiagramBranch.astro";
+import DiagramFrame from "./DiagramFrame.astro";
+import DiagramRings from "./DiagramRings.astro";
+import DiagramRule from "./DiagramRule.astro";
+
+interface Props {
+  data: DiagramData;
+  /** lg: 詳細（12 列いっぱい、note を出す） ／ sm: 一覧（note を省く） */
+  size?: "lg" | "sm";
+}
+
+const { data, size = "lg" } = Astro.props;
+const { form, legend } = data;
+---
+
+<figure
+  class:list={["dg", `dg--${size}`, `dg--${form}`, "fx"]}
+  data-pre="hidden"
+  data-post="solid"
+  data-state="solid"
+  data-reveal
+>
+  <figcaption class="dg__cap mono">
+    <span>Fig. / {data.caption}</span>
+    <span class="dg__legend">
+      {
+        legend.solid && (
+          <span>
+            <i class="dg__ic is-on" aria-hidden="true" />
+            {legend.solid}
+          </span>
+        )
+      }
+      {
+        legend.line && (
+          <span>
+            <i class="dg__ic" aria-hidden="true" />
+            {legend.line}
+          </span>
+        )
+      }
+    </span>
+  </figcaption>
+  <div class="dg__draw">
+    {form === "rule" && <DiagramRule data={data} size={size} />}
+    {form === "rings" && <DiagramRings data={data} size={size} />}
+    {form === "branch" && <DiagramBranch data={data} size={size} />}
+    {form === "frame" && <DiagramFrame data={data} size={size} />}
+  </div>
+</figure>
+
+<style>
+  .dg {
+    /* 線が伸びてから、塗りが満ちはじめるまで */
+    --dg-wait: 360ms;
+    /* 1 工程ぶんのずらし */
+    --dg-step: 240ms;
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .dg--lg {
+    border-top-color: var(--ink);
+  }
+
+  .dg__cap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 24px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .dg__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+  }
+
+  .dg__legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dg__ic {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .dg__ic.is-on {
+    background: var(--teal);
+  }
+
+  .dg__draw {
+    margin-top: clamp(28px, 3.4vw, 48px);
+  }
+
+  .dg--lg .dg__draw {
+    margin-top: clamp(36px, 4.4vw, 64px);
+  }
+</style>

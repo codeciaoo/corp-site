@@ -1,0 +1,127 @@
+---
+// 番号付きの行。番号・見出し・本文を 1 行に並べる。サイト内の番号付きの一覧は、この部品で統一する。
+// 見出しは墨の太字。線→塗りとティールは「これから」「確かめた事実」にだけ使う決まりなので、ここでは使わない。
+import Phrases from "./Phrases.astro";
+import Bars from "@/components/work/Bars.astro";
+import type { CollectionEntry } from "astro:content";
+
+type BarsData = NonNullable<CollectionEntry<"projects">["data"]["bars"]>;
+
+interface Item {
+  /** 見出し。`|` は折り返してよい位置 */
+  title: string;
+  body: string;
+  /** ほかの案件ではどう役立つか（実績の進め方だけで使う）。本文の下に、ラベルを付けて出す */
+  reuse?: string;
+  /** この行の結果（帯の図。実績の進め方だけで使う）。本文のすぐ下に、本文の列の幅で出す */
+  bars?: BarsData;
+}
+
+interface Props {
+  items: Item[];
+  /** 一覧の名前（読み上げ用） */
+  label: string;
+  /** 見出しの階層（既定は h3） */
+  level?: "h3" | "h4";
+}
+
+const { items, label, level: Heading = "h3" } = Astro.props;
+---
+
+<ol class="nr" aria-label={label}>
+  {
+    items.map((item, index) => (
+      <li class="nr__row" data-reveal={item.bars ? undefined : ""}>
+        <span class="nr__no mono" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <Heading class="nr__ttl">
+          <Phrases text={item.title} />
+        </Heading>
+        <div class="nr__body">
+          <p>{item.body}</p>
+          {item.bars && (
+            <div class="nr__fig">
+              <Bars data={item.bars} size="xs" />
+            </div>
+          )}
+          {item.reuse && (
+            <p class="nr__reuse">
+              <span class="nr__reuse-k mono">Reuse / ほかの案件では</span>
+              {item.reuse}
+            </p>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .nr {
+    border-top: 1px solid var(--ink);
+  }
+
+  :global(.sec--ink) .nr {
+    border-top-color: var(--paper);
+  }
+
+  /* この一覧は 12 列の 4 列目から置く前提（9 列ぶんの幅）。本文は 9 列のうち後ろ 5 列、つまりページの 8 列目から始める */
+  .nr__row {
+    display: grid;
+    grid-template-columns:
+      40px minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: clamp(24px, 2.6vw, 36px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .nr__no {
+    color: var(--ink-2);
+  }
+
+  .nr__ttl {
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+    font-feature-settings: "palt";
+  }
+
+  .nr__body {
+    font-size: var(--fs-body);
+    max-width: 32em;
+  }
+
+  /* 行の結果（帯の図）。本文の数字の根拠として、本文のすぐ下に置く */
+  .nr__fig {
+    margin-top: 24px;
+  }
+
+  /* ほかの案件ではどう役立つか。本文と罫線で分け、補足の色で書く */
+  .nr__reuse {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .nr__reuse-k {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 767px) {
+    .nr__row {
+      grid-template-columns: 1fr;
+      row-gap: 8px;
+    }
+
+    /* 行の見出しは、節の見出し（--fs-h2）より小さくする */
+    .nr__ttl {
+      font-size: var(--fs-h3);
+      line-height: 1.5;
+    }
+  }
+</style>

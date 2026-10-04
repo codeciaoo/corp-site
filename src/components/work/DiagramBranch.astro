@@ -1,0 +1,304 @@
+---
+// 図の形 branch: 工程の丸を罫線でつなぎ、最後の工程（items のある工程）で罫線が items の数に分かれる。
+// 768px 以上: 横に並べる。上の帯に丸と罫線、その下に工程ごとの「番号 / tag、label、note」。
+//   分かれる工程は、縦の罫線（幹）から、items の丸へ短い罫線を出す。前の工程からの罫線は、幹のまん中に届く
+// 767px 以下: 縦に並べる。前の工程からの罫線が、そのまま幹になる。
+import { pad, type DiagramData } from "./diagram";
+import DiagramText from "./DiagramText.astro";
+
+interface Props {
+  data: DiagramData;
+  size: "lg" | "sm";
+}
+
+const { data, size } = Astro.props;
+const { steps, legend } = data;
+// 上の帯の高さ（分かれた先の行の数）
+const rows = Math.max(1, ...steps.map(step => step.items?.length ?? 1));
+---
+
+<ol
+  class:list={["bh", `bh--${size}`]}
+  style={`--rows:${rows}`}
+  aria-label={data.alt}
+>
+  {
+    steps.map((step, index) => {
+      const split = Boolean(step.items);
+      const last = index === steps.length - 1;
+      return (
+        <li
+          class:list={["bh__st", { "bh__st--split": split }]}
+          style={`--k:${index}`}
+        >
+          <div class="bh__draw">
+            {split && step.items ? (
+              <ul class="bh__items" style={`--n:${step.items.length}`}>
+                {step.items.map((item, order) => (
+                  <li style={`--j:${order}`}>
+                    <span
+                      class:list={["bh__dot", "bh__dot--item", { "is-solid": step.solid }]}
+                      aria-hidden="true"
+                    />
+                    <span class="bh__item nb">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span
+                class:list={["bh__dot", { "is-solid": step.solid }]}
+                aria-hidden="true"
+              />
+            )}
+            {!last && <span class="bh__seg" aria-hidden="true" />}
+          </div>
+          <div class="bh__tx">
+            <DiagramText
+              no={pad(index + 1)}
+              tag={step.tag}
+              label={step.label}
+              note={size === "lg" ? step.note : undefined}
+              state={step.solid ? legend.solid : legend.line}
+              size={size}
+            />
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .bh {
+    --d: 48px; /* 工程の丸 */
+    --di: 34px; /* 分かれた先の丸 */
+    --h: 64px; /* 分かれた先の 1 行の高さ */
+    --f: 44px; /* 幹から分かれた先の丸までの罫線 */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr);
+    column-gap: var(--g);
+  }
+
+  .bh--sm {
+    --d: 36px;
+    --di: 28px;
+    --h: 50px;
+    --f: 40px;
+  }
+
+  .bh__st {
+    position: relative;
+    min-width: 0;
+  }
+
+  /* 上の帯。高さは、分かれた先の行の数ぶん。工程の丸は、その縦のまん中 */
+  .bh__draw {
+    position: relative;
+    height: calc(var(--h) * var(--rows));
+  }
+
+  .bh__dot {
+    position: absolute;
+    left: 0;
+    top: calc(50% - var(--d) / 2);
+    width: var(--d);
+    height: var(--d);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .bh__dot.is-solid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--teal);
+    clip-path: polygon(
+      0 var(--top),
+      100% var(--top),
+      100% var(--bot),
+      0 var(--bot)
+    );
+    transition: clip-path var(--dur) var(--ease)
+      calc(var(--dg-wait) + var(--k) * var(--dg-step) + var(--j, 0) * 120ms);
+  }
+
+  /* 罫線。丸の右端から、次の列の左端（次の丸、または幹）まで */
+  .bh__seg {
+    position: absolute;
+    left: var(--d);
+    right: calc(-1 * var(--g));
+    top: calc(50% - 0.5px);
+    height: 1px;
+    background: var(--ink);
+    transform-origin: 0 50%;
+    transition: transform 0.6s var(--ease) calc(var(--k) * var(--dg-step));
+  }
+
+  /* 分かれる工程。幹（縦の罫線）から、短い罫線で丸へ */
+  .bh__items {
+    position: relative;
+    height: 100%;
+  }
+
+  .bh__items::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--h) / 2);
+    bottom: calc(var(--h) / 2);
+    width: 1px;
+    background: var(--ink);
+    transition: transform 0.5s var(--ease) calc(var(--k) * var(--dg-step));
+  }
+
+  .bh__items li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: var(--h);
+    padding-left: var(--f);
+  }
+
+  .bh__items li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: var(--f);
+    top: calc(50% - 0.5px);
+    height: 1px;
+    background: var(--ink);
+    transform-origin: 0 50%;
+    transition: transform 0.5s var(--ease)
+      calc(var(--k) * var(--dg-step) + 200ms + var(--j) * 80ms);
+  }
+
+  .bh__dot--item {
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: none;
+    width: var(--di);
+    height: var(--di);
+  }
+
+  .bh__item {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .bh--sm .bh__item {
+    font-size: var(--fs-h4);
+  }
+
+  .bh__tx {
+    margin-top: clamp(14px, 1.6vw, 22px);
+    padding-right: 8px;
+  }
+
+  /* 分かれる工程の文字は、分かれた先の丸の左端にそろえる */
+  .bh__st--split .bh__tx {
+    padding-left: var(--f);
+  }
+
+  :global(html.js:not(.rm) .dg:not(.is-live)) .bh__seg,
+  :global(.dg[data-state="hidden"]) .bh__seg,
+  :global(html.js:not(.rm) .dg:not(.is-live)) .bh__items li::before,
+  :global(.dg[data-state="hidden"]) .bh__items li::before {
+    transform: scaleX(0);
+  }
+
+  :global(html.js:not(.rm) .dg:not(.is-live)) .bh__items::before,
+  :global(.dg[data-state="hidden"]) .bh__items::before {
+    transform: scaleY(0);
+  }
+
+  /* ── 767px 以下: 縦に並べる ──
+     工程の丸は左、文字は右。前の工程からの罫線は、丸の下端から次の工程の上端まで。
+     分かれる工程では、その罫線が幹になり、分かれた先の丸へ短い罫線を出す。文字は丸の行の下 */
+  @media (max-width: 767px) {
+    .bh,
+    .bh--sm {
+      --d: 30px;
+      --di: 24px;
+      --h: 44px;
+      --f: 24px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bh__st {
+      padding-bottom: 28px;
+    }
+
+    .bh__st:last-child {
+      padding-bottom: 0;
+    }
+
+    .bh__draw {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--d);
+      height: auto;
+    }
+
+    .bh__dot {
+      top: 0;
+    }
+
+    .bh__seg {
+      left: calc(var(--d) / 2 - 0.5px);
+      right: auto;
+      top: var(--d);
+      bottom: 0;
+      width: 1px;
+      height: auto;
+      transform-origin: 50% 0;
+    }
+
+    .bh__tx {
+      margin-top: 0;
+      padding: calc(var(--d) / 2 - 9px) 0 0 calc(var(--d) + 16px);
+    }
+
+    /* 分かれる工程: 丸の行を上に、文字をその下に */
+    .bh__st--split .bh__draw {
+      position: relative;
+      width: auto;
+      height: calc(var(--h) * var(--rows));
+    }
+
+    .bh__st--split .bh__tx {
+      padding: 12px 0 0 calc(var(--d) + 16px);
+    }
+
+    .bh__items {
+      margin-left: calc(var(--d) / 2 - 0.5px);
+    }
+
+    /* 幹は、前の工程の罫線の続き（行の上端から、最後の丸のまん中まで） */
+    .bh__items::before {
+      top: 0;
+      transform-origin: 50% 0;
+    }
+
+    .bh__items li {
+      gap: 12px;
+    }
+
+    .bh__item,
+    .bh--sm .bh__item {
+      font-size: var(--fs-h4);
+    }
+
+    :global(html.js:not(.rm) .dg:not(.is-live)) .bh__seg,
+    :global(.dg[data-state="hidden"]) .bh__seg {
+      transform: scaleY(0);
+    }
+  }
+</style>

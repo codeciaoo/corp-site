@@ -1,0 +1,136 @@
+---
+// 05 渡す。渡すものを 4 つ、2 × 2 の罫線の升目に置く。右の升目の文字は、12 列の 8 列目から始める。
+import SectionHead from "@/components/site/SectionHead.astro";
+import { HANDOVER, SECTIONS, type SayPhrase } from "@/data/approach";
+import Rail from "./Rail.astro";
+import Say from "./Say.astro";
+
+const section = SECTIONS.handOver;
+
+// 言い切りは墨の太字だけで組む（「渡す」は確かめた事実ではないので、塗りの文字にしない）
+const statement: SayPhrase[] = [
+  { runs: [{ text: "つくったものは" }] },
+  { br: true, runs: [{ text: "説明できる形で" }] },
+  { runs: [{ text: "渡す" }] },
+];
+---
+
+<section
+  class="sec sec--tint ho grid"
+  id={section.id}
+  aria-labelledby={`h-${section.id}`}
+>
+  <SectionHead
+    no={section.no}
+    en={section.en}
+    title={section.title}
+    id={`h-${section.id}`}
+  >
+    <Rail current={section.id} />
+  </SectionHead>
+  <div class="body">
+    <Say phrases={statement} />
+
+    <ul class="docs">
+      {
+        HANDOVER.map((item, index) => (
+          <li class="doc">
+            <p class="doc__top mono">
+              <span class="dot is-on" aria-hidden="true" />
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <span>{item.en}</span>
+            </p>
+            <h3 class="doc__ttl">
+              {item.title.split("|").map(part => (
+                <span class="pb">{part}</span>
+              ))}
+            </h3>
+            <p class="doc__body phrase">{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .ho {
+    --sec-bg: var(--paper-2);
+  }
+
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  /* 左の升目は 4 列ぶん、右は 5 列ぶん。縦の罫線は、列の間の溝の中央に引く */
+  .docs {
+    margin-top: clamp(48px, 6vw, 88px);
+    display: grid;
+    grid-template-columns:
+      calc((100% - var(--g) * 8) / 9 * 4 + var(--g) * 3.5)
+      minmax(0, 1fr);
+    border-top: 1px solid var(--ink);
+  }
+
+  .doc {
+    padding: 24px calc(var(--g) / 2) clamp(32px, 3.6vw, 52px) 0;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .doc:nth-child(2n) {
+    padding-left: calc(var(--g) / 2);
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .doc__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-2);
+  }
+
+  .doc__ttl {
+    margin-top: clamp(20px, 2.4vw, 36px);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+  }
+
+  .pb {
+    display: inline-block;
+  }
+
+  .doc__body {
+    margin-top: 12px;
+    max-width: 30em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .docs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .docs {
+      grid-template-columns: 1fr;
+    }
+
+    .doc,
+    .doc:nth-child(2n) {
+      padding: 20px 0 28px;
+      border-right: 0;
+    }
+  }
+</style>

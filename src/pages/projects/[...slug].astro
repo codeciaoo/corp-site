@@ -1,49 +1,104 @@
 ---
+import Cta from "@/components/site/Cta.astro";
+import Bars from "@/components/work/Bars.astro";
+import CaseBody from "@/components/work/CaseBody.astro";
+import CaseHead from "@/components/work/CaseHead.astro";
+import CaseNext from "@/components/work/CaseNext.astro";
+import CaseToc from "@/components/work/CaseToc.astro";
+import { chaptersOf } from "@/components/work/chapters";
+import Diagram from "@/components/work/Diagram.astro";
+import Shift from "@/components/work/Shift.astro";
+import Base from "@/layouts/Base.astro";
+import { plainText } from "@/lib/fx";
+import { getPublishedProjects } from "@/lib/projects";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { render } from "astro:content";
+
 export const prerender = true;
 
-import Layout from "@/layouts/Layout.astro";
-import ProjectRenderer from "@/components/projects/ProjectRenderer";
-import { getCollection, render } from "astro:content";
-import Section from "@/components/shared/Section";
+export const getStaticPaths = (async () => {
+  // getStaticPaths は独立したスコープで動くので、ここで使う関数は中に置く
+  const number = (index: number): string => String(index + 1).padStart(2, "0");
+  const projects = await getPublishedProjects();
+  return projects.map((project, index) => {
+    const nextIndex = (index + 1) % projects.length;
+    return {
+      params: { slug: project.id },
+      props: {
+        project,
+        no: number(index),
+        next: projects[nextIndex],
+        nextNo: number(nextIndex),
+      },
+    };
+  });
+}) satisfies GetStaticPaths;
 
-export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-  return projects.map(project => ({
-    params: { slug: project.id },
-    props: { project },
-  }));
-}
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { project } = Astro.props;
-const { Content } = await render(project);
-
-// メタデータの準備
-const { title, tags, publishedDate, summary, tech_stacks } = project.data;
-
-// 日付をフォーマット（date-fnsの代わりにシンプルな方法で実装）
-const formatDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}年${month}月${day}日`;
-};
-
-const formattedDate = formatDate(publishedDate);
-const metadata = {
-  title,
-  tags,
-  publishedDate: formattedDate,
-  summary,
-  tech_stacks
-};
+const { project, no, next, nextNo } = Astro.props;
+const { data } = project;
+const { Content, headings } = await render(project);
+const chapters = chaptersOf(data, headings);
+// 末尾の呼びかけは、この案件で置き換えたもの（これまで）に合わせて書く
+const ctaLead = data.before
+  ? `「${plainText(data.before)}」と同じ状況の方は、現在のやり方を教えてください。`
+  : undefined;
 ---
 
-<Layout title={`${title} | CodeCiao株式会社`} description={summary}>
-  <Section bg="light" ariaLabel={title}>
-    <div class="container mx-auto px-4 md:px-6 py-8 md:py-12">
-      <ProjectRenderer metadata={metadata} client:load>
-        <Content />
-      </ProjectRenderer>
-    </div>
-  </Section>
-</Layout>
+<Base title={plainText(data.title)} description={data.summary}>
+  <article>
+    <CaseHead
+      no={no}
+      title={data.title}
+      summary={data.summary}
+      status={data.status}
+      industry={data.industry}
+      period={data.period}
+      role={data.role}
+    />
+
+    <!-- 899px 以下の目次。冒頭の表の直後に置く（広い画面の目次は、本文の左の列に追従する） -->
+    <CaseToc chapters={chapters} variant="top" />
+
+    {
+      data.before && data.after && (
+        <section class="sec sec--ink band" aria-label="これまでとこれから">
+          <Shift before={data.before} after={data.after} size="lg" hover />
+        </section>
+      )
+    }
+
+    {
+      (data.bars || data.diagram) && (
+        <div class="sec sec--tight figs">
+          {data.bars && <Bars data={data.bars} />}
+          {data.diagram && <Diagram data={data.diagram} />}
+        </div>
+      )
+    }
+
+    <CaseBody data={data} headings={headings}>
+      <Content />
+    </CaseBody>
+  </article>
+
+  <CaseNext project={next} no={nextNo} />
+  <Cta lead={ctaLead} />
+</Base>
+
+<style>
+  /* 墨の帯は、冒頭の続き。上下の余白は「前の節の続き」の値にする */
+  .band {
+    --sec-bg: var(--ink);
+    padding-block: var(--sec-y-tight);
+  }
+
+  /* 図。墨の帯のすぐ下に、12 列いっぱいで置く（このページの見せ場）。
+     帯の図（bars）と工程の図の両方がある案件は、帯の図を先に置く */
+  .figs {
+    display: grid;
+    row-gap: var(--sec-y-tight);
+    padding-bottom: 0;
+  }
+</style>

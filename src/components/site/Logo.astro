@@ -1,0 +1,20 @@
+---
+// 会社ロゴ（シンボル + CODE は塗り、CIAO は線）。元の PNG から起こしたベクター。
+import raw from "@/assets/logo-paths.svg?raw";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const inner = raw.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
+---
+
+<svg
+  class={className}
+  viewBox="0 0 2917 389"
+  role="img"
+  aria-label="CodeCiao"
+  fill="currentColor"
+  set:html={inner}
+/>

@@ -1,7 +1,7 @@
 {
-  "name": "CodeCiao | テクノロジー戦略",
+  "name": "CodeCiao 株式会社",
   "short_name": "CodeCiao",
-  "description": "テクノロジー戦略で事業成長を加速する",
+  "description": "こんにちは、新しい仕組み。さよなら、これまでのやり方。",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -16,7 +16,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#f5f1e8",
+  "background_color": "#f5f1e8",
   "display": "standalone"
 }

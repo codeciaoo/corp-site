@@ -1,0 +1,79 @@
+---
+// 入力の進み具合。ロゴの O の字形に、確かめた必須の項目のぶんだけ、下から塗りが満ちる。
+// 飾りなので読み上げない（入力欄ごとの状態は、入力欄そのものが伝える）。
+import Glyph from "@/components/site/Glyph.astro";
+
+interface Props {
+  /** 対象のフォームの id */
+  form: string;
+  /** 必須の項目の数 */
+  total: number;
+}
+
+const { form, total } = Astro.props;
+---
+
+<div class="mt" data-meter={form} data-glyphs="1.5" aria-hidden="true">
+  <span class="mt__ring"><Glyph name="o" /></span>
+  <p class="mt__tx">
+    <span class="mt__lab mono">必須の入力</span>
+    <span class="mt__num">
+      <span data-meter-count>0</span><i>/</i>{total}
+    </span>
+  </p>
+</div>
+
+<style>
+  .mt {
+    --ratio: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* 進み具合は JavaScript が数える。動かないときは出さない */
+  :global(html:not(.js)) .mt {
+    display: none;
+  }
+
+  .mt__ring {
+    display: flex;
+    flex: none;
+    width: var(--mt-size, 64px);
+  }
+
+  .mt :global(.gl) {
+    --b: var(--ratio);
+  }
+
+  .mt :global(.gl__fill) {
+    transition: clip-path 0.7s var(--ease);
+  }
+
+  .mt__tx {
+    display: grid;
+    gap: 4px;
+  }
+
+  .mt__lab {
+    color: var(--ink-2);
+  }
+
+  .mt__num {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mt__num i {
+    font-style: normal;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+</style>

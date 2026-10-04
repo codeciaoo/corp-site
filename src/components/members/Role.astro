@@ -1,0 +1,27 @@
+---
+// 役割の表記（例: プロジェクトマネージャー / バックエンドエンジニア）。
+// 役割を 1 つずつ、折り返さない箱に入れる。区切りの「/」は前の箱の終わりに付けるので、
+// 2 行に分かれても、行の先頭に「/」が来ない。
+interface Props {
+  /** 「 / 」で区切った役割 */
+  role: string;
+}
+
+const { role } = Astro.props;
+const parts: string[] = role.split(" / ");
+---
+
+{
+  parts.map((part, index) => (
+    <>
+      <span class="rl">{index < parts.length - 1 ? `${part} /` : part}</span>{" "}
+    </>
+  ))
+}
+
+<style>
+  .rl {
+    display: inline-block;
+    white-space: nowrap;
+  }
+</style>

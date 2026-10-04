@@ -1,0 +1,49 @@
+---
+// 「線と塗り」の文字。線（outline）で現れ、下から塗り（solid）が満ちる。去るときは塗りが上へ抜けて線が残る。
+import { plainText, splitFxHtml } from "@/lib/fx";
+
+interface Props {
+  text: string;
+  /** hello: 線→塗り / goodbye: 塗り→線 / line: 線のまま（動かさない） */
+  mode?: "hello" | "goodbye" | "line";
+  /** 画面に入ったときに動かす（false ならページ側のスクリプトが動かす） */
+  reveal?: boolean;
+  /** 欧文のディスプレイ（数字や英字だけの見出し）として組む */
+  en?: boolean;
+  /** ホバー・フォーカスでもう一度動かす */
+  hover?: boolean;
+  delay?: number;
+  as?: string;
+  class?: string;
+  lang?: string;
+}
+
+const {
+  text,
+  mode = "hello",
+  reveal = true,
+  en = false,
+  hover = false,
+  delay,
+  as: Tag = "span",
+  class: className,
+  lang,
+} = Astro.props;
+
+const pre = mode === "hello" ? "hidden" : mode === "line" ? "gone" : "solid";
+const post = mode === "hello" ? "solid" : "gone";
+const animate = reveal && mode !== "line";
+const html = `<span class="sr">${plainText(text)}</span><span aria-hidden="true">${splitFxHtml(text)}</span>`;
+---
+
+<Tag
+  class:list={["fx", { en }, className]}
+  data-pre={pre}
+  data-post={post}
+  data-state={post}
+  data-reveal={animate ? "" : undefined}
+  data-hover={hover ? "" : undefined}
+  style={delay ? `--d0:${delay}ms` : undefined}
+  lang={lang}
+  set:html={html}
+/>

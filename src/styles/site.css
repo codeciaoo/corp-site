@@ -1,0 +1,1067 @@
+@import "./fonts.generated.css";
+
+/* ページ遷移: 対応ブラウザでは、紙が下から上へ入れ替わる */
+@view-transition {
+  navigation: auto;
+}
+
+:root {
+  --paper: #f5f1e8;
+  --paper-2: #ebe4d6;
+  --ink: #11201f;
+  --ink-2: #4e5b59;
+  --teal: #009a9a;
+  --teal-deep: #0b6b6b;
+  --mist: #d4e9e4;
+  --rule: rgba(17, 32, 31, 0.16);
+  --rule-2: rgba(17, 32, 31, 0.07);
+
+  /* 書体は 2 つ。和文は Noto Sans JP、欧文と数字は Inter。ラベルだけ等幅の Geist Mono */
+  --f-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", "Meiryo", sans-serif;
+  --f-mono: "Geist Mono", "Noto Sans JP", ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
+
+  /* 太さは 2 つだけ */
+  --fw-regular: 400;
+  --fw-bold: 700;
+
+  /* 文字の大きさ。この段階だけを使う（値を直接書かない） */
+  --fs-mega: clamp(46px, 10.4vw, 168px); /* ページ末尾の呼びかけ */
+  --fs-hero: clamp(31px, min(4.6vw, 8.6vh), 72px); /* トップページの 2 行 */
+  --fs-d1: clamp(40px, 7.4vw, 116px); /* ページ冒頭の見出し */
+  --fs-d2: clamp(34px, 5.4vw, 84px); /* セクションの主役になる言葉、大きい数字 */
+  --fs-d3: clamp(30px, 3.5vw, 54px); /* 言い切り、長いタイトル */
+  /* 狭い画面で、短い語と数字（案件の番号、承認済みの数字）を画面の主役にする。899px 以下だけで使う */
+  --fs-num: clamp(64px, 20.5vw, 96px);
+  /* 狭い画面で、2〜4 字の動詞（できること）を幅いっぱいに近い大きさで置く。767px 以下だけで使う（375px で 67.5px） */
+  --fs-verb: clamp(48px, 18vw, 72px);
+  --fs-h2: clamp(24px, 2.3vw, 34px);
+  --fs-h3: clamp(20px, 1.8vw, 26px);
+  --fs-h4: clamp(17px, 1.4vw, 20px);
+  --fs-lead: 17px;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  --fs-caption: 13px;
+  --fs-label: 12px;
+  --fs-input: 16px; /* 入力欄。16px 未満にしない（iOS が画面を拡大するため） */
+
+  --lh-display: 1.24;
+  --lh-heading: 1.5;
+  --lh-body: 1.9;
+  --lh-lead: 1.95; /* ページ冒頭のリード */
+  --lh-list: 1.8; /* 箇条書き */
+  --ls-display: 0;
+  --ls-heading: 0.02em;
+  --ls-body: 0.04em;
+  --ls-label: 0.06em;
+
+  --m: 48px;
+  --g: 24px;
+  --cols: 12;
+  --hd: 72px;
+
+  --ease: cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.2, 0.75, 0.15, 1);
+  --dur: 0.85s;
+  --st: 40ms;
+
+  --sec-y: clamp(88px, 11vw, 168px);
+  /* 前の節の続き（話題が変わらない所）は、上の余白を小さくする */
+  --sec-y-tight: clamp(56px, 6.6vw, 96px);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --m: 32px;
+    --g: 20px;
+    --fs-hero: clamp(31px, 6vw, 56px);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --m: 20px;
+    --g: 12px;
+    --cols: 4;
+    --hd: 60px;
+    --fs-hero: clamp(33px, 10.2vw, 44px);
+    --fs-lead: 16px;
+    --fs-body: 15px;
+    /* 節の上下の余白。狭い画面では 88px だと、節の間の空きが画面の 1 割を超える */
+    --sec-y: 64px;
+  }
+}
+
+/* ───────── base ───────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* 押したときの反応は、線に塗りが満ちる動きで返す（:active）。ブラウザ既定の水色は出さない */
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: calc(var(--hd) + 16px);
+  background: var(--paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  /* 文章には和文と英数字の間の空白を書かない。境目のアキは、対応ブラウザが自動で入れる */
+  text-autospace: normal;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ol,
+ul,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong,
+b {
+  font-weight: var(--fw-bold);
+}
+
+/* 見出しは句の切れ目で折り返し、行の長さをそろえる（対応ブラウザのみ） */
+h1,
+h2,
+h3,
+h4 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+/* 本文は、行末に 1〜2 字だけ残さない。箇条書きと表は、語の途中で折らない */
+p,
+li,
+dd,
+dt,
+td,
+th {
+  text-wrap: pretty;
+}
+
+li,
+dd,
+dt,
+td,
+th {
+  word-break: auto-phrase;
+}
+
+/* 本文も句の切れ目で折り返す（語の途中で切らない）。狭い画面では行が短く、右端がそろわなくなるので使わない */
+@media (min-width: 768px) {
+  p,
+  figcaption {
+    word-break: auto-phrase;
+  }
+}
+
+/* ここまでの auto-phrase は Chrome でしか働かない（開発サーバー用）。
+   ビルド結果には scripts/phrase-wrap.mjs が文節の切れ目（幅のない空白）を入れ、処理した要素に data-bx を付ける。
+   その要素は「切れ目以外では折らない」指定にして、どのブラウザでも同じ位置で折り返す。 */
+/* ほかの折り返しの指定（.phrase や部品ごとの指定）より、必ずこちらを優先する */
+[data-bx] {
+  word-break: keep-all !important;
+  overflow-wrap: break-word;
+}
+
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+::selection {
+  background: var(--teal);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* 読み上げ専用（画面には出さない） */
+.sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  font-size: var(--fs-small);
+  text-decoration: none;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+/* 等幅のラベル。書いたとおりの大文字・小文字で出す */
+.mono {
+  font-family: var(--f-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  letter-spacing: var(--ls-label);
+}
+
+/* ───────── 文字の型。見出しと本文は、この型のどれかで組む ───────── */
+.t-mega,
+.t-d1,
+.t-d2,
+.t-d3 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  /* 見出しは字幅を詰めて組む（かなと約物のアキをそろえる） */
+  font-feature-settings: "palt";
+}
+
+.t-mega {
+  font-size: var(--fs-mega);
+  line-height: 1.12;
+}
+
+.t-d1 {
+  font-size: var(--fs-d1);
+  line-height: 1.16;
+}
+
+.t-d2 {
+  font-size: var(--fs-d2);
+}
+
+.t-d3 {
+  font-size: var(--fs-d3);
+  line-height: 1.4;
+}
+
+.t-h2,
+.t-h3,
+.t-h4 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  font-feature-settings: "palt";
+}
+
+.t-h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.4;
+}
+
+.t-h3 {
+  font-size: var(--fs-h3);
+}
+
+.t-h4 {
+  font-size: var(--fs-h4);
+}
+
+.t-lead {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+}
+
+.t-body {
+  font-size: var(--fs-body);
+}
+
+.t-small {
+  font-size: var(--fs-small);
+  line-height: 1.85;
+}
+
+.t-caption {
+  font-size: var(--fs-caption);
+  line-height: 1.7;
+}
+
+/* 数字は幅をそろえる */
+.t-num {
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
+}
+
+/* 開発サーバー用（ビルド結果では、上の [data-bx] の指定が優先される） */
+.phrase {
+  word-break: auto-phrase;
+}
+
+/* 折り返さない箱（役割の 1 つぶん、製品名など） */
+.nb {
+  white-space: nowrap;
+}
+
+/* ───────── layout ───────── */
+.wrap {
+  padding-inline: var(--m);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--g);
+}
+
+/* メニューを開いている間は、後ろのページを動かさない */
+html.menu-open {
+  overflow: hidden;
+}
+
+.sec {
+  position: relative;
+  padding: var(--sec-y) var(--m);
+  border-top: 1px solid var(--rule);
+}
+
+/* 前の節の続き。上の余白を小さくし、区切りの罫線を出さない */
+.sec--tight {
+  padding-top: var(--sec-y-tight);
+  border-top: 0;
+}
+
+.sec--tint {
+  --sec-bg: var(--paper-2);
+  /* 薄い面の上のティールは、少し濃くして 3:1 以上を保つ */
+  --teal: #007f7f;
+  background: var(--paper-2);
+}
+
+.sec--ink {
+  --sec-bg: #11201f;
+  background: var(--ink);
+  color: var(--paper);
+  --rule: rgba(245, 241, 232, 0.2);
+  --rule-2: rgba(245, 241, 232, 0.09);
+  --ink-2: #a9b6b2;
+  --teal-deep: #5fd0c4;
+  --teal: #19b3b0;
+  --btn-over: var(--paper);
+  --btn-over-ink: var(--ink);
+  border-top: 0;
+}
+
+/* ───────── 線（outline）と 塗り（solid）の 2 状態 ─────────
+   線の文字は「地の色で塗った字に、外側へ線を付ける」方法で描く。
+   Noto Sans JP も Inter も字の中で輪郭が重なっているので、中を透明にすると重なりの線が見えてしまう。
+   そのため、地の色が紙以外の場所では --sec-bg に地の色を入れておく（.sec--tint、.sec--ink は設定済み）。 */
+.fx {
+  --lo: -8%;
+  --hi: 108%;
+  --top: var(--hi);
+  --bot: var(--hi);
+  /* 線の色は、ロゴの字形（CIAO、O の図）と同じティール。線の文字は 48px 以上にだけ使う決まりなので、
+     この色で読める。墨の面では、明るいほうに切り替える（下の .sec--ink .fx） */
+  --line: var(--teal);
+  --fill: var(--teal);
+  /* 見える線の太さ。字の大きさに比例させる（小さい字でも中がつぶれない）。
+     上限は 1px。これより太いと、大きい字で濁点の 2 本がつながる */
+  --stroke: clamp(0.6px, 0.022em, 1px);
+  /* 線の文字は 48px 以上にだけ使う。字の大きさが 48px 未満なら 0px、48px 以上なら 1px になる長さ。
+     1em は使う要素（.ch とその疑似要素）の字の大きさで決まるので、幅で大きさが変わる字にも、そのまま効く。
+     48px 未満の字では、線を引かず、細い字（400）と --ink-2 の層（.ch::before）を代わりに見せる */
+  --fx-big: clamp(0px, (1em - 47.99px) * 100000, 1px);
+}
+
+.sec--ink .fx {
+  --line: var(--teal-deep);
+}
+
+.fx[data-state="solid"] {
+  --top: var(--lo);
+  --bot: var(--hi);
+}
+
+.fx[data-state="gone"] {
+  --top: var(--lo);
+  --bot: var(--lo);
+}
+
+/* JS が動くまでの間は、開始状態で待つ（最終状態が一瞬見えるのを防ぐ） */
+html.js:not(.rm) .fx:not(.is-live)[data-pre="hidden"] {
+  --top: var(--hi);
+  --bot: var(--hi);
+}
+
+html.js:not(.rm) .fx:not(.is-live)[data-pre="solid"] {
+  --top: var(--lo);
+  --bot: var(--hi);
+}
+
+.fx .ph {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.fx .ch {
+  display: inline-block;
+  position: relative;
+  font-feature-settings: "palt";
+  color: var(--sec-bg, var(--paper));
+  -webkit-text-stroke-color: var(--line);
+  -webkit-text-stroke-width: min(
+    calc(var(--stroke) * 2),
+    calc(var(--fx-big) * 100000)
+  );
+  paint-order: stroke fill;
+  transition: -webkit-text-stroke-color 0.2s linear;
+}
+
+/* 48px 未満の字の「線」の代わり。塗り（::after）の届いていない所にだけ、細い字と補足の色で見せる。
+   塗りが下から満ちると、細い字が下から太字とティールに切り替わる。塗りが上へ抜けると、細い字に戻る。
+   48px 以上の字では、右端を左の画面外へ送って、何も描かない */
+.fx .ch::before {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: var(--fw-regular);
+  color: var(--ink-2);
+  -webkit-text-stroke-width: 0;
+  clip-path: polygon(
+    -40% var(--lo),
+    calc(140% - var(--fx-big) * 1000000) var(--lo),
+    calc(140% - var(--fx-big) * 1000000) var(--top),
+    -40% var(--top),
+    -40% var(--bot),
+    calc(140% - var(--fx-big) * 1000000) var(--bot),
+    calc(140% - var(--fx-big) * 1000000) var(--hi),
+    -40% var(--hi)
+  );
+  transition: clip-path var(--dur) var(--ease)
+    calc(var(--d0, 0ms) + var(--i, 0) * var(--st));
+}
+
+.fx .ch::after {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--fill);
+  -webkit-text-stroke-color: var(--fill);
+  -webkit-text-stroke-width: min(
+    calc(var(--stroke) * 2),
+    calc(var(--fx-big) * 100000)
+  );
+  paint-order: stroke fill;
+  clip-path: polygon(
+    -40% var(--top),
+    140% var(--top),
+    140% var(--bot),
+    -40% var(--bot)
+  );
+  transition:
+    clip-path var(--dur) var(--ease)
+      calc(var(--d0, 0ms) + var(--i, 0) * var(--st)),
+    -webkit-text-stroke-color 0.2s linear;
+}
+
+/* 塗り切ったら、線を消して塗りだけにする（太い字の中がつぶれない）。
+   線が消えるのは満ちたあと。抜けるとき（solid から離れるとき）は、すぐに線を戻す */
+.fx[data-state="solid"] .ch,
+.fx[data-state="solid"] .ch::after {
+  -webkit-text-stroke-color: transparent;
+  transition-delay: calc(
+    var(--d0, 0ms) + var(--i, 0) * var(--st) + var(--dur) * 0.75
+  );
+}
+
+.fx[data-state="solid"] .ch::after {
+  transition-delay:
+    calc(var(--d0, 0ms) + var(--i, 0) * var(--st)),
+    calc(var(--d0, 0ms) + var(--i, 0) * var(--st) + var(--dur) * 0.75);
+}
+
+html.js:not(.rm) .fx:not(.is-live)[data-pre="hidden"] .ch {
+  -webkit-text-stroke-color: var(--line);
+}
+
+/* 48px 未満の字は、上の .ch::before の仕組みで、線の代わりに細い字になる（どの状態でも線は出ない）。
+   .fx--quiet-sm は、767px 以下では塗りにもしない（細い字と補足の色のまま置く。「これまで」の一覧と同じ見せ方） */
+@media (max-width: 767px) {
+  .fx.fx--quiet-sm .ch {
+    color: var(--ink-2);
+    font-weight: var(--fw-regular);
+    -webkit-text-stroke: 0;
+  }
+
+  .fx.fx--quiet-sm .ch::before,
+  .fx.fx--quiet-sm .ch::after {
+    display: none;
+  }
+}
+
+/* 見出しの句の間は、読点の代わりに空白で区切る。空きは約 0.33em にする。
+   空白の字の幅（約 0.24em）に、この分を足す。word-spacing は使わない
+   （Safari で、行の長さをそろえる指定 text-wrap: balance と重なると、1 行に収まる見出しが 2 行に折れる） */
+.fx .ph.sp {
+  margin-right: 0.09em;
+}
+
+/* 約物の位置（かっこ類）。字幅の詰めは palt に任せる */
+.ykr,
+.ykl,
+.ykc {
+  margin: 0;
+}
+
+/* 和文と英数字の境目のアキ（四分より少し狭く） */
+.fx .aq {
+  margin-right: 0.14em;
+}
+
+.no-tr,
+.no-tr *,
+.no-tr *::after,
+.no-tr *::before {
+  transition: none !important;
+}
+
+/* ロゴの字形（SVG パス）。--a: 上から抜けた量、--b: 下から満ちた量（0〜1） */
+.gl {
+  position: relative;
+  display: block;
+  flex: var(--w) 1 0%;
+  aspect-ratio: var(--w) / 200;
+  --a: 0;
+  --b: 0;
+}
+
+.gl svg {
+  position: absolute;
+  overflow: visible;
+  top: -4%;
+  height: 108%;
+  left: calc(-800% / var(--w));
+  width: calc(100% + 1600% / var(--w));
+  max-width: none;
+}
+
+.gl use {
+  stroke: var(--gl-line, var(--teal));
+  stroke-width: var(--sw, 3);
+  stroke-linejoin: round;
+}
+
+.gl__line use {
+  fill: none;
+}
+
+.gl__fill use {
+  fill: var(--gl-fill, var(--teal));
+}
+
+/* 字形は SVG の高さの 3.7%〜96.3% にある。--b = 0.25 なら、字形の高さの 25% まで満ちる */
+.gl__fill {
+  clip-path: polygon(
+    -10% calc(97.5% - var(--b) * 95%),
+    110% calc(97.5% - var(--b) * 95%),
+    110% calc(97.5% - var(--a) * 95%),
+    -10% calc(97.5% - var(--a) * 95%)
+  );
+}
+
+.fx .gl__fill {
+  transition: clip-path var(--dur) var(--ease)
+    calc(var(--d0, 0ms) + var(--i, 0) * 90ms);
+}
+
+.fx[data-state="hidden"] .gl {
+  --a: 0;
+  --b: 0;
+}
+
+.fx[data-state="solid"] .gl {
+  --a: 0;
+  --b: var(--to, 1);
+}
+
+.fx[data-state="gone"] .gl {
+  --a: 1;
+  --b: 1;
+}
+
+html.js:not(.rm) .fx:not(.is-live)[data-pre="hidden"] .gl {
+  --a: 0;
+  --b: 0;
+}
+
+/* ───────── 小さな部品 ───────── */
+.dot {
+  position: relative;
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--teal);
+  overflow: hidden;
+  flex: none;
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--teal);
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 0.45s var(--ease);
+}
+
+.dot.is-on::after,
+a:focus-visible > .dot::after,
+[aria-current="page"] > .dot::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+a:active > .dot::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition-duration: 0.18s;
+}
+
+@media (hover: hover) {
+  a:hover > .dot::after {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--teal);
+  min-height: 44px;
+  padding: 13px 22px;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--teal);
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 0.55s var(--ease);
+}
+
+.btn:focus-visible::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.btn--solid::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 塗りのボタンは、ホバーとフォーカスで墨の塗りが下から満ちる（線に戻すと、主ボタンが弱く見える） */
+.btn--solid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-over, var(--ink));
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 0.55s var(--ease);
+}
+
+.btn--solid {
+  transition: color 0.3s linear;
+}
+
+.btn--solid:focus-visible {
+  color: var(--btn-over-ink, var(--paper));
+}
+
+.btn--solid:focus-visible::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 紙 2 の面では、ボタンの塗りを濃いティール、字を紙の色にする。
+   この面のティール（#007f7f）は、墨の字でも紙の色の字でも 4.5:1 に届かない。濃いティールと紙の色なら 5.6:1 */
+.sec--tint .btn::before {
+  background: var(--teal-deep);
+}
+
+.sec--tint .btn--solid,
+.sec--tint .btn:not(.btn--solid):focus-visible,
+.sec--tint .btn:not(.btn--solid):active {
+  color: var(--paper);
+}
+
+@media (hover: hover) {
+  .sec--tint .btn:not(.btn--solid):hover {
+    color: var(--paper);
+  }
+}
+
+/* 墨の面では、塗りが満ちたあとの文字を墨にする（紙の色のままだと、明るいティールの上で読みにくい） */
+.sec--ink .btn:not(.btn--solid):focus-visible,
+.sec--ink .btn:not(.btn--solid):active {
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  .sec--ink .btn:not(.btn--solid):hover {
+    color: var(--ink);
+  }
+}
+
+/* ホバーの塗りは、ホバーできる端末だけ（タッチ端末で塗りが残らないように） */
+@media (hover: hover) {
+  .btn:hover::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .btn--solid:hover {
+    color: var(--btn-over-ink, var(--paper));
+  }
+
+  .btn--solid:hover::after {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* 指で押したときも、線に塗りが満ちる（ホバーのない端末でも「こんにちは」が起きる）。
+   押している間だけ見えればよいので、速くする */
+.btn:active::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition-duration: 0.18s;
+}
+
+.btn--solid:active {
+  color: var(--btn-over-ink, var(--paper));
+}
+
+.btn--solid:active::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition-duration: 0.18s;
+}
+
+.btn--lg {
+  padding: 19px 30px;
+  font-size: var(--fs-body);
+}
+
+.btn .arw {
+  width: 14px;
+  height: 10px;
+  flex: none;
+  transition: transform 0.45s var(--ease);
+}
+
+.btn:focus-visible .arw {
+  transform: translateX(3px);
+}
+
+@media (hover: hover) {
+  .btn:hover .arw {
+    transform: translateX(3px);
+  }
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  min-height: 44px;
+  padding-block: 6px;
+}
+
+.link .dot {
+  width: 10px;
+  height: 10px;
+}
+
+/* 箇条書き。丸の大きさ、字下げ、文字の大きさを全ページでそろえる。
+   塗りの丸が既定。.dots--line は線の丸（まだ確かめていないこと、歓迎する条件など） */
+.dots li {
+  position: relative;
+  padding-left: 22px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-list);
+}
+
+.dots li + li {
+  margin-top: 8px;
+}
+
+.dots li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(var(--lh-list) * 0.5em - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.dots--line li::before {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--teal);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags li {
+  font-size: var(--fs-caption);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  padding: 7px 11px 8px;
+  border-radius: 99px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* 本文中のリンク */
+.prose a,
+a.inline {
+  color: var(--teal-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.prose a:hover,
+a.inline:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ───────── reduced motion ───────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ───────── page transition ─────────
+   ヘッダーはどのページでも同じなので、切り替えの動きから外す（Header.astro の view-transition-name）。
+   古いヘッダーの像は出さず、新しいヘッダーをそのまま置く。View Transitions の無いブラウザでは何もしない */
+::view-transition-group(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-out 0.5s var(--ease) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 0.6s var(--ease) both;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(24px);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+/* ───────── 長文（実績の詳細・方針など Markdown 由来の本文） ───────── */
+.prose {
+  max-width: 40em;
+  font-size: var(--fs-body);
+  line-height: 2;
+}
+
+.prose > * + * {
+  margin-top: 1.1em;
+}
+
+.prose h2 {
+  margin-top: 2.6em;
+  padding-top: 1.1em;
+  border-top: 1px solid var(--ink);
+  font-size: var(--fs-h2);
+  line-height: 1.4;
+  letter-spacing: var(--ls-heading);
+  font-feature-settings: "palt";
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.prose h3 {
+  margin-top: 2em;
+  font-size: var(--fs-h4);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  font-feature-settings: "palt";
+}
+
+.prose h3 + p {
+  margin-top: 0.5em;
+}
+
+.prose ul,
+.prose ol {
+  display: grid;
+  gap: 0.5em;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 1.5em;
+}
+
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.2em;
+  top: 0.78em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.prose ol {
+  counter-reset: prose;
+}
+
+.prose ol > li {
+  position: relative;
+  padding-left: 2.4em;
+  counter-increment: prose;
+}
+
+.prose ol > li::before {
+  content: counter(prose, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  font-family: var(--f-mono);
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.prose strong {
+  font-weight: var(--fw-bold);
+}

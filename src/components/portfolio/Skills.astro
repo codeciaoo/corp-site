@@ -1,0 +1,386 @@
+---
+// 01 / スキル。分類ごとに、水準・技術名・経験年数を並べる。
+// 水準は、ロゴの字形 O の塗りの量で示す（4 段階を 25% 刻み。塗りは、経験して確かめたこと）。
+// 文字の太さでは区別しない。凡例は表の上に 1 回だけ置く。
+// 行は水準の高い順に並べる（同じ水準の中は、データに書いてある順のまま）。
+// 768px 以上では 2 列（12 列の 4 列目と 8 列目から）に流して、行数を詰める。
+// 767px 以下では、行の多い分類は上位 3 件だけを出し、残りは「ほか◯件を表示」で開く。
+// JS が動かないときと、単体で渡すページでは、はじめから全部の行を出す。
+import Glyph from "@/components/site/Glyph.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import {
+  SKILL_STAGES,
+  skillStageIndex,
+  type SkillGroup,
+} from "@/data/portfolios";
+
+interface Props {
+  groups: SkillGroup[];
+  /** 狭い画面でも、はじめから全部の行を出す */
+  expanded?: boolean;
+}
+
+/** 狭い画面で、分類ごとにはじめから出す件数 */
+const TOP = 3;
+/** 行がこの数以上ある分類だけを畳む（1〜2 件を隠しても、ほとんど短くならないため） */
+const FOLD_FROM = 6;
+
+const { groups, expanded = false } = Astro.props;
+
+/** 段階（0 がいちばん高い）を、塗りの量（0〜1）に直す */
+const fillOf = (stage: number): number =>
+  (SKILL_STAGES.length - stage) / SKILL_STAGES.length;
+
+const tables = groups.map(group => {
+  const skills = group.skills
+    .map(skill => ({ ...skill, stage: skillStageIndex(skill.level) }))
+    .sort((a, b) => a.stage - b.stage);
+  return {
+    category: group.category,
+    skills,
+    fold: !expanded && skills.length >= FOLD_FROM,
+  };
+});
+
+/** 狭い画面で、はじめは隠れている行の数 */
+const folded = tables.reduce(
+  (sum, table) => sum + (table.fold ? table.skills.length - TOP : 0),
+  0,
+);
+---
+
+<section class="sec grid" id="skills" aria-labelledby="h-skills">
+  <SectionHead no="01" en="Skills" title="スキル" id="h-skills" />
+  <div class="body" data-skills>
+    <p class="sk__note">
+      技術ごとに経験年数と水準を示します。水準は丸の塗りの量で表します。
+    </p>
+    <dl class="sk__stages">
+      {
+        SKILL_STAGES.map((stage, index) => (
+          <div class="sk__stage">
+            <dt>
+              <span class="sk__o sk__o--lg" aria-hidden="true">
+                <Glyph name="o" fill={fillOf(index)} />
+              </span>
+              {stage.label}
+            </dt>
+            <dd>{stage.description}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    {
+      folded > 0 && (
+        <div class="sk__bar">
+          <p class="sk__hint">上位3件ずつ表示しています。</p>
+          <button
+            class="link sk__all"
+            type="button"
+            aria-expanded="false"
+            data-skills-all
+          >
+            <span class="dot" aria-hidden="true" />
+            <span data-skills-all-label>ほか{folded}件を表示</span>
+          </button>
+        </div>
+      )
+    }
+
+    {
+      tables.map(table => {
+        const half = Math.ceil(table.skills.length / 2);
+        return (
+          <div class="sk__group">
+            <h3 class="sk__cat t-h3">{table.category}</h3>
+            <ul class="sk__list" data-reveal>
+              {table.skills.map((skill, index) => (
+                <li
+                  class:list={[
+                    "sk__row",
+                    {
+                      "is-b": index >= half,
+                      "is-more": table.fold && index >= TOP,
+                    },
+                  ]}
+                  style={`--r:${(index % half) + 1}`}
+                >
+                  <span
+                    class="sk__o fx"
+                    data-pre="hidden"
+                    data-post="solid"
+                    data-state="solid"
+                    style={`--to:${fillOf(skill.stage)};--d0:${index * 50}ms`}
+                    aria-hidden="true"
+                  >
+                    <Glyph name="o" />
+                  </span>
+                  <span class="sk__name">{skill.name}</span>
+                  <span class="sk__years">
+                    <span class="sr">経験</span>
+                    {skill.years}年
+                  </span>
+                  <span class="sr">水準は{SKILL_STAGES[skill.stage].label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+<style>
+  /* --split は、右の列が始まる位置（本文の箱の中での列番号）。12 列の 8 列目にあたる */
+  .body {
+    --split: 5;
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-content: start;
+  }
+
+  .body > * {
+    grid-column: 1 / -1;
+  }
+
+  .sk__note {
+    max-width: 36em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  /* ───── 字形 O。塗りの量が水準。線の太さは、大きさによらず約 1.5px（200 が字形の高さ） ───── */
+  .sk__o {
+    display: flex;
+    flex: none;
+    width: 18px;
+    --sw: 16.7;
+  }
+
+  .sk__o--lg {
+    width: 24px;
+    --sw: 12.5;
+  }
+
+  /* ───── 凡例。高い順に、4 列目・8 列目・4 列目・8 列目（下の表の 2 列と同じ位置） ───── */
+  .sk__stages {
+    margin-top: clamp(20px, 2.2vw, 28px);
+    display: grid;
+    grid-template-columns: subgrid;
+    border-top: 1px solid var(--ink);
+  }
+
+  .sk__stage {
+    grid-column: 1 / var(--split);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 14px;
+    padding: 13px 0 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sk__stage:nth-child(2n) {
+    grid-column: var(--split) / -1;
+  }
+
+  .sk__stage dt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-small);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    white-space: nowrap;
+  }
+
+  .sk__stage dd {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  /* ───── 狭い画面だけに出す、畳んだ行を開くボタン ───── */
+  .sk__bar {
+    display: none;
+  }
+
+  .sk__hint {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  .sk__all {
+    flex: none;
+    margin-left: auto;
+    border: 0;
+    padding-inline: 0;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .sk__all:focus-visible .dot::after,
+  .sk__all:active .dot::after {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  /* ───── 分類 ───── */
+  .sk__group {
+    margin-top: clamp(36px, 5.2vw, 76px);
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  /* 「クラウド / インフラ」の空白は、句の区切りではない。見出し用の語間（0.09em）を付けない。
+     語間があると、WebKit は 1 行に収まる見出しを「/」の後ろで 2 行に折る（text-wrap: balance との組み合わせ） */
+  .sk__cat {
+    grid-column: 1 / -1;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--ink);
+    word-spacing: normal;
+  }
+
+  .sk__list {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  /* 2 列に流す。前半は 4 列目から、後半は 8 列目から。上から下へ読む。
+     1 行は、左から水準の O・技術名・経験年数 */
+  .sk__row {
+    grid-column: 1 / var(--split);
+    grid-row: var(--r);
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    column-gap: 12px;
+    align-items: center;
+    padding: 12px 0 13px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sk__row.is-b {
+    grid-column: var(--split) / -1;
+  }
+
+  .sk__name {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-body);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .sk__years {
+    font-feature-settings: "tnum";
+    font-size: var(--fs-caption);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+
+  /* 1023px 以下: 凡例の説明は、どの段階も名前の下の行に置く（列が狭く、横に並べると段階ごとに形が変わるため） */
+  @media (max-width: 1023px) {
+    .sk__stage dd {
+      flex-basis: 100%;
+      padding-left: 34px;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      --split: 8;
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* 767px 以下: 1 列。凡例は 2 列に詰めて、段階の名前だけを出す。
+     説明の文は出さない（凡例と行の並びで読める。ページを短くする） */
+  @media (max-width: 767px) {
+    .body {
+      --split: 3;
+    }
+
+    .sk__note {
+      display: none;
+    }
+
+    .sk__stages {
+      margin-top: 0;
+    }
+
+    .sk__stage {
+      padding: 10px 0 11px;
+    }
+
+    .sk__stage dt {
+      gap: 8px;
+      font-size: var(--fs-caption);
+    }
+
+    .sk__stage dd {
+      display: none;
+    }
+
+    .sk__o--lg {
+      width: 18px;
+      --sw: 16.7;
+    }
+
+    .sk__group {
+      margin-top: 26px;
+    }
+
+    .sk__cat {
+      padding-bottom: 10px;
+    }
+
+    .sk__row,
+    .sk__row.is-b {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      padding: 8px 0;
+    }
+
+    /* 畳むのは、JS が動くときだけ（動かないときは、開くボタンが働かないため） */
+    :global(html.js) .sk__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0 12px;
+      margin-top: 4px;
+    }
+
+    :global(html.js) .body:not([data-open]) .sk__row.is-more {
+      display: none;
+    }
+
+    .body[data-open] .sk__hint {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // 狭い画面で畳んだ行を、まとめて開閉する
+  const root = document.querySelector<HTMLElement>("[data-skills]");
+  const button = root?.querySelector<HTMLButtonElement>("[data-skills-all]");
+  const label = button?.querySelector<HTMLElement>("[data-skills-all-label]");
+
+  if (root && button && label) {
+    const closedLabel = label.textContent ?? "";
+    button.addEventListener("click", () => {
+      const open = root.toggleAttribute("data-open");
+      button.setAttribute("aria-expanded", String(open));
+      label.textContent = open ? "上位3件だけを表示" : closedLabel;
+    });
+  }
+</script>

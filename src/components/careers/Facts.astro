@@ -1,0 +1,189 @@
+---
+// 職種の要点（契約形態、働き方、稼働など）の帯。上に墨の罫線、項目の間に縦の線。
+// 職種の詳細ページの冒頭（size="lg"）と、採用ページの一覧（size="sm"）で使う。
+// 置き場所の列: lg は 12 列の 1・4・8 列目から、sm は本文の箱（9 列）を 3 等分する。
+// 狭い画面（767px 以下）: lg はラベルを上、値を下に積んで、値を最初の画面の主役にする。
+// sm はラベルと値を 1 行に並べる。
+import type { Position } from "@/data/careers";
+
+interface Props {
+  facts: Position["facts"];
+  size?: "lg" | "sm";
+}
+
+const { facts, size = "lg" } = Astro.props;
+
+interface Chunk {
+  text: string;
+  /** 後ろに区切りの「/」を付ける */
+  slash: boolean;
+}
+
+/**
+ * 要点の値を、折り返してよいかたまりに分ける。
+ * 「 / 」で並べた値は 1 つずつ、かっこ書きはかっこの前で分ける（かたまりの途中では折り返さない）。
+ * 区切りの「/」は、前のかたまりの終わりに付ける（行の先頭に「/」が来ないようにする）。
+ */
+const partsOf = (body: string): Chunk[][] => {
+  const parts = body.split(" / ");
+  return parts.map((part, index) => {
+    const chunks = part.split(/(?=（)/);
+    return chunks.map((text, order) => ({
+      text,
+      slash: index < parts.length - 1 && order === chunks.length - 1,
+    }));
+  });
+};
+
+/** 区切り。前の文字と離れないよう、折り返さない空白でつなぐ */
+const SLASH = " /";
+---
+
+<dl class:list={["facts", `facts--${size}`]}>
+  {
+    facts.map(fact => (
+      <div class="facts__item">
+        <dt class="mono">{fact.term}</dt>
+        <dd>
+          {partsOf(fact.body).map(chunks => (
+            <>
+              <span class="facts__part">
+                {chunks.map(chunk => (
+                  <span class="facts__chunk">{chunk.text}{chunk.slash && <span class="facts__sep">{SLASH}</span>}</span>
+                ))}
+              </span>{" "}
+            </>
+          ))}
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+    border-top: 1px solid var(--ink);
+  }
+
+  .facts__item {
+    position: relative;
+    grid-column: 1 / span 3;
+    min-width: 0;
+    padding: 16px 0 4px;
+  }
+
+  .facts__item:nth-child(2) {
+    grid-column: 4 / span 4;
+  }
+
+  .facts__item:nth-child(3) {
+    grid-column: 8 / -1;
+  }
+
+  /* 一覧（本文の箱の 9 列）では、3 等分する */
+  .facts--sm {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+
+  .facts--sm .facts__item,
+  .facts--sm .facts__item:nth-child(2),
+  .facts--sm .facts__item:nth-child(3) {
+    grid-column: auto / span 3;
+    padding: 14px 0 2px;
+  }
+
+  /* 区切りの線は、列の間（溝のまん中）に引く */
+  .facts__item + .facts__item::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--g) / -2);
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .facts dt {
+    color: var(--ink-2);
+  }
+
+  .facts dd {
+    margin-top: 6px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .facts--sm dd {
+    margin-top: 4px;
+    font-size: var(--fs-h4);
+  }
+
+  /* かたまりの途中では折り返さない */
+  .facts__chunk {
+    display: inline-block;
+  }
+
+  /* 列が狭い幅では、「 / 」で並べた値の 1 つを 1 行にする（区切りの記号を行の端に残さない） */
+  @media (max-width: 1023px) {
+    .facts__part {
+      display: block;
+    }
+
+    .facts__sep {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .facts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .facts__item,
+    .facts__item:nth-child(2),
+    .facts__item:nth-child(3) {
+      grid-column: 1 / -1;
+      padding: 14px 0 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .facts__item + .facts__item::before {
+      display: none;
+    }
+
+    /* 冒頭の値は、文字の型を .t-d3（言い切り）と同じにする */
+    .facts--lg dd {
+      margin-top: 4px;
+      font-size: var(--fs-d3);
+      line-height: 1.4;
+      letter-spacing: var(--ls-display);
+    }
+
+    /* 一覧では、ラベルと値を 1 行に並べる（値は 6em の位置から） */
+    .facts--sm .facts__item,
+    .facts--sm .facts__item:nth-child(2),
+    .facts--sm .facts__item:nth-child(3) {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 5.5em minmax(0, 1fr);
+      column-gap: 12px;
+      align-items: baseline;
+      padding: 12px 0 13px;
+    }
+
+    .facts--sm dd {
+      margin-top: 0;
+    }
+
+    /* 最後の行の下は、続く要素（冒頭では目次、一覧では行の区切り）の罫線にまかせる */
+    .facts__item:last-child {
+      border-bottom: 0;
+    }
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+// 人物の写真。墨と紙の 2 色に刷り直し、線の枠に、下から満ちるように現れる。
+// 写真は現れるまで clip-path で隠している。隠れた画像は「画面の外」として扱われるので、
+// loading="lazy" にすると、満ちはじめるまで読み込みが始まらず、空の枠が満ちることになる。
+// そのため遅延読み込みはしない（1 枚 20〜45KB）。代わりに、最初の画面に出ない写真は低い優先度で読む
+// （fetchpriority="low"。字のフォントより先に帯域を使わないようにする）。decoding="async" も付けない
+// （付けていたときは、ページ全体のスクリーンショットで写真が空のまま写ることがあった）。
+import type { MemberPhoto } from "@/data/members";
+
+interface Props {
+  photo: MemberPhoto;
+  alt: string;
+  /** 枠の縦横比（CSS の aspect-ratio） */
+  ratio?: string;
+  /** 画面に入ったときに、下から満たす */
+  reveal?: boolean;
+  /** ホバーでもう一度、下から満たす */
+  hover?: boolean;
+  delay?: number;
+  /** 最初の画面に出る写真（優先して読む）。既定は低い優先度で読む */
+  priority?: boolean;
+  class?: string;
+}
+
+const {
+  photo,
+  alt,
+  ratio = "4 / 5",
+  reveal = true,
+  hover = false,
+  delay = 0,
+  priority = false,
+  class: className,
+} = Astro.props;
+---
+
+<figure
+  class:list={["pt", className]}
+  data-pre="hidden"
+  data-post="solid"
+  data-state="solid"
+  data-reveal={reveal ? "" : undefined}
+  data-hover={hover ? "" : undefined}
+  style={`--ratio:${ratio};--pos:${photo.position};--d0:${delay}ms`}
+>
+  <span class="pt__in">
+    <img
+      src={photo.src}
+      width={photo.width}
+      height={photo.height}
+      alt={alt}
+      fetchpriority={priority ? "high" : "low"}
+    />
+  </span>
+</figure>
+
+<style>
+  .pt {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+  }
+
+  /* 線の枠。写真が満ちたあとも残る */
+  .pt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    pointer-events: none;
+  }
+
+  .pt__in {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
+    background: var(--paper);
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1.1s var(--ease) var(--d0, 0ms);
+  }
+
+  .pt[data-state="hidden"] .pt__in {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  :global(html.js:not(.rm)) .pt[data-reveal]:not(.is-live) .pt__in {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  /* 1 色刷り: 明るいところは紙の色、暗いところは濃いティール */
+  .pt img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos, 50% 30%);
+    filter: grayscale(1) contrast(1.28) brightness(0.95);
+    mix-blend-mode: multiply;
+  }
+
+  .pt__in::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--teal-deep);
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+</style>

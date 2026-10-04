@@ -1,0 +1,56 @@
+---
+// 03 AI に任せること 任せないこと。番号付きの行は、共通部品の NumberedRows で組む。
+import NumberedRows from "@/components/site/NumberedRows.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { AI_RULES, SECTIONS, type SayPhrase } from "@/data/approach";
+import Rail from "./Rail.astro";
+import Say from "./Say.astro";
+
+const section = SECTIONS.ai;
+
+// 言い切りは墨の太字だけで組む（線の文字は、否定する言葉には使わない）
+const statement: SayPhrase[] = [
+  { runs: [{ text: "AIに" }] },
+  { runs: [{ text: "完全性を" }] },
+  { runs: [{ text: "求めない" }] },
+];
+---
+
+<section
+  class="sec ai grid"
+  id={section.id}
+  aria-labelledby={`h-${section.id}`}
+>
+  <SectionHead
+    no={section.no}
+    en={section.en}
+    title="AIに任せること |任せないこと"
+    id={`h-${section.id}`}
+  >
+    <Rail current={section.id} />
+  </SectionHead>
+  <div class="body">
+    <Say phrases={statement} />
+
+    <div class="rows">
+      <NumberedRows items={AI_RULES} label={section.title} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .rows {
+    margin-top: clamp(48px, 6vw, 88px);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

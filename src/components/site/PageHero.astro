@@ -1,0 +1,147 @@
+---
+// 下層ページの冒頭。欧文ラベル、線から塗りへ満ちる見出し、リード文。
+import Fx from "./Fx.astro";
+
+interface Props {
+  en: string;
+  label: string;
+  /** 見出し。`|` で折り返してよい位置を示す */
+  title: string;
+  lead?: string;
+  mode?: "hello" | "goodbye";
+  /**
+   * 低いヒーロー。上下の余白と、見出しとリードの間を詰める。
+   * ヒーローのすぐ下が主役のページ（お問い合わせのフォーム）で、最初の画面に入力欄を入れるために使う
+   */
+  compact?: boolean;
+}
+
+const { en, label, title, lead, mode = "hello", compact = false } = Astro.props;
+const columns = Array.from({ length: 12 }, (_, index) => index);
+---
+
+<section class:list={["ph", { "ph--compact": compact }]}>
+  <div class="ph__grid" aria-hidden="true">
+    {columns.map(index => <i style={`--k:${index}`} />)}
+  </div>
+  <div class="ph__in">
+    <p class="ph__lab mono">
+      <span class="dot is-on" aria-hidden="true"></span>
+      {en} / {label}
+    </p>
+    <h1 class="ph__ttl">
+      <Fx text={title} mode={mode} />
+    </h1>
+    {lead && <p class="ph__lead phrase">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .ph {
+    position: relative;
+    padding: clamp(56px, 8vw, 128px) var(--m) clamp(56px, 7vw, 104px);
+    overflow: clip;
+  }
+
+  .ph__grid {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--m) - var(--g) / 2);
+    right: calc(var(--m) - var(--g) / 2);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    pointer-events: none;
+  }
+
+  .ph__grid i {
+    border-left: 1px solid var(--rule-2);
+    transform-origin: 50% 0;
+  }
+
+  .ph__grid i:last-child {
+    border-right: 1px solid var(--rule-2);
+  }
+
+  :global(html.js:not(.rm)) .ph__grid i {
+    transform: scaleY(0);
+  }
+
+  :global(html.js.is-go:not(.rm)) .ph__grid i {
+    transform: none;
+    transition: transform 1.2s var(--ease) calc(var(--k) * 40ms);
+  }
+
+  .ph__in {
+    position: relative;
+  }
+
+  .ph__lab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .ph__ttl {
+    margin-top: clamp(18px, 2.4vw, 32px);
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d1);
+    line-height: 1.16;
+    letter-spacing: var(--ls-display);
+    --st: 52ms;
+  }
+
+  /* リードは 12 列の 8 列目から始める（下のセクションの列とそろえる） */
+  .ph__lead {
+    margin-top: clamp(24px, 3.4vw, 48px);
+    margin-left: calc((100% - var(--g) * 11) / 12 * 7 + var(--g) * 7);
+    max-width: 31em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+  }
+
+  /* 幅が狭くなったら、本文の箱と同じ位置（4 列目、899px 以下は左端）から始める */
+  @media (max-width: 1023px) {
+    .ph__lead {
+      margin-left: calc((100% - var(--g) * 11) / 12 * 3 + var(--g) * 3);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .ph__lead {
+      margin-left: 0;
+    }
+  }
+
+  /* 低いヒーロー: 上下の余白と、見出しとリードの間を詰める */
+  .ph--compact {
+    padding-block: clamp(40px, 5vw, 72px) clamp(40px, 4.4vw, 64px);
+  }
+
+  .ph--compact .ph__lead {
+    margin-top: clamp(20px, 2vw, 28px);
+  }
+
+  @media (max-width: 767px) {
+    .ph__grid i:nth-child(n + 5) {
+      display: none;
+    }
+
+    .ph__grid i:nth-child(4) {
+      border-right: 1px solid var(--rule-2);
+    }
+
+    .ph__lead {
+      margin-left: 0;
+    }
+
+    /* 見出しは最初の句で改行する。行の分け方をブラウザに任せると、Chrome と Safari で違う位置で折れる */
+    .ph__ttl :global(.fx .ph:first-child) {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+// セクションの見出し。左の 3 列に、番号・欧文ラベル・和文タイトルを置く。
+// 番号は墨の数字。線→塗りとティールは「これから」「確かめた事実」にだけ使う決まりなので、ここでは使わない。
+// 767px 以下では、番号を欧文ラベルと同じ行の等幅（「01 / Ciao」）にする。節の頭を詰めて、本文を早く始めるため。
+// 大きい番号（--fs-num）を残すのはトップページだけ（big を渡す）。
+import Phrases from "./Phrases.astro";
+
+interface Props {
+  no: string;
+  en: string;
+  /** 和文のタイトル。`|` は折り返してよい位置 */
+  title: string;
+  id: string;
+  /** 767px 以下でも、番号を大きい墨の数字のまま置く（トップページだけ） */
+  big?: boolean;
+}
+
+const { no, en, title, id, big = false } = Astro.props;
+---
+
+<header class:list={["sh", { "sh--big": big }]}>
+  <span class="sh__no" aria-hidden="true">{no}</span>
+  <p class="sh__en mono">{en}</p>
+  <h2 class="sh__ttl" id={id}><Phrases text={title} /></h2>
+  <!-- 見出しの下に添えるもの（つくり方の、節ごとの目次） -->
+  <slot />
+</header>
+
+<style>
+  .sh {
+    grid-column: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+  }
+
+  /* 数字の幅をそろえる。tabular-nums は、子の要素の "palt" に上書きされない */
+  .sh__no {
+    display: block;
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d2);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  .sh__en {
+    margin-top: 22px;
+    color: var(--ink-2);
+  }
+
+  .sh__ttl {
+    margin-top: 6px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  /* 狭い画面では、番号を画面の主役の大きさ（--fs-num、64〜96px）の墨の数字にして、
+     その下に欧文ラベルと和文の見出しを縦に積む */
+  @media (max-width: 899px) {
+    .sh {
+      grid-column: 1 / -1;
+      position: static;
+      margin-bottom: 40px;
+    }
+
+    .sh__no {
+      font-size: var(--fs-num);
+      line-height: 0.82;
+      letter-spacing: -0.04em;
+    }
+
+    .sh__en {
+      margin-top: 20px;
+    }
+
+    /* 節の見出しは、中の行の見出し（--fs-h3）より大きくする。大きさで現在地が分かるようにするため */
+    .sh__ttl {
+      font-size: var(--fs-h2);
+      line-height: 1.4;
+    }
+  }
+
+  /* スマートフォン（トップページ以外）: 番号は欧文ラベルと同じ行の等幅にする（「01 / Ciao」） */
+  @media (max-width: 767px) {
+    .sh:not(.sh--big) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      margin-bottom: 32px;
+    }
+
+    /* 見出しと、見出しの下に添えるもの（slot）は、1 行ずつ */
+    .sh:not(.sh--big) > :global(*) {
+      flex: 0 0 100%;
+      min-width: 0;
+    }
+
+    .sh:not(.sh--big) .sh__no,
+    .sh:not(.sh--big) .sh__en {
+      flex: none;
+    }
+
+    .sh:not(.sh--big) .sh__no {
+      font-family: var(--f-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-regular);
+      line-height: 1.5;
+      letter-spacing: var(--ls-label);
+    }
+
+    .sh:not(.sh--big) .sh__no::after {
+      content: "/";
+      margin-inline: 0.6em;
+      color: var(--ink-2);
+    }
+
+    .sh:not(.sh--big) .sh__en {
+      margin-top: 0;
+    }
+
+    .sh:not(.sh--big) .sh__ttl {
+      margin-top: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F5F1E8">
+<title>CodeCiao — 方向性 A: Solid / Outline</title>
+<meta name="description" content="CodeCiao コーポレートサイト刷新・方向性ボード A「Solid / Outline」。線（来る・去る）と塗り（いま）の 2 状態で、さよなら／こんにちはを組む。">
+<!--
+  設計メモ（Direction A — Solid / Outline）
+  ─────────────────────────────────────────
+  ヒーローの構図 : 12 列のスイス系グリッドを罫線ごと見せる。上段は左右 6 列ずつの対句
+                   （左＝さよなら＝線、右＝こんにちは＝塗り）。下段に全幅の CIAO が地に立つ。
+                   CIAO はロゴの字形を SVG パスに起こしたもの（フォントではない）。
+  タイポのスケール: CIAO（全幅）> EN 52 / JP 56 > 本文 16 > ラベル 11（1440px 時）。
+                   EN = Unbounded 800（ロゴの幅広・重い字形）、JP 見出し = M PLUS Rounded 1c 800
+                   （丸い端点）、本文 = M PLUS 2 + Figtree（同じ M+ の骨格の角ゴ）。
+  グリッド       : 1440 で 12 列 / 余白 48 / 溝 24。375 で 4 列 / 余白 16 / 溝 12。
+  振付           : 0.0s 罫線が上から降りる → 0.2s CIAO の線を描く → 0.5s さよなら（塗りが上へ抜ける）
+                   → 0.9s こんにちは（下から満ちる）→ 1.0s CIAO を塗りの波が通る（＝Ciao の手振り）
+                   → 2.6s Before→After が回り始める。以後、スクロールで CIAO が満ち、ホバーで 1 字ずつ。
+  原則           : 塗りは常に下から上へ。来るときは下から満ち、去るときは上へ抜け、線は残す。
+                   動かすのは clip-path / stroke-dashoffset / transform のみ。
+  確認用         : ?pause=1500 で開始 1.5 秒後の中間フレームに固定。
+-->
+<link rel="icon" href="../../public/favicon-96x96.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=M+PLUS+2:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@800&family=Martian+Mono:wght@400;500&family=Unbounded:wght@600;800&display=swap">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+:root{
+  --paper:#F5F1E8; --paper-2:#EBE4D6; --ink:#11201F; --ink-2:#4E5B59;
+  --teal:#03999A; --teal-deep:#0B6B6B; --mist:#D4E9E4;
+  --rule:rgba(17,32,31,.14); --rule-2:rgba(17,32,31,.07);
+  --f-en:"Unbounded",system-ui,sans-serif;
+  --f-jpd:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;
+  --f-body:"Figtree","M PLUS 2","Hiragino Sans",sans-serif;
+  --f-mono:"Martian Mono","M PLUS 2",ui-monospace,monospace;
+  --m:48px; --g:24px; --cols:12; --hd:72px;
+  --lw:1.5px;
+  --ease:cubic-bezier(.7,0,.2,1);
+  --ease-out:cubic-bezier(.2,.75,.15,1);
+  --dur:.85s; --st:40ms;
+}
+@media (max-width:1023px){ :root{ --m:32px; --g:20px; } }
+@media (max-width:767px){ :root{ --m:16px; --g:12px; --cols:4; --hd:60px; --lw:1.1px; } }
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:calc(var(--hd) + 16px)}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.9;letter-spacing:.04em;-webkit-font-smoothing:antialiased;font-kerning:normal}
+img,svg{display:block}
+a{color:inherit}
+h1,h2,h3,h4,p,ol,ul,dl,dd,figure{margin:0}
+ol,ul{padding:0;list-style:none}
+::selection{background:var(--mist);color:var(--ink)}
+:focus-visible{outline:2px solid var(--teal-deep);outline-offset:3px;border-radius:2px}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--ink);color:var(--paper);padding:8px 14px;font-size:14px;text-decoration:none}
+.skip:focus{top:12px}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.mono{font-family:var(--f-mono);font-size:11px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase}
+.lat{font-family:var(--f-en)}
+
+/* ───────── 2-state system: 線（outline）と 塗り（solid） ───────── */
+.ch{display:inline-block;position:relative}
+.ykr{display:inline-block;margin-right:-.45em}
+.ykl{display:inline-block;margin-left:-.45em}
+.ykc{display:inline-block;margin:0 -.22em}
+.ph{white-space:nowrap}
+.fx{--lo:-4%;--hi:104%;--top:var(--hi);--bot:var(--hi)}
+.fx.en{--lo:-14%;--hi:114%}
+.fx[data-state="solid"]{--top:var(--lo);--bot:var(--hi)}
+.fx[data-state="gone"]{--top:var(--lo);--bot:var(--lo)}
+.fx .ch{color:transparent;-webkit-text-stroke:var(--lw) var(--teal)}
+.fx .ch::after{content:attr(data-c);position:absolute;left:0;top:0;color:var(--teal);-webkit-text-stroke:var(--lw) var(--teal);
+  clip-path:polygon(-40% var(--top),140% var(--top),140% var(--bot),-40% var(--bot));
+  transition:clip-path var(--dur) var(--ease) calc(var(--d0,0ms) + var(--i,0) * var(--st))}
+/* Unbounded は可変フォントで輪郭が重なるため、地色で塗って線を外側にだけ出す */
+.fx.en .ch{color:var(--bgc,var(--paper));-webkit-text-stroke:calc(var(--lw) * 2) var(--teal);paint-order:stroke fill}
+.fx.en .ch::after{-webkit-text-stroke:calc(var(--lw) * 2) var(--teal);paint-order:stroke fill}
+/* JS なしの表示 */
+.fx[data-split]:not(.is-split){color:transparent;-webkit-text-stroke:var(--lw) var(--teal)}
+.fx[data-split]:not(.is-split)[data-state="solid"]{color:var(--teal)}
+.no-tr,.no-tr *,.no-tr *::after,.no-tr *::before{transition:none!important}
+
+/* glyphs drawn from the logo (SVG paths) */
+.gl{position:relative;flex:var(--w) 1 0%;aspect-ratio:var(--w) / 200;--a:0;--b:0}
+.gl svg{position:absolute;overflow:visible;top:-4%;height:108%;left:calc(-800% / var(--w));width:calc(100% + 1600% / var(--w))}
+.gl use{stroke:var(--teal);stroke-width:var(--sw,3);stroke-linejoin:round}
+.gl__line use{fill:none}
+.gl__fill use{fill:var(--teal)}
+.gl__fill{clip-path:polygon(-10% calc(105% - var(--b) * 110%),110% calc(105% - var(--b) * 110%),110% calc(105% - var(--a) * 110%),-10% calc(105% - var(--a) * 110%))}
+.fx .gl__fill{transition:clip-path var(--dur) var(--ease) calc(var(--d0,0ms) + var(--i,0) * 90ms)}
+.fx[data-state="hidden"] .gl{--a:0;--b:0}
+.fx[data-state="solid"] .gl{--a:0;--b:1}
+.fx[data-state="gone"] .gl{--a:1;--b:1}
+
+/* ───────── header ───────── */
+.hd{position:sticky;top:0;z-index:50;background:var(--paper)}
+.hd__in{height:var(--hd);padding:0 var(--m);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.hd__logo{display:block;flex:none}
+.hd__logo img{height:22px;width:auto}
+.hd__nav{display:flex;align-items:center;gap:36px}
+.hd__nav ul{display:flex;gap:28px}
+.hd__nav li a{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:14px;font-weight:500;letter-spacing:.06em;line-height:1;padding:10px 0}
+.hd__nav li a .n{display:none;font:400 10px/1 var(--f-mono);color:var(--ink-2);letter-spacing:.04em}
+.dot{position:relative;width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--teal);overflow:hidden;flex:none}
+.dot::after{content:"";position:absolute;inset:0;background:var(--teal);clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path .45s var(--ease)}
+.hd__nav li a:hover .dot::after,.hd__nav li a:focus-visible .dot::after{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--teal);padding:12px 20px;font-size:14px;font-weight:500;line-height:1;letter-spacing:.06em;text-decoration:none;color:var(--ink);overflow:hidden;isolation:isolate}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--teal);clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path .55s var(--ease)}
+.btn:hover::before,.btn:focus-visible::before{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.btn .arw{width:14px;height:10px}
+.hd__menu{display:none}
+.hd__bar{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule)}
+.hd__bar i{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--teal);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+
+/* ───────── hero ───────── */
+.hero{position:relative;min-height:calc(100svh - var(--hd));padding:0 var(--m) clamp(20px,3.6vh,36px);display:flex;flex-direction:column;overflow:clip}
+.hero__grid{position:absolute;top:0;bottom:0;left:calc(var(--m) - var(--g) / 2);right:calc(var(--m) - var(--g) / 2);display:grid;grid-template-columns:repeat(var(--cols),1fr);pointer-events:none}
+.hero__grid i{border-left:1px solid var(--rule-2);transform-origin:50% 0}
+.hero__grid i:last-child{border-right:1px solid var(--rule-2)}
+.js .hero__grid i{transform:scaleY(0)}
+.is-go .hero__grid i{transform:none;transition:transform 1.4s var(--ease) calc(var(--k) * 40ms)}
+.hero__in{position:relative;flex:1;display:grid;grid-template-columns:repeat(var(--cols),1fr);grid-template-rows:auto auto 1fr;column-gap:var(--g);padding-top:clamp(28px,5vh,52px)}
+.pairs{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:var(--g);font-weight:inherit}
+.pair{display:block}
+.pair__lab{display:flex;align-items:center;gap:10px;color:var(--ink-2);margin-bottom:clamp(14px,2vh,22px)}
+.pair__lab .no{color:var(--ink)}
+.pair__lab .ic{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--teal)}
+.pair--hi .pair__lab .ic{background:var(--teal)}
+.pair__lab .rl{flex:0 0 28px;height:1px;background:var(--rule)}
+.pair__en{display:block;font:800 clamp(26px,3vw,46px)/1.04 var(--f-en);letter-spacing:-.02em}
+.pair__jp{display:block;margin-top:.22em;font:800 clamp(29px,3.9vw,60px)/1.3 var(--f-jpd);letter-spacing:0}
+.pair__en.fx{--st:32ms}
+.pair__jp.fx{--d0:140ms;--st:46ms}
+.lead{grid-column:1/span 5;margin-top:clamp(22px,4vh,44px);font-size:16px;line-height:1.95;max-width:32em;word-break:auto-phrase}
+.ticker{grid-column:7/span 5;margin-top:clamp(22px,4vh,44px)}
+.ticker__head{display:flex;justify-content:space-between;color:var(--ink-2);border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:6px}
+.ticker__row{display:grid;grid-template-columns:5.2em 1fr;align-items:center}
+.ticker__k{color:var(--ink-2)}
+.slot{position:relative;display:block;overflow:hidden;height:1.4em;font:800 clamp(20px,1.9vw,28px)/1.4 var(--f-jpd);letter-spacing:.01em}
+.slot__v{position:absolute;left:0;top:0;white-space:nowrap;transition:transform .9s var(--ease)}
+.slot__v.is-enter{transform:translateY(110%)}
+.slot__v.is-leave{transform:translateY(-110%)}
+.ciao-wrap{grid-column:1/-1;align-self:end;position:relative;margin-top:clamp(28px,4vh,44px)}
+.ciao{display:flex;gap:2.37%;width:100%;touch-action:manipulation}
+.ciao .gl{cursor:crosshair}
+.gl--a{margin:0 -2.1% 0 -1.5%}
+.wm .gl--a{margin:0 -.7% 0 -.5%}
+.hint{position:absolute;right:0;top:-26px;display:flex;gap:18px;color:var(--ink-2)}
+.hint b{font-weight:500;color:var(--ink)}
+.hint .t-touch,.hint .t-rm{display:none}
+@media (hover:none){.hint .t-mouse{display:none}.hint .t-touch{display:inline}}
+
+/* ───────── board ───────── */
+.band{display:grid;grid-template-columns:repeat(var(--cols),1fr);column-gap:var(--g);padding:18px var(--m);border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);color:var(--ink-2)}
+.band>*:nth-child(1){grid-column:1/span 3}
+.band>*:nth-child(2){grid-column:4/span 5;color:var(--ink)}
+.band>*:nth-child(3){grid-column:9/-1;text-align:right}
+.sec{display:grid;grid-template-columns:repeat(var(--cols),1fr);column-gap:var(--g);padding:clamp(72px,10vw,136px) var(--m);border-bottom:1px solid var(--rule)}
+.sec__head{grid-column:1/span 3;align-self:start;position:sticky;top:calc(var(--hd) + 36px)}
+.sec__no{display:block;font:800 clamp(52px,5.6vw,88px)/.9 var(--f-en);letter-spacing:-.03em;--lw:1.5px;--st:90ms}
+.sec__en{margin-top:22px;color:var(--ink-2)}
+.sec__ttl{margin-top:6px;font:800 clamp(22px,1.9vw,28px)/1.35 var(--f-jpd);letter-spacing:.02em}
+.sec__body{grid-column:4/-1;min-width:0}
+.sub{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:14px;row-gap:2px;padding-bottom:12px;border-bottom:1px solid var(--ink);margin-bottom:0}
+.sub h3{font:800 18px/1.4 var(--f-jpd);letter-spacing:.04em}
+.sub .mono{color:var(--ink-2)}
+.note{font-size:14px;line-height:1.85;letter-spacing:.05em;color:var(--ink-2)}
+
+/* 00 concept */
+.concept{font:800 clamp(26px,3.3vw,50px)/1.42 var(--f-jpd);letter-spacing:.01em;max-width:19em;word-break:auto-phrase}
+.concept .fx{--lw:1.5px}
+.concept__sub{margin-top:28px;max-width:34em;font-size:17px;line-height:1.95;word-break:auto-phrase}
+.film{margin-top:clamp(48px,6vw,80px);display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--ink)}
+.film li{padding:22px 16px 0 0;border-right:1px solid var(--rule)}
+.film li:last-child{border-right:0}
+.film li+li{padding-left:16px}
+.film .glw{display:flex;width:clamp(56px,6.6vw,104px)}
+.film b{display:block;margin-top:18px;font:800 18px/1.3 var(--f-jpd);letter-spacing:.04em}
+.film span{display:block;color:var(--ink-2)}
+.film .arrowhead{color:var(--ink-2)}
+
+/* 01 palette */
+.pal{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--g)}
+.sw{display:flex;flex-direction:column;min-width:0}
+.sw--wide{grid-column:span 2}
+.sw__chip{position:relative;height:clamp(96px,10vw,148px);border-radius:2px;box-shadow:inset 0 0 0 1.5px var(--c);overflow:hidden}
+.sw__chip.is-paper{box-shadow:inset 0 0 0 1px var(--rule)}
+.sw__chip.is-paper i{inset:1px}
+.sw__chip i{position:absolute;inset:0;background:var(--c);clip-path:polygon(-1% var(--top),101% var(--top),101% var(--bot),-1% var(--bot));transition:clip-path 1s var(--ease) calc(var(--d0,0ms))}
+.sw__chip .lb{position:absolute;left:12px;bottom:10px;font:800 13px/1 var(--f-jpd);letter-spacing:.06em}
+.sw__name{margin-top:14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:600 15px/1.4 var(--f-body);letter-spacing:.02em}
+.sw__name .hex{font:400 12px/1 var(--f-mono);letter-spacing:.04em}
+.sw__role{font-size:13px;line-height:1.7;color:var(--ink-2);margin-top:4px}
+.sw__cr{margin-top:10px;border-top:1px solid var(--rule);padding-top:8px;display:grid;gap:6px}
+.sw__cr div{display:flex;justify-content:space-between;gap:8px;font-size:12px;line-height:1.5;letter-spacing:.03em}
+.sw__cr dt{color:var(--ink-2)}
+.sw__cr dd{font-family:var(--f-mono);font-size:11px;white-space:nowrap}
+.grade{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:99px;font-size:10px;line-height:1.5;box-shadow:inset 0 0 0 1px var(--ink)}
+.grade.is-fill{background:var(--ink);color:var(--paper)}
+.pal__foot{margin-top:28px}
+
+/* 02 type */
+.spec{display:grid;grid-template-columns:minmax(150px,2fr) 7fr;column-gap:var(--g);padding:28px 0 32px;border-top:1px solid var(--rule)}
+.spec:first-child{border-top:1px solid var(--ink)}
+.spec__meta{color:var(--ink-2)}
+.spec__meta b{display:block;margin-bottom:6px;font:800 15px/1.4 var(--f-jpd);letter-spacing:.04em;color:var(--ink);text-transform:none}
+.spec__meta p{font:400 11px/1.75 var(--f-mono);letter-spacing:.03em}
+.spec__s{min-width:0}
+.s-en{font:800 clamp(34px,5.84vw,84px)/1.02 var(--f-en);letter-spacing:-.02em}
+.s-jp{font:800 clamp(25px,3.34vw,48px)/1.3 var(--f-jpd)}
+.s-body16{font-size:16px;line-height:1.9;letter-spacing:.04em;max-width:36em}
+.s-body14{font-size:14px;line-height:1.85;letter-spacing:.05em;max-width:38em}
+.cmp{display:grid;gap:12px}
+.cmp__row{display:grid;grid-template-columns:7.5em 1fr auto;align-items:baseline;gap:12px;padding:6px 0;border-bottom:1px dashed var(--rule)}
+.cmp__row .mono{color:var(--ink-2)}
+.cmp__t{font:800 clamp(22px,2.4vw,34px)/1.3 var(--f-jpd);letter-spacing:0;white-space:nowrap}
+.cmp__t .bx{display:inline-block;box-shadow:inset 0 0 0 1px rgba(3,153,154,.35)}
+.cmp__w{font:500 11px/1 var(--f-mono);color:var(--teal-deep)}
+.bl{position:relative;display:inline-block;padding:0 4px;font:800 clamp(22px,2.6vw,38px)/1.5 var(--f-jpd)}
+.bl::before{content:"";position:absolute;left:0;right:0;top:var(--bl,70%);height:1px;background:var(--teal);opacity:.75}
+.bl__probe{display:inline-block;width:0;height:0;vertical-align:baseline}
+.bl .lat{font-weight:600;letter-spacing:-.01em}
+.bl--body{display:block;padding:0;font:400 16px/1.9 var(--f-body);letter-spacing:.04em;margin:0}
+.bl--body::before{opacity:.5}
+.mix{display:grid;gap:10px}
+.mix__row{display:grid;grid-template-columns:7.5em 1fr;align-items:center;gap:12px}
+.mix__row.is-no>.mono{text-decoration:line-through;text-decoration-thickness:1px}
+.mix__row.is-no .bl{opacity:.62}
+.mix__row .mono{color:var(--ink-2)}
+
+/* 03 motion */
+.prin{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.pr{padding:24px var(--g) 8px 0;border-right:1px solid var(--rule)}
+.pr+.pr{padding-left:var(--g)}
+.pr:last-child{border-right:0}
+.pr__demo{height:clamp(120px,11vw,168px);display:flex;align-items:center;gap:6%;margin-bottom:22px}
+.pr__demo .glw{display:flex;height:100%;align-items:center}
+.pr__demo .gl{flex:none;height:78%;width:auto}
+.pr .pr__no{color:var(--ink-2);font-size:11px;margin:0}
+.pr h3{margin-top:6px;font:800 clamp(24px,2.1vw,30px)/1.3 var(--f-jpd);letter-spacing:.02em}
+.pr h3 small{display:block;margin-top:2px;font:600 12px/1.4 var(--f-en);letter-spacing:.02em;color:var(--ink-2)}
+.pr p{margin-top:12px;font-size:15px;line-height:1.85}
+.pr .spec-l{margin-top:14px;font:400 10.5px/1.8 var(--f-mono);letter-spacing:.03em;color:var(--teal-deep)}
+@property --b{syntax:"<number>";inherits:true;initial-value:0}
+@property --a{syntax:"<number>";inherits:true;initial-value:0}
+.loop-in .gl{animation:loopIn 4.2s var(--ease) infinite}
+.loop-out .gl{animation:loopOut 4.2s var(--ease) infinite}
+@keyframes loopIn{0%,10%{--b:0;--a:0}50%,88%{--b:1;--a:0}88.01%,100%{--b:0;--a:0}}
+@keyframes loopOut{0%,12%{--b:1;--a:0}52%,100%{--b:1;--a:1}}
+.loop-in .gl,.loop-out .gl{animation-play-state:paused}
+.is-vis .gl{animation-play-state:running}
+.touch .gl{cursor:pointer}
+.chor{margin-top:clamp(48px,6vw,80px)}
+.tl{margin-top:14px;display:grid;gap:0}
+.tl__row{display:grid;grid-template-columns:minmax(120px,15em) 1fr;align-items:center;gap:16px;padding:9px 0;border-bottom:1px solid var(--rule-2);font-size:13px;line-height:1.5}
+.tl__trk{position:relative;height:12px}
+.tl__bar{position:absolute;top:0;height:12px;left:calc(var(--s) / 3 * 100%);width:calc(var(--d) / 3 * 100%);box-shadow:inset 0 0 0 1.25px var(--teal);border-radius:99px;overflow:hidden}
+.tl__bar i{position:absolute;inset:0;background:var(--teal);clip-path:polygon(0 var(--top),100% var(--top),100% var(--bot),0 var(--bot));transition:clip-path .9s var(--ease) calc(var(--d0,0ms))}
+.tl__bar.is-loop{border-radius:99px 0 0 99px}
+.tl__axis{display:grid;grid-template-columns:minmax(120px,15em) 1fr;gap:16px;margin-top:6px;color:var(--ink-2)}
+.tl__ticks{display:flex;justify-content:space-between;text-transform:none}
+
+/* 04 sample */
+.blk+.blk{margin-top:clamp(64px,8vw,112px)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr)}
+.pl{padding:26px var(--g) 8px 0;border-right:1px solid var(--rule);display:flex;flex-direction:column}
+.pl+.pl{padding-left:var(--g)}
+.pl:last-child{border-right:0}
+.pl__top{display:flex;justify-content:space-between;color:var(--ink-2)}
+.pl__v{margin-top:26px;font:800 clamp(38px,4.3vw,64px)/1.15 var(--f-jpd);letter-spacing:.02em}
+.pl__v .fx{--st:70ms}
+.pl__en{margin-top:10px;font:600 13px/1.4 var(--f-en);letter-spacing:.01em}
+.pl__en span{margin-left:8px;font:500 12px/1.4 var(--f-body);color:var(--ink-2);letter-spacing:.06em}
+.pl__tx{margin-top:18px;font-size:15px;line-height:1.9}
+.tags{margin-top:auto;padding-top:22px;display:flex;flex-wrap:wrap;gap:6px}
+.tags li{position:relative;font-size:12px;line-height:1;letter-spacing:.04em;padding:7px 10px 8px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--ink-2);overflow:hidden;isolation:isolate}
+.tags li::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--mist);clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%);transition:clip-path .55s var(--ease) calc(var(--j,0) * 60ms)}
+.pl:hover .tags li::before{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.ba{border-top:0}
+.ba__row{display:grid;grid-template-columns:48px minmax(0,1fr) 112px minmax(0,1.2fr);align-items:baseline;column-gap:var(--g);padding:16px 0 14px;border-bottom:1px solid var(--rule);font:800 clamp(22px,2.5vw,38px)/1.3 var(--f-jpd);letter-spacing:.01em}
+.ba__row .fx{--lw:1.25px}
+.ba__no{font:400 11px/1 var(--f-mono);color:var(--ink-2);letter-spacing:.04em}
+.ba__arr{position:relative;align-self:center;height:14px}
+.ba__arr i{position:absolute;left:0;right:10px;top:50%;height:1.5px;margin-top:-.75px;background:var(--ink);transform-origin:0 50%;transform:scaleX(0);transition:transform .7s var(--ease) 120ms}
+.ba__arr::after{content:"";position:absolute;right:1px;top:50%;width:9px;height:9px;border-top:1.5px solid var(--ink);border-right:1.5px solid var(--ink);transform:translate(0,-50%) rotate(45deg) scale(0);transition:transform .35s var(--ease) .7s}
+.ba__arr[data-state="solid"] i{transform:scaleX(1)}
+.ba__arr[data-state="solid"]::after{transform:translate(0,-50%) rotate(45deg) scale(1)}
+.ba__head{display:grid;grid-template-columns:48px minmax(0,1fr) 112px minmax(0,1.2fr);column-gap:var(--g);padding:12px 0 10px;border-bottom:1px solid var(--ink);color:var(--ink-2)}
+.work{margin-top:0;display:grid;grid-template-columns:5fr 4fr;border:1px solid var(--ink);border-radius:2px}
+.work__vis{position:relative;padding:28px;border-right:1px solid var(--rule);display:flex;flex-direction:column;justify-content:space-between;min-height:340px;background:
+  linear-gradient(var(--rule-2) 1px,transparent 1px) 0 0/100% 28px}
+.work__k{color:var(--ink-2)}
+.work__nums{display:flex;align-items:baseline;gap:.18em;font:800 clamp(84px,10.5vw,168px)/.95 var(--f-en);letter-spacing:-.04em}
+.work__nums .fx{--lw:2px;--bgc:var(--paper)}
+.work__arr{position:relative;width:.42em;height:.1em;align-self:center}
+.work__arr i{position:absolute;inset:0;margin:auto 0;height:2px;background:var(--ink);transform-origin:0 50%;transform:scaleX(0);transition:transform .6s var(--ease) .25s}
+.work__arr::after{content:"";position:absolute;right:0;top:50%;width:.1em;height:.1em;border-top:2px solid var(--ink);border-right:2px solid var(--ink);transform:translate(-1px,-50%) rotate(45deg) scale(0);transition:transform .3s var(--ease) .75s}
+.work__arr[data-state="solid"] i{transform:scaleX(1)}
+.work__arr[data-state="solid"]::after{transform:translate(-1px,-50%) rotate(45deg) scale(1)}
+.work__info{padding:28px;display:flex;flex-direction:column}
+.work__lab{display:flex;align-items:center;gap:10px;color:var(--ink-2)}
+.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:var(--ink);color:var(--paper);font:500 10px/1 var(--f-mono);letter-spacing:.06em}
+.work__ttl{margin-top:20px;font:800 clamp(24px,2.3vw,32px)/1.4 var(--f-jpd);letter-spacing:.02em;word-break:auto-phrase}
+.work__meta{margin-top:22px;border-top:1px solid var(--rule)}
+.work__meta div{display:grid;grid-template-columns:4em 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.7}
+.work__meta dt{color:var(--ink-2)}
+.mig{display:inline-flex;align-items:center;margin:2px 8px 2px 0;font-size:13px;line-height:1;letter-spacing:.03em}
+.mig s{text-decoration:none;padding:6px 9px;border-radius:99px 0 0 99px;box-shadow:inset 0 0 0 1px var(--ink-2);color:var(--ink-2)}
+.mig b{font-weight:600;padding:6px 10px;border-radius:0 99px 99px 0;background:var(--teal);color:var(--ink)}
+.mig i{display:none}
+.link{margin-top:auto;padding-top:24px;display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;letter-spacing:.06em;text-decoration:none;align-self:flex-start}
+.link .dot{width:10px;height:10px}
+.link:hover .dot::after,.link:focus-visible .dot::after,.work:hover .link .dot::after{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+
+/* 05 risk */
+.risk__lead{font:800 clamp(20px,2vw,28px)/1.55 var(--f-jpd);letter-spacing:.02em;max-width:26em;margin-bottom:36px;word-break:auto-phrase}
+.rt{width:100%;border-collapse:collapse;font-size:14px;line-height:1.85;letter-spacing:.04em}
+.rt th,.rt td{text-align:left;vertical-align:top;padding:14px 16px 14px 0;border-top:1px solid var(--rule)}
+.rt thead th{border-top:1px solid var(--ink);font:400 11px/1.5 var(--f-mono);letter-spacing:.06em;color:var(--ink-2);text-transform:uppercase;padding-top:10px;padding-bottom:10px}
+.rt tbody th{width:12.5em;font-weight:700}
+.rt td:nth-child(2){width:6.5em}
+.lv{display:inline-block;padding:3px 10px 4px;border-radius:99px;font-size:12px;line-height:1.4;font-weight:500;white-space:nowrap}
+.lv--ok{background:var(--teal);color:var(--ink)}
+.lv--low{background:var(--mist);color:var(--ink)}
+.lv--mid{box-shadow:inset 0 0 0 1px var(--ink-2);color:var(--ink)}
+
+/* footer */
+.ft{padding:clamp(72px,9vw,128px) var(--m) 28px}
+.ft__cta{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.ft__q{font:800 clamp(26px,3.2vw,48px)/1.4 var(--f-jpd);letter-spacing:.01em;word-break:auto-phrase;max-width:15em}
+.btn--lg{padding:18px 28px;font-size:15px}
+.wm{display:flex;gap:1.2%;margin-top:clamp(48px,7vw,96px)}
+.wm .gap{flex:0 0 .4%}
+.ft__row{margin-top:28px;padding-top:16px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-2)}
+
+/* ───────── responsive ───────── */
+@media (max-width:1023px){
+  .hd__nav{gap:22px}
+  .hd__nav ul{gap:18px}
+  .pal{grid-template-columns:repeat(2,1fr)}
+  .prin,.pillars{grid-template-columns:1fr}
+  .pr,.pl{border-right:0;border-bottom:1px solid var(--rule);padding:24px 0 28px!important}
+  .work{grid-template-columns:1fr}
+  .work__vis{border-right:0;border-bottom:1px solid var(--rule);min-height:260px}
+  .spec{grid-template-columns:1fr;row-gap:14px}
+  .cmp__row{grid-template-columns:minmax(0,1fr) auto;row-gap:2px}
+  .cmp__row>.mono:first-child{grid-column:1/-1}
+  .mix__row{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:899px){
+  .hd__menu{display:inline-flex;align-items:center;gap:8px;font:500 13px/1 var(--f-body);letter-spacing:.06em;color:var(--ink);background:none;border:0;border-radius:99px;box-shadow:inset 0 0 0 1.5px var(--teal);padding:10px 16px;cursor:pointer}
+  .hd__menu .bars{display:grid;gap:4px;width:14px}
+  .hd__menu .bars i{display:block;height:1.5px;background:var(--ink);transition:transform .4s var(--ease)}
+  .menu-open .hd__menu .bars i:first-child{transform:translateY(2.75px) rotate(45deg)}
+  .menu-open .hd__menu .bars i:last-child{transform:translateY(-2.75px) rotate(-45deg)}
+  .hd__nav{position:fixed;left:0;right:0;top:var(--hd);bottom:0;background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:12px var(--m) 32px;visibility:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .6s var(--ease),visibility 0s .6s}
+  .menu-open .hd__nav{visibility:visible;clip-path:inset(0 0 0 0);transition:clip-path .6s var(--ease)}
+  .hd__nav ul{flex-direction:column;gap:0}
+  .hd__nav li{border-bottom:1px solid var(--rule)}
+  .hd__nav li a{display:flex;width:100%;padding:18px 0;font:800 28px/1.2 var(--f-jpd);letter-spacing:.02em}
+  .hd__nav li a .n{display:inline;order:2;margin-left:auto}
+  .hd__nav li a .dot{width:11px;height:11px}
+  .hd__nav .btn{margin-top:28px;justify-content:center;padding:18px 24px;font-size:16px}
+  .menu-open body{overflow:hidden}
+}
+@media (max-width:767px){
+  .hd__logo img{height:17px}
+  .pairs{grid-template-columns:1fr;row-gap:26px}
+  .lead,.ticker{grid-column:1/-1}
+  .lead{font-size:15px;line-height:1.9}
+  .ticker{margin-top:20px}
+  .hero__grid i:nth-child(n+5){display:none}
+  .hero__grid i:nth-child(4){border-right:1px solid var(--rule-2)}
+  .hint{position:static;margin-bottom:10px;justify-content:space-between;gap:8px}
+  .band{grid-template-columns:1fr;row-gap:2px}
+  .band>*{grid-column:1/-1!important;text-align:left!important}
+  .sec__head{grid-column:1/-1;position:static;margin-bottom:36px;display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:end}
+  .sec__no{grid-row:1/span 2}
+  .sec__en{margin-top:0}
+  .sec__body{grid-column:1/-1}
+  .film{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .film li{padding-right:6px!important}
+  .film li+li{padding-left:6px}
+  .film .glw{width:100%;max-width:56px}
+  .film b{font-size:13px}
+  .film span{font-size:9px;letter-spacing:.02em}
+  .pal{grid-template-columns:1fr 1fr;column-gap:12px;row-gap:28px}
+  .sw--wide{grid-column:1/-1}
+  .sw:not(.sw--wide) .sw__cr div{flex-direction:column;gap:0}
+  .sw__name{flex-wrap:wrap}
+  .bl{font-size:19px}
+  .bl--body{font-size:15px}
+  .tl__row,.tl__axis{grid-template-columns:1fr;gap:6px}
+  .tl__axis>span:first-child{display:none}
+  .ba__head{display:none}
+  .ba__row{grid-template-columns:2em 1.6em minmax(0,1fr);row-gap:4px;column-gap:10px;font-size:22px}
+  .ba__no{grid-row:1/span 2;align-self:start;padding-top:8px}
+  .ba__b{grid-column:2/-1}
+  .ba__arr{grid-column:2;grid-row:2;height:12px}
+  .ba__a{grid-column:3;grid-row:2}
+  .work__vis,.work__info{padding:20px}
+  .rt thead{display:none}
+  .rt,.rt tbody,.rt tr,.rt th,.rt td{display:block;width:auto!important}
+  .rt tr{border-top:1px solid var(--rule);padding:14px 0}
+  .rt th,.rt td{border:0;padding:0}
+  .rt td:nth-child(2){margin:6px 0 8px}
+  .ft__row{flex-direction:column;gap:4px}
+}
+
+/* ───────── reduced motion ───────── */
+@media (prefers-reduced-motion:reduce){
+  .fx .ch::after,.fx .gl__fill,.sw__chip i,.tl__bar i,.ba__arr i,.ba__arr::after,.work__arr i,.slot__v,.btn::before,.dot::after,.tags li::before,.hd__nav{transition:none!important}
+  .js .hero__grid i{transform:none}
+  .loop-in .gl,.loop-out .gl{animation:none}
+  .hint>span{display:none!important}
+  .hint>.t-rm{display:inline!important}
+  .loop-in .gl{--b:.55}
+  .loop-out .gl{--b:1;--a:.45}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="g-c" pathLength="1" d="M80 0H145A27 27 0 0 1 145 54H80A26 26 0 0 0 54 80V120A26 26 0 0 0 80 146H145A27 27 0 0 1 145 200H80A80 80 0 0 1 0 120V80A80 80 0 0 1 80 0Z"/>
+    <path id="g-i" pathLength="1" d="M27 0A27 27 0 0 1 54 27V173A27 27 0 0 1 27 200A27 27 0 0 1 0 173V27A27 27 0 0 1 27 0Z"/>
+    <path id="g-a" pathLength="1" fill-rule="evenodd" d="M87.87 11.55A20 20 0 0 1 124.13 11.55L202.71 180.08A14 14 0 0 1 190.02 200L21.98 200A14 14 0 0 1 9.29 180.08Z M102.37 87.77A4 4 0 0 1 109.63 87.77L136.92 146.31A4 4 0 0 1 133.29 152L78.71 152A4 4 0 0 1 75.08 146.31Z"/>
+    <path id="g-o" pathLength="1" fill-rule="evenodd" d="M100 0A100 100 0 1 1 100 200A100 100 0 1 1 100 0Z M100 52A48 48 0 1 0 100 148A48 48 0 1 0 100 52Z"/>
+    <path id="g-d" pathLength="1" fill-rule="evenodd" d="M14 0H100A88 88 0 0 1 188 88V112A88 88 0 0 1 100 200H14A14 14 0 0 1 0 186V14A14 14 0 0 1 14 0Z M52 54V146H100A40 40 0 0 0 140 106V94A40 40 0 0 0 100 54Z"/>
+    <path id="g-e" pathLength="1" fill-rule="evenodd" d="M14 0H145A27 27 0 0 1 145 54H62A8 8 0 0 0 54 62V138A8 8 0 0 0 62 146H145A27 27 0 0 1 145 200H14A14 14 0 0 1 0 186V14A14 14 0 0 1 14 0Z M92 74H130A26 26 0 0 1 130 126H92A26 26 0 0 1 92 74Z"/>
+  </defs>
+</svg>
+
+<header class="hd">
+  <div class="hd__in">
+    <a class="hd__logo" href="#main" aria-label="CodeCiao トップへ"><img src="../../public/corp_logo_transparent.png" alt="CodeCiao" width="2917" height="389"></a>
+    <button class="hd__menu" type="button" aria-expanded="false" aria-controls="gnav"><span class="bars" aria-hidden="true"><i></i><i></i></span><span class="ml">Menu</span></button>
+    <nav class="hd__nav" id="gnav" aria-label="メインメニュー">
+      <ul>
+        <li><a href="#about"><span class="dot" aria-hidden="true"></span>会社概要<span class="n" aria-hidden="true">01</span></a></li>
+        <li><a href="#works"><span class="dot" aria-hidden="true"></span>実績<span class="n" aria-hidden="true">02</span></a></li>
+        <li><a href="#services"><span class="dot" aria-hidden="true"></span>サービス<span class="n" aria-hidden="true">03</span></a></li>
+        <li><a href="#careers"><span class="dot" aria-hidden="true"></span>採用<span class="n" aria-hidden="true">04</span></a></li>
+      </ul>
+      <a class="btn" href="#contact">お問い合わせ<svg class="arw" viewBox="0 0 14 10" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    </nav>
+  </div>
+  <div class="hd__bar" aria-hidden="true"><i></i></div>
+</header>
+
+<main id="main">
+  <!-- ═════════ HERO ═════════ -->
+  <section class="hero" aria-label="ヒーロー">
+    <div class="hero__grid" aria-hidden="true"><i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i><i style="--k:5"></i><i style="--k:6"></i><i style="--k:7"></i><i style="--k:8"></i><i style="--k:9"></i><i style="--k:10"></i><i style="--k:11"></i></div>
+    <div class="hero__in">
+      <h1 class="pairs">
+        <span class="pair pair--bye">
+          <span class="pair__lab mono" aria-hidden="true"><span class="no">01</span><span class="rl"></span><span class="ic"></span>Goodbye — 塗りが抜け、線が残る</span>
+          <span class="pair__en fx en" lang="en" data-split data-pre="solid" data-post="gone" data-state="gone">Ciao, legacy.</span>
+          <span class="pair__jp fx" data-split data-pre="solid" data-post="gone" data-state="gone">さよなら、古い仕組み。</span>
+        </span>
+        <span class="pair pair--hi">
+          <span class="pair__lab mono" aria-hidden="true"><span class="no">02</span><span class="rl"></span><span class="ic"></span>Hello — 線に塗りが満ちる</span>
+          <span class="pair__en fx en" lang="en" data-split data-pre="hidden" data-post="solid" data-state="solid">Ciao, next.</span>
+          <span class="pair__jp fx" data-split data-pre="hidden" data-post="solid" data-state="solid">こんにちは、次の仕組み。</span>
+        </span>
+      </h1>
+      <p class="lead">Ciao（チャオ）は、出会いにも別れにも使うイタリア語のあいさつです。CodeCiao は、長く働いてきたシステムを丁寧に見送り、次のシステムを迎えるソフトウェア会社です。</p>
+      <div class="ticker">
+        <p class="ticker__head mono"><span>Before → After</span><span class="ticker__count" aria-hidden="true">01 / 06</span></p>
+        <p class="sr">移行の対の例: JDK 8 から JDK 25、Java EE から Jakarta EE、Struts から JSTL、EC2 から ECS、設計書なしからソースから復元、手作業のレビューから機械チェック 60 種。</p>
+        <div aria-hidden="true">
+          <p class="ticker__row"><span class="ticker__k mono">Before</span><span class="slot" data-row="0"><span class="slot__v fx" data-split data-pre="solid" data-post="gone" data-state="gone">JDK 8</span></span></p>
+          <p class="ticker__row"><span class="ticker__k mono">After</span><span class="slot" data-row="1"><span class="slot__v fx" data-split data-pre="hidden" data-post="solid" data-state="solid">JDK 25</span></span></p>
+        </div>
+      </div>
+      <div class="ciao-wrap">
+        <p class="hint mono" aria-hidden="true"><span><b>Scroll</b> 塗られる</span><span class="t-mouse"><b>Hover</b> 1 字ずつ</span><span class="t-touch"><b>Tap</b> 1 字ずつ</span><span class="t-rm"><b>Still</b> 線 → 塗りの 4 段</span></p>
+        <div class="ciao" id="ciao" data-glyphs="2" role="img" aria-label="CIAO（線で描かれ、スクロールで塗られる）">
+          <span class="gl" style="--w:172;--i:0"><svg class="gl__line" viewBox="-8 -8 188 216"><use href="#g-c"/></svg><svg class="gl__fill" viewBox="-8 -8 188 216"><use href="#g-c"/></svg></span>
+          <span class="gl" style="--w:54;--i:1"><svg class="gl__line" viewBox="-8 -8 70 216"><use href="#g-i"/></svg><svg class="gl__fill" viewBox="-8 -8 70 216"><use href="#g-i"/></svg></span>
+          <span class="gl gl--a" style="--w:212;--i:2"><svg class="gl__line" viewBox="-8 -8 228 216"><use href="#g-a"/></svg><svg class="gl__fill" viewBox="-8 -8 228 216"><use href="#g-a"/></svg></span>
+          <span class="gl" style="--w:200;--i:3"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ BOARD ═════════ -->
+  <div class="band mono"><span>方向性ボード / Direction</span><span>A — Solid / Outline</span><span>CodeCiao 刷新 · 2026.10 試作</span></div>
+
+  <!-- 00 concept -->
+  <section class="sec" id="about" aria-labelledby="h-concept">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">00</span>
+      <p class="sec__en mono">Concept</p>
+      <h2 class="sec__ttl" id="h-concept">コンセプト</h2>
+    </header>
+    <div class="sec__body">
+      <p class="concept"><span class="ph">すべての要素が<span class="ykr">、</span></span><span class="ph"><span class="fx" data-split data-reveal data-pre="solid" data-post="gone" data-state="gone" style="--d0:200ms">線</span><span class="ykl">（</span>来る<span class="ykc">・</span>去る<span class="ykr">）</span>と</span><span class="ph"><span class="fx" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--d0:500ms">塗り</span><span class="ykl">（</span>いま<span class="ykr">）</span>の<span class="ykr">、</span></span><span class="ph">2 つの状態を持つ。</span></p>
+      <p class="concept__sub">ロゴの「CODE は塗り、CIAO は線」をそのまま体系にしました。さよならは、塗りが上へ抜けて線だけが残る。こんにちはは、線の内側に下から塗りが満ちる。線は設計図のようなもので、見送ったあとも消しません。</p>
+      <ol class="film" data-glyphs="1.5" aria-label="1 つの字形が状態を移る順序">
+        <li><span class="glw"><span class="gl" style="--w:200;--b:0"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></span><b>線</b><span class="mono">来る</span></li>
+        <li><span class="glw"><span class="gl" style="--w:200;--b:.5"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></span><b>満ちる</b><span class="mono">Hello</span></li>
+        <li><span class="glw"><span class="gl" style="--w:200;--b:1"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></span><b>塗り</b><span class="mono">いま</span></li>
+        <li><span class="glw"><span class="gl" style="--w:200;--b:1;--a:.5"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></span><b>抜ける</b><span class="mono">Goodbye</span></li>
+        <li><span class="glw"><span class="gl" style="--w:200;--b:0"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></span><b>線</b><span class="mono">残る</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 01 palette -->
+  <section class="sec" aria-labelledby="h-pal">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">01</span>
+      <p class="sec__en mono">Palette</p>
+      <h2 class="sec__ttl" id="h-pal">色</h2>
+    </header>
+    <div class="sec__body">
+      <div class="pal">
+        <div class="sw sw--wide fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#03999A">
+          <div class="sw__chip"><i></i><span class="lb">塗り＝いま</span></div>
+          <p class="sw__name">Teal　ティール <span class="hex">#03999A</span></p>
+          <p class="sw__role">主役。ロゴの色。塗りと線の両方に使い、状態だけを変える。文字に使うのは 24px 以上の見出しだけ。</p>
+          <dl class="sw__cr">
+            <div><dt>Teal の面に Ink の文字</dt><dd>4.82 : 1<span class="grade is-fill">AA</span></dd></div>
+            <div><dt>Paper の地に Teal の文字</dt><dd>3.09 : 1<span class="grade">AA Large</span></dd></div>
+          </dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#11201F;--d0:80ms">
+          <div class="sw__chip"><i></i></div>
+          <p class="sw__name">Ink　墨 <span class="hex">#11201F</span></p>
+          <p class="sw__role">本文の文字色。ティールを少し含む黒。</p>
+          <dl class="sw__cr"><div><dt>Paper の地</dt><dd>14.90 : 1<span class="grade is-fill">AAA</span></dd></div></dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#0B6B6B;--d0:160ms">
+          <div class="sw__chip"><i></i></div>
+          <p class="sw__name">Teal Deep <span class="hex">#0B6B6B</span></p>
+          <p class="sw__role">小さい文字のティール（リンク・注記）。</p>
+          <dl class="sw__cr"><div><dt>Paper の地</dt><dd>5.60 : 1<span class="grade is-fill">AA</span></dd></div></dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#F5F1E8;--d0:80ms">
+          <div class="sw__chip is-paper"><i></i></div>
+          <p class="sw__name">Paper　紙 <span class="hex">#F5F1E8</span></p>
+          <p class="sw__role">地。温かい紙の白。</p>
+          <dl class="sw__cr"><div><dt>Ink の文字</dt><dd>14.90 : 1<span class="grade is-fill">AAA</span></dd></div></dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#EBE4D6;--d0:160ms">
+          <div class="sw__chip"><i></i></div>
+          <p class="sw__name">Paper 2 <span class="hex">#EBE4D6</span></p>
+          <p class="sw__role">面（帯・表の地）。</p>
+          <dl class="sw__cr"><div><dt>Ink の文字</dt><dd>13.28 : 1<span class="grade is-fill">AAA</span></dd></div></dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#4E5B59;--d0:240ms">
+          <div class="sw__chip"><i></i></div>
+          <p class="sw__name">Ink 2 <span class="hex">#4E5B59</span></p>
+          <p class="sw__role">補足・ラベルの文字色。</p>
+          <dl class="sw__cr"><div><dt>Paper の地</dt><dd>6.28 : 1<span class="grade is-fill">AA</span></dd></div></dl>
+        </div>
+        <div class="sw fx" data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--c:#D4E9E4;--d0:320ms">
+          <div class="sw__chip"><i></i></div>
+          <p class="sw__name">Mist　霧 <span class="hex">#D4E9E4</span></p>
+          <p class="sw__role">選択・ホバーの面。</p>
+          <dl class="sw__cr"><div><dt>Ink の文字</dt><dd>13.26 : 1<span class="grade is-fill">AAA</span></dd></div></dl>
+        </div>
+      </div>
+      <p class="note pal__foot">コントラスト比は WCAG 2.x の相対輝度から算出（小数第 3 位を四捨五入）。AA は本文 4.5 以上、AA Large は 24px 以上または太字 18.66px 以上で 3.0 以上。罫線は Ink の 14%／7% の透明度で、文字には使わない。</p>
+    </div>
+  </section>
+
+  <!-- 02 type -->
+  <section class="sec" aria-labelledby="h-type">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">02</span>
+      <p class="sec__en mono">Typography</p>
+      <h2 class="sec__ttl" id="h-type">書体</h2>
+    </header>
+    <div class="sec__body">
+      <div class="spec">
+        <div class="spec__meta"><b>EN ディスプレイ</b><p>Unbounded 800<br>84 / 1.02 / −0.02em<br>幅広で重い字形が<br>ロゴの CODE と呼応</p></div>
+        <div class="spec__s s-en" lang="en">
+          <span class="fx en" data-split data-reveal data-pre="solid" data-post="gone" data-state="gone">Ciao, legacy.</span><br>
+          <span class="fx en" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--d0:300ms">Ciao, next.</span>
+        </div>
+      </div>
+      <div class="spec">
+        <div class="spec__meta"><b>JP 見出し</b><p>M PLUS Rounded 1c 800<br>48 / 1.3 / 0<br>丸い端点がロゴの<br>角丸と同じ温度</p></div>
+        <div class="spec__s s-jp">
+          <span class="fx" data-split data-reveal data-pre="solid" data-post="gone" data-state="gone">さよなら、古い仕組み。</span><br>
+          <span class="fx" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid" style="--d0:300ms">こんにちは、次の仕組み。</span>
+        </div>
+      </div>
+      <div class="spec">
+        <div class="spec__meta"><b>約物と palt</b><p>見出し: 約物だけ半角詰め<br>本文: ベタ組み（詰めない）</p></div>
+        <div class="spec__s">
+          <div class="cmp">
+            <div class="cmp__row"><span class="mono">ベタ</span><span class="cmp__t" id="cmp-a"><span class="bx">こんにちは、次の仕組み。</span></span><span class="cmp__w" id="cmp-aw">—</span></div>
+            <div class="cmp__row"><span class="mono">約物詰め</span><span class="cmp__t" id="cmp-b"><span class="bx" data-split>こんにちは、次の仕組み。</span></span><span class="cmp__w" id="cmp-bw">—</span></div>
+          </div>
+          <p class="note" style="margin-top:14px">Google Fonts 版の M PLUS Rounded 1c と M PLUS 2 は palt を持たない（実測で <code>font-feature-settings:"palt"</code> を指定しても字幅が変わらない）。そこで見出しは「、」「。」「・」「（」だけを JS で個別に詰め、本文はベタ組みのまま行の字数をそろえる。見出しの改行は <code>word-break: auto-phrase</code> で文節単位にする。</p>
+        </div>
+      </div>
+      <div class="spec">
+        <div class="spec__meta"><b>JP 本文 16px</b><p>M PLUS 2 400 ＋ Figtree 400<br>16 / 1.9 / 0.04em<br>1 行 36 字まで</p></div>
+        <div class="spec__s"><p class="s-body16">CodeCiao は、長く働いてきたシステムを丁寧に見送り、次のシステムを迎えるソフトウェア会社です。古い Java や Struts、設計書のないシステムでも、ソースコードから設計を読み解き、止めずに次の基盤へ移します。新しい業務 SaaS は Web・iPad・LINE ミニアプリまでまとめてつくり、設計書を正本にして仕様と実装をずらしません。</p></div>
+      </div>
+      <div class="spec">
+        <div class="spec__meta"><b>JP 本文 14px</b><p>M PLUS 2 400 ＋ Figtree 400<br>14 / 1.85 / 0.05em<br>注記・カード本文</p></div>
+        <div class="spec__s"><p class="s-body14">AI エージェント（Claude Code）が書き、約 60 種の機械チェックが確かめ、人が責任を持つ。うちはこの開発の型をプラグインにまとめ、解説動画や研修と一緒にチームへ渡します。仕組みは、使う人に引き継がれてはじめて働きます。</p></div>
+      </div>
+      <div class="spec">
+        <div class="spec__meta"><b>和欧混植</b><p>見出し: 欧文も M PLUS<br>Rounded 1c のまま<br>本文: Figtree → M PLUS 2<br>の順で指定</p></div>
+        <div class="spec__s">
+          <div class="mix">
+            <div class="mix__row"><span class="mono">見出し・採用</span><span class="bl">Java EE を Jakarta EE へ。</span></div>
+            <div class="mix__row is-no"><span class="mono">見出し・不採用</span><span class="bl"><span class="lat">Java EE</span> を <span class="lat">Jakarta EE</span> へ。</span></div>
+            <div class="mix__row"><span class="mono">本文・採用</span><p class="s-body16 bl bl--body">Struts を JSTL へ、EC2 を ECS へ。JDK 8 から 25 まで止めずに移します。</p></div>
+            <div class="mix__row is-no"><span class="mono">本文・比較</span><p class="s-body16 bl bl--body" style="font-family:'M PLUS 2',sans-serif">Struts を JSTL へ、EC2 を ECS へ。JDK 8 から 25 まで止めずに移します。</p></div>
+          </div>
+          <p class="note" style="margin-top:14px">ティールの線は欧文のベースライン。見出しに Unbounded を混ぜると欧文だけが幅広く浮くため、Unbounded は欧文だけの行に限る。見出し中の欧文は和文と同じ丸い骨格の M PLUS Rounded 1c で組む。本文は欧文と数字だけを Figtree に置き換える。和文と欧文の間は半角スペース 1 つ。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 motion -->
+  <section class="sec" aria-labelledby="h-motion">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">03</span>
+      <p class="sec__en mono">Motion</p>
+      <h2 class="sec__ttl" id="h-motion">動きの原則</h2>
+    </header>
+    <div class="sec__body">
+      <div class="prin" data-glyphs="1.5">
+        <article class="pr">
+          <div class="pr__demo loop-in" aria-hidden="true"><span class="gl" style="--w:200"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span></div>
+          <p class="pr__no mono">Principle 1</p>
+          <h3>満ちる<small>Hello</small></h3>
+          <p>来るものは、まず線で現れ、塗りが下から満ちる。文字は読む順に 1 字ずつ。</p>
+          <p class="spec-l">clip-path · 0.85s · cubic-bezier(.7,0,.2,1)<br>1 字 40ms ずらし · 下 → 上</p>
+        </article>
+        <article class="pr">
+          <div class="pr__demo loop-out" aria-hidden="true"><span class="gl" style="--w:172"><svg class="gl__line" viewBox="-8 -8 188 216"><use href="#g-c"/></svg><svg class="gl__fill" viewBox="-8 -8 188 216"><use href="#g-c"/></svg></span></div>
+          <p class="pr__no mono">Principle 2</p>
+          <h3>抜ける<small>Goodbye</small></h3>
+          <p>去るものは、塗りが上へ抜けて線が残る。消さない。逆再生もしない。塗りは来るときも去るときも、上へ進む。</p>
+          <p class="spec-l">clip-path · 0.85s · 下端が上へ<br>線（stroke）は常に残す</p>
+        </article>
+        <article class="pr">
+          <div class="pr__demo touch-demo" aria-hidden="true">
+            <span class="gl" style="--w:54;--i:0"><svg class="gl__line" viewBox="-8 -8 70 216"><use href="#g-i"/></svg><svg class="gl__fill" viewBox="-8 -8 70 216"><use href="#g-i"/></svg></span>
+            <span class="gl" style="--w:212;--i:1"><svg class="gl__line" viewBox="-8 -8 228 216"><use href="#g-a"/></svg><svg class="gl__fill" viewBox="-8 -8 228 216"><use href="#g-a"/></svg></span>
+          </div>
+          <p class="pr__no mono">Principle 3</p>
+          <h3><span class="ph">触れたものが<span class="ykr">、</span></span><span class="ph">いま</span><small>Now</small></h3>
+          <p>ホバー・フォーカス・スクロールで注目されたものだけが塗られる。塗りは線の内側からはみ出さない。拡大・ぼかし・バウンドは使わない。</p>
+          <p class="spec-l">pointer / focus / scroll<br>clip-path · stroke-dashoffset · transform のみ</p>
+        </article>
+      </div>
+
+      <div class="chor">
+        <div class="sub"><span class="mono">Choreography</span><h3>ヒーローの振付 <span class="ph">0〜3 秒</span></h3></div>
+        <div class="tl" data-reveal>
+          <div class="tl__row"><span>罫線が上から降りる</span><span class="tl__trk"><span class="tl__bar fx" data-pre="hidden" data-post="solid" data-state="solid" style="--s:0;--d:1.84"><i></i></span></span></div>
+          <div class="tl__row"><span>CIAO の線を描く</span><span class="tl__trk"><span class="tl__bar fx" data-pre="hidden" data-post="solid" data-state="solid" style="--s:.2;--d:1.63;--d0:80ms"><i></i></span></span></div>
+          <div class="tl__row"><span>さよなら — 塗りが抜ける</span><span class="tl__trk"><span class="tl__bar fx" data-pre="hidden" data-post="solid" data-state="solid" style="--s:.5;--d:1.45;--d0:160ms"><i></i></span></span></div>
+          <div class="tl__row"><span>こんにちは — 塗りが満ちる</span><span class="tl__trk"><span class="tl__bar fx" data-pre="hidden" data-post="solid" data-state="solid" style="--s:.9;--d:1.5;--d0:240ms"><i></i></span></span></div>
+          <div class="tl__row"><span>CIAO を塗りの波が通る</span><span class="tl__trk"><span class="tl__bar fx" data-pre="hidden" data-post="solid" data-state="solid" style="--s:1;--d:1.85;--d0:320ms"><i></i></span></span></div>
+          <div class="tl__row"><span>Before → After が回る</span><span class="tl__trk"><span class="tl__bar fx is-loop" data-pre="hidden" data-post="solid" data-state="solid" style="--s:2.6;--d:.4;--d0:400ms"><i></i></span></span></div>
+        </div>
+        <div class="tl__axis mono" aria-hidden="true"><span></span><span class="tl__ticks"><span>0s</span><span>1s</span><span>2s</span><span>3s</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 sample -->
+  <section class="sec" aria-labelledby="h-sample">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">04</span>
+      <p class="sec__en mono">Sample</p>
+      <h2 class="sec__ttl" id="h-sample">サンプル</h2>
+    </header>
+    <div class="sec__body">
+      <div class="blk" id="services">
+        <div class="sub"><span class="mono">Three pillars</span><h3>3 つの柱</h3></div>
+        <ol class="pillars">
+          <li class="pl" data-reveal data-hover>
+            <p class="pl__top mono"><span>01</span><span>Legacy</span></p>
+            <h4 class="pl__v"><span class="fx" data-split data-pre="solid" data-post="gone" data-state="gone">見送る</span></h4>
+            <p class="pl__en" lang="en">Goodbye<span lang="ja">レガシー刷新</span></p>
+            <p class="pl__tx">古い Java や Struts、設計書のないシステム。ソースコードから設計を読み解き、止めずに次の基盤へ移します。</p>
+            <ul class="tags"><li style="--j:0">Java / Jakarta EE 移行</li><li style="--j:1">ソースからの設計書復元</li><li style="--j:2">クラウド移行</li></ul>
+          </li>
+          <li class="pl" data-reveal data-hover>
+            <p class="pl__top mono"><span>02</span><span>Product</span></p>
+            <h4 class="pl__v"><span class="fx" data-split data-pre="hidden" data-post="solid" data-state="solid">迎える</span></h4>
+            <p class="pl__en" lang="en">Hello<span lang="ja">新しいプロダクト開発</span></p>
+            <p class="pl__tx">業務 SaaS を、Web・iPad・LINE までまとめてつくります。設計書を正本にして、仕様と実装がずれない状態を保ちます。</p>
+            <ul class="tags"><li style="--j:0">Web / iOS / LINE ミニアプリ</li><li style="--j:1">AWS</li><li style="--j:2">Terraform</li></ul>
+          </li>
+          <li class="pl" data-reveal data-hover>
+            <p class="pl__top mono"><span>03</span><span>AI-driven</span></p>
+            <h4 class="pl__v"><span class="fx" data-split data-pre="solid" data-post="gone" data-state="gone">引き</span><span class="fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:260ms">継ぐ</span></h4>
+            <p class="pl__en" lang="en">Handover<span lang="ja">AI 駆動開発と伝える仕組み</span></p>
+            <p class="pl__tx">AI エージェントが書き、機械のチェックが確かめ、人が責任を持つ。開発の型と、解説動画・研修でチームに渡します。</p>
+            <ul class="tags"><li style="--j:0">Claude Code</li><li style="--j:1">品質の自動チェック</li><li style="--j:2">解説動画</li><li style="--j:3">研修</li></ul>
+          </li>
+        </ol>
+        <p class="note" style="margin-top:16px">動詞が自分の意味どおりに動く。見送るは塗りが抜け、迎えるは満ち、引き継ぐは塗りが「引き」から「継ぐ」へ渡る（ホバーで再生）。</p>
+      </div>
+
+      <div class="blk">
+        <div class="sub"><span class="mono">Before → After</span><h3>移行の対</h3></div>
+        <div class="ba__head mono" aria-hidden="true"><span>No.</span><span>Before — 線</span><span></span><span>After — 塗り</span></div>
+        <ol class="ba">
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">01</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">JDK 8</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">JDK 25</span></li>
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">02</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">Java EE</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">Jakarta EE</span></li>
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">03</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">Struts</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">JSTL</span></li>
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">04</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">EC2</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">ECS</span></li>
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">05</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">設計書なし</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">ソースから復元</span></li>
+          <li class="ba__row" data-reveal data-hover><span class="ba__no">06</span><span class="ba__b fx" data-split data-pre="solid" data-post="gone" data-state="gone">手作業のレビュー</span><span class="ba__arr fx" aria-hidden="true" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="sr">から</span><span class="ba__a fx" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:420ms">機械チェック 60 種</span></li>
+        </ol>
+      </div>
+
+      <div class="blk" id="works">
+        <div class="sub"><span class="mono">Work</span><h3>実績カード</h3></div>
+        <article class="work" data-reveal data-hover style="margin-top:24px">
+          <div class="work__vis" aria-hidden="true">
+            <span class="work__k mono">JDK — 移行</span>
+            <span class="work__nums"><span class="fx en" data-split data-pre="solid" data-post="gone" data-state="gone">8</span><span class="work__arr fx" data-pre="hidden" data-post="solid" data-state="solid"><i></i></span><span class="fx en" data-split data-pre="hidden" data-post="solid" data-state="solid" style="--d0:450ms;--st:90ms">21</span></span>
+          </div>
+          <div class="work__info">
+            <p class="work__lab mono"><span class="tag">Sample</span>汎用のダミー</p>
+            <h4 class="work__ttl"><span class="ph">基幹業務システムの</span> <span class="ph">Java 移行</span></h4>
+            <dl class="work__meta">
+              <div><dt>業界</dt><dd>金融</dd></div>
+              <div><dt>期間</dt><dd>6 か月</dd></div>
+              <div><dt>担当</dt><dd>調査・移行設計・実装・テスト</dd></div>
+              <div><dt>移行</dt><dd><span class="mig"><s>JDK 8</s><i> → </i><b>21</b></span><span class="mig"><s>Struts</s><i> → </i><b>JSTL</b></span></dd></div>
+            </dl>
+            <a class="link" href="#works"><span class="dot" aria-hidden="true"></span>事例を読む</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 risk -->
+  <section class="sec" aria-labelledby="h-risk">
+    <header class="sec__head">
+      <span class="sec__no fx en" aria-hidden="true" data-split data-reveal data-pre="hidden" data-post="solid" data-state="solid">05</span>
+      <p class="sec__en mono">Cost / Risk</p>
+      <h2 class="sec__ttl" id="h-risk">コストとリスク</h2>
+    </header>
+    <div class="sec__body">
+      <p class="risk__lead">素材ゼロ・ライブラリなしで成立する。いちばん重いのは和文 Web フォントで、次が線だけの文字の読みにくさ。</p>
+      <table class="rt">
+        <thead><tr><th scope="col">項目</th><th scope="col">判定</th><th scope="col">内容と対策</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">素材</th><td><span class="lv lv--ok">不要</span></td><td>写真・イラスト・動画なし。ロゴの字形を SVG パス 6 本（C・I・A・O・D・E）に起こし、ヒーロー・図版・フッターをすべてそこから組む。ロゴのベクター化とセットで済む。</td></tr>
+          <tr><th scope="row">60fps</th><td><span class="lv lv--low">低</span></td><td>動かすのは clip-path・stroke-dashoffset・transform だけで、レイアウトは動かさない。clip-path は合成ではなく再描画になるため、同時に動く文字を 30 字前後に抑え、画面外の要素は動かさない。CIAO の塗りは requestAnimationFrame のばねで、止まると描画ループも止める。</td></tr>
+          <tr><th scope="row">Lighthouse ≥ 90</th><td><span class="lv lv--mid">中</span></td><td>重さの大半は Web フォント（和文 2・欧文 3 書体）。和文は Google Fonts の unicode-range 分割で使う字だけ読む。画像はロゴ 1 枚（本番は SVG 化）、JS は依存なしの <span id="js-size">数</span> KB。LCP は h1 のテキストで、フォント待ちで消さない。本番では見出し用和文を使う字だけに絞る（text= 指定やサブセット化）。</td></tr>
+          <tr><th scope="row">reduced-motion</th><td><span class="lv lv--ok">対応</span></td><td>遷移をすべて止め、最終状態で静止する。CIAO は C＝線 → I → A → O＝塗りの 4 段で止め、「線から塗りへ」を 1 枚の絵で読ませる。Before → After は先頭の対で固定。</td></tr>
+          <tr><th scope="row">375px</th><td><span class="lv lv--ok">読める</span></td><td>CIAO は全幅のまま残し、さよなら／こんにちはを縦に積む。約物を詰めて見出しを 1 行に収める。横スクロールなし。</td></tr>
+          <tr><th scope="row">モバイルで落とすもの</th><td><span class="lv lv--mid">一部</span></td><td>ホバー演出（タップで代替）、12 列の罫線（4 列に間引く）、見出し番号の追従。CIAO の波とスクロールでの塗りは残す。</td></tr>
+          <tr><th scope="row">可読性</th><td><span class="lv lv--mid">注意</span></td><td>線だけの文字は読みにくい。線の状態は 24px 以上の見出しだけに使い、本文・ボタン・ラベルは「枠のチップ」と「塗りのチップ」で 2 状態を表す。</td></tr>
+          <tr><th scope="row">運用（CMS 化）</th><td><span class="lv lv--mid">注意</span></td><td>見出しの約物詰めと 1 字ずつの分割は JS で行う。CMS から流す見出しにも同じ分割を通す必要がある（ビルド時に分割すれば JS は不要）。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="ft" id="contact">
+  <div class="ft__cta" id="careers">
+    <p class="ft__q"><span class="ph">見送りたい仕組みも<span class="ykr">、</span></span><span class="ph">迎えたい仕組みも。</span></p>
+    <a class="btn btn--lg" href="#contact">お問い合わせ<svg class="arw" viewBox="0 0 14 10" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+  </div>
+  <div class="wm" id="wm" data-glyphs="1.5" role="img" aria-label="CodeCiao">
+    <span class="gl" style="--w:172;--b:1"><svg class="gl__line" viewBox="-8 -8 188 216"><use href="#g-c"/></svg><svg class="gl__fill" viewBox="-8 -8 188 216"><use href="#g-c"/></svg></span>
+    <span class="gl" style="--w:200;--b:1"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span>
+    <span class="gl" style="--w:188;--b:1"><svg class="gl__line" viewBox="-8 -8 204 216"><use href="#g-d"/></svg><svg class="gl__fill" viewBox="-8 -8 204 216"><use href="#g-d"/></svg></span>
+    <span class="gl" style="--w:172;--b:1"><svg class="gl__line" viewBox="-8 -8 188 216"><use href="#g-e"/></svg><svg class="gl__fill" viewBox="-8 -8 188 216"><use href="#g-e"/></svg></span>
+    <span class="gap"></span>
+    <span class="gl wm-o" style="--w:172"><svg class="gl__line" viewBox="-8 -8 188 216"><use href="#g-c"/></svg><svg class="gl__fill" viewBox="-8 -8 188 216"><use href="#g-c"/></svg></span>
+    <span class="gl wm-o" style="--w:54"><svg class="gl__line" viewBox="-8 -8 70 216"><use href="#g-i"/></svg><svg class="gl__fill" viewBox="-8 -8 70 216"><use href="#g-i"/></svg></span>
+    <span class="gl gl--a wm-o" style="--w:212"><svg class="gl__line" viewBox="-8 -8 228 216"><use href="#g-a"/></svg><svg class="gl__fill" viewBox="-8 -8 228 216"><use href="#g-a"/></svg></span>
+    <span class="gl wm-o" style="--w:200"><svg class="gl__line" viewBox="-8 -8 216 216"><use href="#g-o"/></svg><svg class="gl__fill" viewBox="-8 -8 216 216"><use href="#g-o"/></svg></span>
+  </div>
+  <div class="ft__row mono"><p>© 2026 CodeCiao Inc. — Tokyo</p><p>Direction A — Solid / Outline · 方向性ボード（試作）</p></div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const doc = document.documentElement;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const params = new URLSearchParams(location.search);
+  const PAUSE_AT = params.has('pause') ? (Number(params.get('pause')) || 1500) : null;
+  let paused = false;
+  const later = (ms, fn) => setTimeout(() => { if (!paused) fn(); }, ms);
+
+  /* ── 1. split text into characters (with 約物詰め) ── */
+  const YK_R = '、。，．」』）', YK_L = '「『（', YK_C = '・';
+  function split(el) {
+    const text = el.textContent.replace(/\s+/g, ' ').trim();
+    const sr = document.createElement('span');
+    sr.className = 'sr'; sr.textContent = text;
+    const vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    let i = 0;
+    for (const tok of text.match(/ |[^ 、。]+[、。]?|[、。]/g) || []) {
+      if (tok === ' ') { vis.append(' '); continue; }
+      const ph = document.createElement('span');
+      ph.className = 'ph';
+      for (const c of tok) {
+        const s = document.createElement('span');
+        s.className = 'ch' + (YK_R.includes(c) ? ' ykr' : YK_L.includes(c) ? ' ykl' : YK_C.includes(c) ? ' ykc' : '');
+        s.dataset.c = c; s.textContent = c;
+        s.style.setProperty('--i', i++);
+        ph.append(s);
+      }
+      vis.append(ph);
+    }
+    el.replaceChildren(sr, vis);
+    el.classList.add('is-split');
+  }
+  $$('[data-split]').forEach(split);
+
+  /* ── 2. state machine: pre → post ── */
+  const parts = (scope) => scope.hasAttribute('data-pre') ? [scope] : $$('[data-pre]', scope);
+  function arm(scope) {
+    const ps = parts(scope);
+    ps.forEach(p => { p.classList.add('no-tr'); p.dataset.state = p.dataset.pre; });
+    void scope.offsetWidth;
+    ps.forEach(p => p.classList.remove('no-tr'));
+  }
+  function go(scope) { parts(scope).forEach(p => { p.dataset.state = p.dataset.post; }); }
+  function play(scope) {
+    const ps = parts(scope);
+    ps.forEach(p => { p.classList.add('no-tr'); p.dataset.state = p.dataset.pre; });
+    void scope.offsetWidth;
+    ps.forEach(p => { p.classList.remove('no-tr'); p.dataset.state = p.dataset.post; });
+  }
+
+  /* ── 3. stroke widths in px, independent of glyph size ── */
+  function sizeStrokes() {
+    $$('[data-glyphs]').forEach(w => {
+      const g = $('.gl', w); if (!g) return;
+      const h = g.getBoundingClientRect().height; if (!h) return;
+      const px = parseFloat(w.dataset.glyphs) * (innerWidth < 768 ? .8 : 1);
+      w.style.setProperty('--sw', (px * 200 / h).toFixed(3));
+    });
+  }
+
+  /* ── 4. glyph engine (critically damped springs) ── */
+  const OM = 9;
+  const L = [];
+  const mkLetter = (el, i, opt = {}) => ({ el, i, a: 0, b: 0, va: 0, vb: 0, mode: 'base', base: 0, hold: false, pend: false, ...opt });
+  let running = false, last = 0;
+  function stepSpring(o, k, target, dt) {
+    const v = 'v' + k;
+    o[v] += (OM * OM * (target - o[k]) - 2 * OM * o[v]) * dt;
+    o[k] += o[v] * dt;
+    if (Math.abs(target - o[k]) < 6e-4 && Math.abs(o[v]) < 6e-4) { o[k] = target; o[v] = 0; return false; }
+    return true;
+  }
+  function frame(t) {
+    const dt = Math.min(.034, (t - last) / 1000); last = t;
+    let active = false;
+    for (const o of L) {
+      let ta = 0, tb = o.base;
+      if (o.mode === 'in') { ta = 0; tb = 1; }
+      else if (o.mode === 'out') { ta = 1; tb = 1; }
+      const a1 = stepSpring(o, 'a', ta, dt), b1 = stepSpring(o, 'b', tb, dt);
+      active = active || a1 || b1;
+      if (o.mode === 'in' && !o.hold && o.b > .985) { o.mode = 'out'; active = true; }
+      if (o.mode === 'out' && o.a > .985) {
+        o.a = o.b = o.va = o.vb = 0;
+        o.mode = (o.hold || o.pend) ? 'in' : 'base'; o.pend = false; active = true;
+      }
+      o.el.style.setProperty('--a', o.a.toFixed(4));
+      o.el.style.setProperty('--b', o.b.toFixed(4));
+    }
+    if (active && !paused) requestAnimationFrame(frame); else running = false;
+  }
+  function kick() { if (running || paused) return; running = true; last = performance.now(); requestAnimationFrame(frame); }
+  const enter = (o) => { o.hold = true; if (o.mode === 'out') o.pend = true; else o.mode = 'in'; kick(); };
+  const leave = (o) => { o.hold = false; kick(); };
+  const pulse = (o) => { if (o.mode === 'base') { o.mode = 'in'; kick(); } else if (o.mode === 'out') o.pend = true; };
+
+  const heroGl = $$('#ciao .gl').map((el, i) => mkLetter(el, i, { hero: true }));
+  const wmGl = $$('#wm .wm-o').map((el, i) => mkLetter(el, i));
+  const touchGl = $$('.touch-demo .gl').map((el, i) => mkLetter(el, i));
+  L.push(...heroGl, ...wmGl, ...touchGl);
+
+  function bindHover(list, groupEl) {
+    list.forEach(o => {
+      o.el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') enter(o); });
+      o.el.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') leave(o); });
+      o.el.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') pulse(o); });
+    });
+    if (groupEl) {
+      groupEl.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') list.forEach((o, i) => later(i * 90, () => pulse(o))); });
+    }
+  }
+
+  /* ── 5. scroll: progress bar + CIAO fill ── */
+  const bar = $('.hd__bar');
+  const hero = $('.hero');
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const max = doc.scrollHeight - innerHeight;
+      bar.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+      if (RM) return;
+      const s = Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * .62)));
+      heroGl.forEach((o, i) => { o.base = Math.min(1, Math.max(0, (s - i * .13) / .5)); });
+      kick();
+    });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+
+  /* ── 6. Before → After ticker ── */
+  const PAIRS = [['JDK 8', 'JDK 25'], ['Java EE', 'Jakarta EE'], ['Struts', 'JSTL'], ['EC2', 'ECS'], ['設計書なし', 'ソースから復元'], ['手作業のレビュー', '機械チェック 60 種']];
+  let tk = 0;
+  const slots = $$('.slot');
+  const count = $('.ticker__count');
+  function tickerNext() {
+    if (document.hidden) return;
+    tk = (tk + 1) % PAIRS.length;
+    slots.forEach((slot, r) => {
+      const old = slot.lastElementChild;
+      const nu = document.createElement('span');
+      nu.className = 'slot__v fx is-enter';
+      nu.dataset.pre = r ? 'hidden' : 'solid';
+      nu.dataset.post = r ? 'solid' : 'gone';
+      nu.dataset.state = nu.dataset.pre;
+      nu.textContent = PAIRS[tk][r];
+      split(nu);
+      slot.append(nu);
+      void nu.offsetWidth;
+      setTimeout(() => {
+        nu.classList.remove('is-enter');
+        if (old) { old.classList.add('is-leave'); setTimeout(() => old.remove(), 1000); }
+      }, r * 110);
+      setTimeout(() => go(nu), 650 + r * 380);
+    });
+    count.textContent = String(tk + 1).padStart(2, '0') + ' / ' + String(PAIRS.length).padStart(2, '0');
+  }
+
+  /* ── 7. typographic measurements (palt 比較・ベースライン) ── */
+  function measure() {
+    const em = (el) => { const fs = parseFloat(getComputedStyle(el).fontSize); return (el.getBoundingClientRect().width / fs).toFixed(2) + 'em'; };
+    const a = $('#cmp-a .bx'), b = $('#cmp-b .bx');
+    if (a && b) { $('#cmp-aw').textContent = em(a); $('#cmp-bw').textContent = em(b); }
+    $$('.bl').forEach(el => {
+      let p = $('.bl__probe', el);
+      if (!p) { p = document.createElement('i'); p.className = 'bl__probe'; el.prepend(p); }
+      el.style.setProperty('--bl', (p.getBoundingClientRect().bottom - el.getBoundingClientRect().top) + 'px');
+    });
+  }
+
+  /* ── 8. menu ── */
+  const menuBtn = $('.hd__menu'), nav = $('#gnav');
+  const setMenu = (open) => { menuBtn.setAttribute('aria-expanded', String(open)); doc.classList.toggle('menu-open', open); $('.ml', menuBtn).textContent = open ? 'Close' : 'Menu'; };
+  menuBtn.addEventListener('click', () => { const open = menuBtn.getAttribute('aria-expanded') !== 'true'; setMenu(open); if (open) $('a', nav).focus(); });
+  nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && doc.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+
+  /* ── 9. JS size note (自己申告ではなく実測) ── */
+  const js = $('#js-size');
+  if (js) js.textContent = (new Blob([document.currentScript.textContent]).size / 1024).toFixed(1);
+
+  /* ── 10. boot ── */
+  sizeStrokes(); measure(); onScroll();
+  let rz;
+  addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { sizeStrokes(); measure(); }, 120); });
+
+  if (RM) {
+    // 静止状態: CIAO は線→塗りの 4 段、他は最終状態
+    heroGl.forEach((o, i) => { o.el.style.setProperty('--b', (i / 3).toFixed(3)); });
+    document.fonts && document.fonts.ready.then(measure);
+    return;
+  }
+
+  bindHover(heroGl);
+  bindHover(wmGl, $('#wm'));
+  bindHover(touchGl);
+  $('.touch-demo').addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') touchGl.forEach((o, i) => later(i * 120, () => pulse(o))); });
+
+  // hero: arm pre-states (visible immediately; no hidden text for LCP)
+  const bye = $('.pair--bye'), hi = $('.pair--hi');
+  arm(bye); arm(hi);
+  slots.forEach(s => arm(s.lastElementChild));
+
+  // reveals below the fold
+  const io = new IntersectionObserver(es => {
+    for (const e of es) if (e.isIntersecting) { io.unobserve(e.target); play(e.target); }
+  }, { threshold: .35, rootMargin: '0px 0px -6% 0px' });
+  $$('[data-reveal]').forEach(el => { arm(el); io.observe(el); });
+
+  // looping demos only while visible
+  const vis = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-vis', e.isIntersecting)), { threshold: .2 });
+  $$('.loop-in, .loop-out').forEach(el => vis.observe(el));
+
+  // footer wordmark: one wave when it arrives
+  const wmIo = new IntersectionObserver(es => { if (es[0].isIntersecting) { wmIo.disconnect(); wmGl.forEach((o, i) => later(200 + i * 140, () => pulse(o))); } }, { threshold: .6 });
+  wmIo.observe($('#wm'));
+
+  // hover / focus replays
+  $$('[data-hover]').forEach(el => {
+    let t0 = 0;
+    const replay = () => { const t = performance.now(); if (t - t0 < 1100) return; t0 = t; play(el); };
+    el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') replay(); });
+    el.addEventListener('focusin', replay);
+  });
+
+  function start() {
+    if (start.done) return; start.done = true;
+    sizeStrokes(); measure();
+    doc.classList.add('is-go');           // 罫線・CIAO の線
+    $$('#ciao .gl__line').forEach((s, i) => {
+      s.style.strokeDasharray = '1 1';
+      s.style.strokeDashoffset = '1.001';
+      void s.getBoundingClientRect();
+      s.style.transition = `stroke-dashoffset 1.3s cubic-bezier(.65,0,.25,1) ${200 + i * 110}ms`;
+      s.style.strokeDashoffset = '0';
+    });
+    later(500, () => go(bye));            // さよなら: 塗り → 線
+    later(900, () => go(hi));            // こんにちは: 線 → 塗り
+    heroGl.forEach((o, i) => later(1000 + i * 150, () => pulse(o)));  // Ciao の波
+    later(2600, () => {                   // 最初の対を移してから回す
+      go(slots[0].lastElementChild);
+      later(380, () => go(slots[1].lastElementChild));
+      setInterval(() => { if (!paused) tickerNext(); }, 3600);
+    });
+    setInterval(() => {                   // アイドル時だけ、ときどき手を振る
+      if (scrollY < 40 && !document.hidden && !heroGl.some(o => o.hold)) heroGl.forEach((o, i) => later(i * 150, () => pulse(o)));
+    }, 9000);
+    if (PAUSE_AT !== null) setTimeout(() => {
+      paused = true;
+      document.getAnimations().forEach(a => a.pause());
+    }, PAUSE_AT);
+  }
+  // CIAO の線は描画前に隠しておく
+  $$('#ciao .gl__line').forEach(s => { s.style.strokeDasharray = '1 1'; s.style.strokeDashoffset = '1.001'; });
+  const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise(r => setTimeout(r, 1600))]).then(() => requestAnimationFrame(start));
+})();
+</script>
+</body>
+</html>

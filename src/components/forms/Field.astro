@@ -1,0 +1,316 @@
+---
+// 入力欄 1 つ。ラベルは常に見える位置に置く。入力欄は薄い面に置いて、押す場所が分かるようにする。
+// ホバーとフォーカスで面の色が変わり、フォーカスすると下線の下から「塗り」が満ちる。
+// 入力が確かめられると、ラベルの丸が塗られる（Form.astro のスクリプトが動かす）。
+import { EMAIL_PATTERN_SOURCE, type Option } from "./schema";
+
+interface Props {
+  /** フォームの id。入力欄の id の接頭辞にする */
+  form: string;
+  name: string;
+  label: string;
+  type?: "text" | "email" | "url" | "select" | "textarea";
+  required?: boolean;
+  /** type="select" の選択肢 */
+  options?: readonly Option[];
+  autocomplete?: string;
+  maxlength?: number;
+  hint?: string;
+  rows?: number;
+  /** URL の ?name=value で、あらかじめ選んでおく（type="select" のみ） */
+  prefill?: boolean;
+  /** 未入力のときに出す文 */
+  missing?: string;
+  /** 形式が違うときに出す文 */
+  invalid?: string;
+}
+
+const {
+  form,
+  name,
+  label,
+  type = "text",
+  required = false,
+  options = [],
+  autocomplete,
+  maxlength,
+  hint,
+  rows = 6,
+  prefill = false,
+  missing,
+  invalid,
+} = Astro.props;
+
+const id = `${form}-${name}`;
+const errorId = `${id}-error`;
+const hintId = hint ? `${id}-hint` : undefined;
+const describedBy = [hintId, errorId].filter(Boolean).join(" ");
+const isTyped = type === "email" || type === "url";
+
+const common = {
+  id,
+  name,
+  required,
+  "aria-describedby": describedBy,
+  "data-missing": missing,
+  "data-invalid": invalid,
+};
+---
+
+<div class:list={["fd", `fd--${type}`]} data-field>
+  <div class="fd__head">
+    <label class="fd__label" for={id}>
+      <span class="dot" aria-hidden="true"></span>
+      {label}
+    </label>
+    <span class:list={["fd__req", { "is-req": required }]} aria-hidden="true">
+      {required ? "必須" : "任意"}
+    </span>
+  </div>
+  {
+    hint && (
+      <p class="fd__hint" id={hintId}>
+        {hint}
+      </p>
+    )
+  }
+  <div class="fd__ctl">
+    {
+      type === "select" ? (
+        <select
+          class="fd__in"
+          {...common}
+          autocomplete={autocomplete}
+          data-prefill={prefill ? "" : undefined}
+        >
+          <option value="">選んでください</option>
+          {options.map(option => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      ) : type === "textarea" ? (
+        <textarea
+          class="fd__in"
+          {...common}
+          rows={rows}
+          maxlength={maxlength}
+          autocomplete={autocomplete}
+        />
+      ) : (
+        <input
+          class="fd__in"
+          {...common}
+          type={type}
+          maxlength={maxlength}
+          autocomplete={autocomplete}
+          pattern={type === "email" ? EMAIL_PATTERN_SOURCE : undefined}
+          inputmode={isTyped ? type : undefined}
+          autocapitalize={isTyped ? "off" : undefined}
+          spellcheck={isTyped ? "false" : undefined}
+        />
+      )
+    }
+    <span class="fd__line" aria-hidden="true"></span>
+  </div>
+  <p class="fd__err phrase" id={errorId} data-error hidden></p>
+</div>
+
+<style>
+  .fd {
+    --lh: 32px;
+    --pad: 14px;
+  }
+
+  .fd__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .fd__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-feature-settings: "palt";
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+
+  /* 任意は線、必須は塗り */
+  .fd__req {
+    flex: none;
+    padding: 4px 9px 5px;
+    border-radius: 99px;
+    box-shadow: inset 0 0 0 1px var(--rule);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--ink-2);
+  }
+
+  .fd__req.is-req {
+    background: var(--ink);
+    box-shadow: none;
+    color: var(--paper);
+  }
+
+  .fd__hint {
+    margin-top: 6px;
+    padding-left: 19px;
+    font-size: var(--fs-caption);
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .fd__ctl {
+    position: relative;
+    margin-top: 10px;
+  }
+
+  /* 入力欄は薄い面（紙 2）に置き、下の線で閉じる。高さは 48px（押す対象は 44px 以上）。
+     文字は 16px。16px より小さいと、iOS が入力のときに画面を拡大する */
+  .fd__in {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 8px var(--pad) 7px;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+    background-color: var(--paper-2);
+    /* 型の外: 利用者が打つ字は、サブセットの Web フォントでは欠ける。システムの書体で組む */
+    font-family: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", system-ui,
+      sans-serif;
+    font-size: var(--fs-input);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    appearance: none;
+    transition: background-color 0.2s linear;
+  }
+
+  /* ホバーで面が少し色づき、フォーカスで薄いティールの面になる */
+  @media (hover: hover) {
+    .fd__in:hover {
+      background-color: color-mix(in srgb, var(--paper-2), var(--mist));
+    }
+  }
+
+  .fd__in:focus {
+    background-color: var(--mist);
+  }
+
+  .fd__in:focus-visible {
+    outline-offset: 2px;
+  }
+
+  /* ブラウザの自動入力でも、面の色を保つ */
+  .fd__in:-webkit-autofill {
+    -webkit-text-fill-color: var(--ink);
+    box-shadow: inset 0 0 0 100px var(--mist);
+  }
+
+  /* 塗り: フォーカスで、下線の下から満ちる */
+  .fd__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.45s var(--ease);
+    pointer-events: none;
+  }
+
+  .fd__in:focus ~ .fd__line {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  select.fd__in {
+    padding-right: calc(var(--pad) + 30px);
+    cursor: pointer;
+    text-overflow: ellipsis;
+  }
+
+  select.fd__in:has(option[value=""]:checked) {
+    color: var(--ink-2);
+  }
+
+  .fd--select .fd__ctl::after {
+    content: "";
+    position: absolute;
+    right: calc(var(--pad) + 4px);
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    margin-top: -8px;
+    border-right: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  /* 罫紙。1 行ごとに薄い線を引く */
+  textarea.fd__in {
+    padding-block: 0;
+    min-height: calc(var(--lh) * 4 + 1px);
+    resize: vertical;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--lh) - 1px),
+      var(--rule) calc(var(--lh) - 1px),
+      var(--rule) var(--lh)
+    );
+    background-attachment: local;
+  }
+
+  /* エラー: 下線を 3px にして、すぐ下の墨の帯に直すことを書く */
+  .fd.is-invalid .fd__in {
+    box-shadow: inset 0 -2px 0 var(--ink);
+  }
+
+  .fd__err {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: start;
+    padding: 9px var(--pad) 10px;
+    background: var(--ink);
+    color: var(--paper);
+    /* エラーの文は画面の中で作るので、ビルド後の文節の処理が入らない。行の長さをそろえて、短い最終行を防ぐ */
+    text-wrap: balance;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+
+  .fd__err[hidden] {
+    display: none;
+  }
+
+  .fd__err::before {
+    content: "!";
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+    font-feature-settings: "tnum";
+    font-size: var(--fs-label);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+</style>

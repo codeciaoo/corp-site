@@ -1,0 +1,72 @@
+---
+import BeforeAfterList from "@/components/site/BeforeAfterList.astro";
+import Fx from "@/components/site/Fx.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { BEFORE_AFTER } from "@/data/home";
+---
+
+<section class="sec grid" aria-labelledby="h-ciao">
+  <SectionHead no="01" en="Ciao" title="迎えると見送る" id="h-ciao" big />
+  <div class="body">
+    <p class="statement">
+      <span class="ph">新しい仕組みを</span><span class="ph"
+        ><Fx text="迎える" delay={200} />と</span
+      >
+      <span class="ph">これまでのやり方が</span><span class="ph"
+        ><Fx
+            text="終わり"
+            mode="goodbye"
+            delay={500}
+            class="fx--quiet-sm"
+          />ます</span
+      >
+    </p>
+    <p class="sub phrase">
+      CodeCiaoは、紙の日報やExcelの集計、自分たちでは直せないシステムを置き換えてきました。新しいシステムをつくる仕事には、これまでのやり方を終わらせる仕事が必ずついてきます。CodeCiaoは、つくる仕事と終わらせる仕事の両方を担当します。
+    </p>
+    <div class="list">
+      <BeforeAfterList items={BEFORE_AFTER.filter(item => !item.draft)} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .statement {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d3);
+    line-height: 1.4;
+    letter-spacing: var(--ls-display);
+    max-width: 17em;
+  }
+
+  .statement .ph {
+    display: inline-block;
+  }
+
+  .sub {
+    margin-top: 28px;
+    max-width: 36em;
+    font-size: var(--fs-lead);
+    line-height: 1.95;
+  }
+
+  .list {
+    margin-top: clamp(56px, 7vw, 96px);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .sub {
+      font-size: var(--fs-body);
+    }
+  }
+</style>

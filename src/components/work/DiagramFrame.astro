@@ -1,0 +1,256 @@
+---
+// 図の形 frame: 大きい丸（steps[0]、1 つのもの）の円周上に、items の小さい丸を等間隔に置く。
+// 大きい丸の中に「番号 / tag、label、note」。小さい丸には番号、名前は丸の外側に書く。
+// 塗りと線の意味は、ほかの形と同じ（steps[0].solid が false なら、どの丸も線のまま）。
+// 767px 以下: 名前は、丸の下に 2 列の番号つきの行として並べる。note も丸の外（丸の下）に出す（丸の中に収まらないため）。
+import { pad, type DiagramData } from "./diagram";
+import DiagramText from "./DiagramText.astro";
+
+interface Props {
+  data: DiagramData;
+  size: "lg" | "sm";
+}
+
+const { data, size } = Astro.props;
+const { legend } = data;
+const [step] = data.steps;
+const items = step.items ?? [];
+const fixed = (value: number): string => value.toFixed(4);
+// 12 時の位置から時計回りに、等しい角度で置く
+const points = items.map((_, index) => {
+  const angle = (index / items.length) * Math.PI * 2;
+  return { sx: Math.sin(angle), cy: -Math.cos(angle) };
+});
+// 名前を丸のどちら側に寄せるか（右の丸は左寄せ、左の丸は右寄せ、上下の丸は中央）
+const align = (value: number): string =>
+  value > 0.3 ? "0%" : value < -0.3 ? "-100%" : "-50%";
+---
+
+<div class:list={["fr", `fr--${size}`, { "is-solid": step.solid }]}>
+  <div class="fr__box">
+    <div class="fr__ring" aria-hidden="true">
+      {
+        points.map((point, index) => (
+          <span
+            class="fr__dot"
+            style={`--j:${index};--sx:${fixed(point.sx)};--cy:${fixed(point.cy)}`}
+          >
+            <b class="mono">{pad(index + 1)}</b>
+          </span>
+        ))
+      }
+    </div>
+    <div class="fr__core">
+      <DiagramText
+        no={pad(0)}
+        tag={step.tag}
+        label={step.label}
+        note={size === "lg" ? step.note : undefined}
+        state={step.solid ? legend.solid : legend.line}
+        size={size}
+      />
+    </div>
+    {
+      size === "lg" && step.note && (
+        <p class="fr__note">{step.note}</p>
+      )
+    }
+    <ol class="fr__list" aria-label={data.alt}>
+      {
+        items.map((item, index) => (
+          <li
+            style={`--sx:${fixed(points[index].sx)};--cy:${fixed(points[index].cy)};--tx:${align(points[index].sx)};--ty:${align(points[index].cy)}`}
+          >
+            <span class="fr__no mono" aria-hidden="true">
+              {pad(index + 1)}
+            </span>
+            <span class="fr__name nb">{item}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style>
+  .fr {
+    --w: 440px; /* 大きい丸の直径 */
+    --d: 64px; /* 小さい丸の直径 */
+  }
+
+  .fr--sm {
+    --w: 360px;
+    --d: 48px;
+  }
+
+  @media (max-width: 1199px) {
+    .fr {
+      --w: 380px;
+      --d: 56px;
+    }
+  }
+
+  /* 名前が丸の外に出るので、上下にその高さを空ける */
+  .fr__box {
+    position: relative;
+    width: var(--w);
+    margin: calc(var(--d) / 2 + 48px) auto;
+  }
+
+  .fr__ring {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  /* 円周上の小さい丸。中は地の色（大きい丸の線を隠す）。画面に入ると、12 時から順に現れる */
+  .fr__dot {
+    position: absolute;
+    left: calc(50% + var(--sx) * 50%);
+    top: calc(50% + var(--cy) * 50%);
+    display: grid;
+    place-items: center;
+    width: var(--d);
+    height: var(--d);
+    margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    transition: transform 0.55s var(--ease)
+      calc(var(--dg-wait) + var(--j) * 110ms);
+  }
+
+  .fr__dot b {
+    font-weight: var(--fw-regular);
+    color: var(--ink);
+  }
+
+  .is-solid .fr__dot {
+    background: var(--teal);
+  }
+
+  :global(html.js:not(.rm) .dg:not(.is-live)) .fr__dot,
+  :global(.dg[data-state="hidden"]) .fr__dot {
+    transform: scale(0);
+  }
+
+  /* 大きい丸の中の文字。まん中に置く */
+  .fr__core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 64%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .fr__core :global(.sx__k) {
+    justify-content: center;
+  }
+
+  .fr__core :global(.sx__l--lg) {
+    font-size: var(--fs-h2);
+  }
+
+  .fr__core :global(.sx__n) {
+    margin-inline: auto;
+  }
+
+  /* 0 番（大きい丸そのもの）には番号を出さない */
+  .fr__core :global(.sx__no),
+  .fr__core :global(.sx__no + span) {
+    display: none;
+  }
+
+  /* 名前。丸の外側に、丸の位置に合わせて寄せる */
+  .fr__list {
+    position: absolute;
+    inset: 0;
+  }
+
+  .fr__list li {
+    position: absolute;
+    left: calc(50% + var(--sx) * (50% + var(--d) / 2 + 14px));
+    top: calc(50% + var(--cy) * (50% + var(--d) / 2 + 10px));
+    transform: translate(var(--tx), var(--ty));
+  }
+
+  .fr__no,
+  .fr__note {
+    display: none;
+  }
+
+  .fr__name {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  /* ── 767px 以下: 丸を幅に合わせ、名前は下の 2 列の行に ── */
+  @media (max-width: 767px) {
+    .fr,
+    .fr--sm {
+      --d: 40px;
+      --w: min(300px, calc(100vw - 2 * var(--m) - var(--d)));
+    }
+
+    .fr__box {
+      width: auto;
+      margin: 0;
+    }
+
+    .fr__ring {
+      width: var(--w);
+      margin: calc(var(--d) / 2) auto;
+    }
+
+    .fr__core {
+      top: calc(var(--d) / 2 + var(--w) / 2);
+      width: calc(var(--w) * 0.7);
+    }
+
+    .fr__core :global(.sx__l--lg) {
+      font-size: var(--fs-h3);
+    }
+
+    /* note は丸の下に出す（丸の中の note は隠す。どちらか一方だけが読まれる） */
+    .fr__core :global(.sx__n) {
+      display: none;
+    }
+
+    .fr__note {
+      display: block;
+      margin-top: 20px;
+      font-size: var(--fs-small);
+      line-height: 1.75;
+      color: var(--ink-2);
+    }
+
+    .fr__list {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--g);
+      margin-top: 28px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .fr__list li {
+      position: static;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 12px 0 13px;
+      border-top: 1px solid var(--rule);
+      transform: none;
+    }
+
+    .fr__no {
+      display: inline;
+      color: var(--ink-2);
+    }
+  }
+</style>

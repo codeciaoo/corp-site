@@ -1,0 +1,103 @@
+---
+// ページ末尾の呼びかけ。相談と採用のページへ案内する。
+import Arrow from "./Arrow.astro";
+import Fx from "./Fx.astro";
+
+interface Props {
+  /** 採用への案内を出さない（採用ページなど） */
+  hideCareers?: boolean;
+  /** 見出しの大きさ。特大はトップページだけ（下層では、すぐ下のフッターのロゴと重なって重くなる） */
+  size?: "mega" | "large";
+  /** 見出しの下の文。ページの内容に合わせて変える。空文字なら文を出さない */
+  lead?: string;
+}
+
+const DEFAULT_LEAD =
+  "内容が決まっていなくても構いません。現在のやり方と困っていることを教えてください。";
+
+const {
+  hideCareers = false,
+  size = "large",
+  lead = DEFAULT_LEAD,
+} = Astro.props;
+---
+
+<section class:list={["cta", `cta--${size}`]} aria-labelledby="h-cta">
+  <p class="cta__lab mono">Contact</p>
+  <h2 class="cta__ttl" id="h-cta">
+    <Fx text="まずは Ciaoから" />
+  </h2>
+  <div class="cta__row">
+    {lead ? <p class="cta__body phrase">{lead}</p> : <span />}
+    <div class="cta__act">
+      <a class="btn btn--lg btn--solid" href="/contact">
+        相談する
+        <Arrow />
+      </a>
+      {
+        !hideCareers && (
+          <a class="link" href="/careers">
+            <span class="dot" aria-hidden="true" />
+            一緒につくる人も探しています
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding: var(--sec-y) var(--m) clamp(64px, 8vw, 112px);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cta__lab {
+    color: var(--ink-2);
+  }
+
+  .cta__ttl {
+    margin-top: 14px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-d1);
+    line-height: 1.16;
+    letter-spacing: var(--ls-display);
+    --st: 60ms;
+  }
+
+  .cta--mega .cta__ttl {
+    font-size: var(--fs-mega);
+    line-height: 1.12;
+  }
+
+  .cta__row {
+    margin-top: clamp(28px, 4vw, 52px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 28px 48px;
+    flex-wrap: wrap;
+  }
+
+  .cta__body {
+    max-width: 26em;
+    font-size: var(--fs-lead);
+    line-height: 1.95;
+  }
+
+  .cta__act {
+    display: flex;
+    align-items: center;
+    gap: 16px 28px;
+    flex-wrap: wrap;
+  }
+
+  /* 狭い画面では、どのページでも「まずは」「Ciaoから」の 2 行にそろえる */
+  @media (max-width: 767px) {
+    .cta__ttl :global(.ph) {
+      display: block;
+    }
+  }
+
+</style>

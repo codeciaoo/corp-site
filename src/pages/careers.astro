@@ -1,8 +1,34 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import CareersPage from "../components/pages/careers/CareersPage";
+import Entry from "@/components/careers/Entry.astro";
+import Positions from "@/components/careers/Positions.astro";
+import Values from "@/components/careers/Values.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import PageIndex from "@/components/site/PageIndex.astro";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+// 目次。番号・欧文・名前は、各節の SectionHead と同じ
+const SECTIONS = [
+  { no: "01", href: "#values", en: "Values", title: "働き方" },
+  { no: "02", href: "#positions", en: "Positions", title: "募集している仕事" },
+  { no: "03", href: "#entry", en: "Entry", title: "応募する" },
+];
 ---
 
-<Layout title="採用情報 | CodeCiao株式会社" description="CodeCiaoで一緒に働きませんか？最新技術を駆使して、お客様のビジネスに革新的なソリューションを提供するチームの一員になりましょう。">
-  <CareersPage client:load />
-</Layout>
+<Base
+  title="採用"
+  description="CodeCiaoは一緒に開発する人を探しています。業務委託のフルスタックエンジニアと、エンジニアインターンを募集しています。"
+>
+  <PageHero
+    en="Careers"
+    label="採用"
+    title="説明できる|コードを|書く人へ"
+    lead="AIは自由に使ってください。ただし、提出するコードは自分ですべて説明できるようにしてください。CodeCiaoの開発はこの約束を前提にしています。"
+  >
+    <PageIndex items={SECTIONS} />
+  </PageHero>
+  <Values />
+  <Positions />
+  <Entry no="03" />
+</Base>

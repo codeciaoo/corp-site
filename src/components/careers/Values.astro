@@ -1,0 +1,66 @@
+---
+// 働き方。採用ページにしかない 2 つを置く。
+// 「確かめてから言う」「足すより削る」は会社ページの「大事にしていること」にあるので、ここでは繰り返さずリンクにする。
+import Arrow from "@/components/site/Arrow.astro";
+import Fx from "@/components/site/Fx.astro";
+import NumberedRows from "@/components/site/NumberedRows.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import { VALUES } from "@/data/careers";
+---
+
+<section class="sec sec--ink vl grid" id="values" aria-labelledby="h-values">
+  <SectionHead no="01" en="Values" title="働き方" id="h-values" />
+  <div class="body">
+    <p class="vl__head t-d3">
+      <span class="vl__ln">速く書けるから</span>
+      <span class="vl__ln">
+        <Fx text="確かめる作業に|時間を使う" delay={320} />
+      </span>
+    </p>
+
+    <div class="vl__rows">
+      <NumberedRows items={VALUES} label="働き方" />
+    </div>
+
+    <a class="btn btn--lg vl__more" href="/about#h-purpose">
+      会社が大事にしていることを読む
+      <Arrow />
+    </a>
+  </div>
+</section>
+
+<style>
+  .vl {
+    --sec-bg: var(--ink);
+  }
+
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .vl__head {
+    --st: 52ms;
+  }
+
+  /* 読点の後ろで折り返す。入りきらない幅では、句の切れ目でさらに折り返す */
+  .vl__ln {
+    display: inline-block;
+  }
+
+  .vl__rows {
+    margin-top: clamp(56px, 7vw, 96px);
+  }
+
+  /* 墨の面では、線のボタンの文字を紙の色にする */
+  .vl__more {
+    margin-top: clamp(32px, 4vw, 48px);
+    color: var(--paper);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

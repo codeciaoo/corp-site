@@ -1,0 +1,69 @@
+---
+// 図の工程 1 つぶんの文字。どの形の図でも同じ組み方にする。
+//   番号 / tag（等幅、補足の色）→ label（墨の太字）→ note（補足の色。詳細の図だけ）
+// 状況（塗り／線の意味）は、読み上げだけに添える。
+import Phrases from "@/components/site/Phrases.astro";
+
+interface Props {
+  no: string;
+  tag: string;
+  label: string;
+  note?: string;
+  /** 読み上げ用。凡例の言葉（「完了」「検討中」など） */
+  state?: string;
+  /** lg: 詳細（大きい） ／ sm: 一覧 */
+  size: "lg" | "sm";
+}
+
+const { no, tag, label, note, state, size } = Astro.props;
+---
+
+<p class="sx__k mono">
+  <span class="sx__no" aria-hidden="true">{no}</span>
+  <span aria-hidden="true">/</span>
+  {tag}
+</p>
+<p class:list={["sx__l", `sx__l--${size}`]}>
+  <Phrases text={label} />
+  {state && <span class="sr">（{state}）</span>}
+</p>
+{note && <p class="sx__n">{note}</p>}
+
+<style>
+  .sx__k {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6em;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .sx__no {
+    color: var(--ink);
+  }
+
+  .sx__l {
+    margin-top: 6px;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    text-wrap: balance;
+  }
+
+  .sx__l--lg {
+    font-size: var(--fs-h3);
+  }
+
+  .sx__l--sm {
+    font-size: var(--fs-h4);
+  }
+
+  .sx__n {
+    margin-top: 6px;
+    max-width: 22em;
+    font-size: var(--fs-small);
+    line-height: 1.75;
+    color: var(--ink-2);
+  }
+</style>

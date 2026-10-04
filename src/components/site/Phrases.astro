@@ -1,0 +1,20 @@
+---
+// 長い見出しを、句のかたまりで折り返す。text の `|` が「ここで折り返してよい」の印。
+// かたまりの途中では、なるべく折り返さない（入りきらないときだけ折り返す）。
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+const parts = text.split("|");
+---
+
+{parts.map(part => <span class="phr">{part}</span>)}
+
+<style>
+  .phr {
+    display: inline-block;
+    /* かたまりが行より長いときは、行の幅で折り返す（はみ出さない） */
+    max-width: 100%;
+  }
+</style>

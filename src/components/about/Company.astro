@@ -1,0 +1,141 @@
+---
+// 04 / 会社概要。
+// 事業内容は、トップページの「できること」と同じ 4 項目（クラウド基盤は、移行の項目に含める）。
+import SectionHead from "@/components/site/SectionHead.astro";
+import { COMPANY } from "@/data/site";
+
+const BUSINESS: string[] = [
+  "業務システム・SaaSの開発",
+  "生成AIの組み込み",
+  "システムの移行・刷新（クラウド基盤の設計・構築・運用を含む）",
+  "AI駆動開発の導入支援",
+];
+
+interface Row {
+  label: string;
+  value: string;
+  /** 空白で区切ったかたまりごとに折り返す（郵便番号、住所、建物名） */
+  chunks?: boolean;
+}
+
+const ROWS: Row[] = [
+  { label: "社名", value: `${COMPANY.name}（読みは${COMPANY.kana}）` },
+  {
+    label: "所在地",
+    value: `${COMPANY.postalCode} ${COMPANY.street} ${COMPANY.building}`,
+    chunks: true,
+  },
+  { label: "設立", value: COMPANY.founded },
+  { label: "資本金", value: COMPANY.capital },
+  { label: "代表", value: COMPANY.representative },
+  { label: "体制", value: COMPANY.staff },
+];
+---
+
+<section class="sec sec--tint grid" id="company" aria-labelledby="h-company">
+  <SectionHead no="04" en="Company" title="会社概要" id="h-company" />
+  <div class="body">
+    <dl class="tb">
+      {
+        ROWS.map(row => (
+          <div class="tb__row">
+            <dt>{row.label}</dt>
+            {row.chunks ? (
+              <dd>
+                {row.value.split(" ").map(chunk => (
+                  <>
+                    <span class="tb__chunk">{chunk}</span>{" "}
+                  </>
+                ))}
+              </dd>
+            ) : (
+              <dd>{row.value}</dd>
+            )}
+          </div>
+        ))
+      }
+      <div class="tb__row">
+        <dt>事業内容</dt>
+        <dd>
+          <ul class="dots">
+            {BUSINESS.map(item => <li>{item}</li>)}
+          </ul>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .tb {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    border-top: 1px solid var(--ink);
+  }
+
+  .tb__row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    padding: 22px 0 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 値は 12 列の 8 列目から（代表メッセージの本文、ページ冒頭のリードと同じ位置） */
+  .tb__row dt {
+    grid-column: 1 / span 4;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-label);
+    color: var(--ink-2);
+  }
+
+  .tb__row dd {
+    grid-column: 5 / -1;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .tb__chunk {
+    display: inline-block;
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+
+    .tb__row dt {
+      grid-column: 1 / span 3;
+    }
+
+    .tb__row dd {
+      grid-column: 4 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .tb__row {
+      padding: 16px 0 18px;
+    }
+
+    .tb__row dt,
+    .tb__row dd {
+      grid-column: 1 / -1;
+    }
+
+    .tb__row dt {
+      font-size: var(--fs-caption);
+    }
+  }
+</style>

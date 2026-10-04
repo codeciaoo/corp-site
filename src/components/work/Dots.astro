@@ -1,0 +1,114 @@
+---
+// 数を点で描く図。点 1 つが 1 件。まだ動いていないものなので、点は線のまま（塗らない）。
+// 画面に入ると、下の行から順に点が出る。詳細のページだけに置く（一覧には置かない）。
+import type { CollectionEntry } from "astro:content";
+
+type DotsData = NonNullable<CollectionEntry<"projects">["data"]["dots"]>;
+
+interface Props {
+  data: DotsData;
+}
+
+const { data } = Astro.props;
+const cells = Array.from({ length: data.cols * data.rows }, (_, index) =>
+  Math.floor(index / data.cols)
+);
+---
+
+<figure
+  class:list={["dt", "fx"]}
+  data-pre="hidden"
+  data-post="solid"
+  data-state="solid"
+  data-reveal
+>
+  <figcaption class="dt__cap mono">
+    <span>Fig. / {data.caption}</span>
+    <span class="dt__legend">
+      <i class="dt__ic" aria-hidden="true"></i>
+      {data.legend}
+    </span>
+  </figcaption>
+  <div
+    class="dt__grid"
+    role="img"
+    aria-label={data.alt}
+    style={`--n:${data.cols}`}
+  >
+    {cells.map(row => <i style={`--r:${data.rows - 1 - row}`} />)}
+  </div>
+</figure>
+
+<style>
+  /* 置き場所は 12 列の 4〜12 列目（9 列ぶん）。題は 4 列目から、点は 8 列目から */
+  .dt {
+    display: grid;
+    grid-template-columns:
+      calc((100% - 8 * var(--g)) / 9 * 4 + 4 * var(--g))
+      minmax(0, 1fr);
+    align-items: start;
+    margin: 0;
+    padding: 22px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .dt__cap {
+    display: grid;
+    gap: 8px;
+    padding-right: var(--g);
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .dt__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dt__ic {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .dt__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: clamp(3.5px, 0.6vw, 8px);
+  }
+
+  .dt__grid i {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    transition: transform 0.5s var(--ease) calc(var(--r) * 55ms);
+  }
+
+  :global(html.js:not(.rm)) .dt:not(.is-live) .dt__grid i,
+  .dt[data-state="hidden"] .dt__grid i {
+    transform: scale(0);
+  }
+
+  @media (max-width: 1199px) {
+    .dt {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 16px;
+      padding-top: 18px;
+    }
+
+    .dt__cap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px 20px;
+      padding-right: 0;
+    }
+
+    .dt__grid {
+      max-width: 546px;
+    }
+  }
+</style>

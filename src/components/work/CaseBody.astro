@@ -1,0 +1,503 @@
+---
+// 実績の詳細の本体。規模の数字、点の図、目次、本文（Markdown）、確かめたこと／まだ確かめていないこと、進め方、技術のタグ。
+// 進め方の結果（帯の図）は、根拠の行（NumberedRows の行）の中に置く。
+// 概要の表（業界・期間・役割）は冒頭（CaseHead）、工程の図と帯の図は、その下の 12 列の節（ページ側）にある。
+// 節の見出しは、どれも同じ大きさ（--fs-h3）。「これまで」は細い字と線の丸、「これから」は太い字と塗りの丸で組む。
+// 目次は CaseToc（広い画面は左の列に追従。899px 以下はページ側が冒頭の表の直後に置く）。目次の点は、読んだ章まで塗る。
+import Arrow from "@/components/site/Arrow.astro";
+import Figures from "@/components/site/Figures.astro";
+import NumberedRows from "@/components/site/NumberedRows.astro";
+import { withBreaks } from "./breaks";
+import CaseToc from "./CaseToc.astro";
+import { CHECKED, chaptersOf, NOT_YET, PROCESS } from "./chapters";
+import Dots from "./Dots.astro";
+import type { MarkdownHeading } from "astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  data: CollectionEntry<"projects">["data"];
+  headings: MarkdownHeading[];
+}
+
+const { data, headings } = Astro.props;
+
+const steps = (data.process ?? []).map(step => ({
+  title: withBreaks(step.title),
+  body: step.body,
+  reuse: step.reuse,
+  bars: step.bars,
+}));
+const chapters = chaptersOf(data, headings);
+---
+
+<section class="sec sec--tight cb grid">
+  <CaseToc chapters={chapters} variant="rail" />
+
+  <div class="cb__main">
+    <h2 class="sr">概要</h2>
+    {data.figures && <Figures items={data.figures} />}
+    {data.dots && <Dots data={data.dots} />}
+
+    <div class="wk-prose">
+      <slot />
+    </div>
+
+    {
+      data.checked && (
+        <div class="cb__chk">
+          <div class="cb__chk-col">
+            <h2 class="cb__h cb__chk-h is-done" id={CHECKED}>
+              {CHECKED}
+            </h2>
+            <ul class="dots">
+              {data.checked.done.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="cb__chk-col">
+            <h2 class="cb__h cb__chk-h">{NOT_YET}</h2>
+            <ul class="dots dots--line">
+              {data.checked.notYet.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      steps.length > 0 && (
+        <div class="cb__proc">
+          <h2 class="cb__h" id={PROCESS}>
+            {PROCESS}
+          </h2>
+          <NumberedRows items={steps} label={PROCESS} />
+          <a class="cb__more" href="/approach#flow">
+            <span class="cb__more-t">共通のつくり方を読む</span>
+            <span class="cb__more-k mono" aria-hidden="true">
+              Approach / つくり方
+            </span>
+            <span class="cb__more-go" aria-hidden="true">
+              <Arrow />
+            </span>
+          </a>
+        </div>
+      )
+    }
+
+    <div class="cb__tech">
+      <h2 class="cb__h">技術</h2>
+      <ul class="tags">
+        {data.tech_stacks.map(tech => <li>{tech}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb {
+    --wk-gap: clamp(48px, 5.6vw, 84px);
+    --wk-pad: clamp(22px, 2.3vw, 32px);
+    /* 12 列の 4〜12 列目（9 列ぶん）のうち、左の 4 列ぶんの幅。右の列は 8 列目から始まる */
+    --wk-left: calc((100% - 8 * var(--g)) / 9 * 4 + 4 * var(--g));
+  }
+
+  .cb__main {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .wk-prose {
+    margin-top: var(--wk-gap);
+  }
+
+  /* 数字と点の図が無い案件は、本文から始める（目次と上端をそろえる） */
+  .cb__main > .sr + .wk-prose {
+    margin-top: 0;
+  }
+
+  /* 節の見出し（確かめたこと、進め方、技術）。本文（Markdown）の見出しと同じ大きさ */
+  .cb__h {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    scroll-margin-top: calc(var(--hd) + 24px);
+  }
+
+  /* 確かめたこと（塗りの丸）と、まだ確かめていないこと（線の丸）。2 列で、12 列の 4 列目と 8 列目から始める */
+  .cb__chk {
+    margin-top: var(--wk-gap);
+    padding-top: var(--wk-pad);
+    border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: var(--wk-left) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .cb__chk-col:first-child {
+    padding-right: var(--g);
+  }
+
+  .cb__chk-h {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: var(--fw-regular);
+    color: var(--ink-2);
+  }
+
+  .cb__chk-h::before {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .cb__chk-h.is-done {
+    font-weight: var(--fw-bold);
+    color: var(--teal-deep);
+  }
+
+  .cb__chk-h.is-done::before {
+    background: var(--teal);
+  }
+
+  .cb__chk .dots {
+    margin-top: 16px;
+    max-width: 32em;
+  }
+
+  /* 進め方。見出しの下に、番号付きの行（NumberedRows）。番号と見出しの距離は 64px */
+  .cb__proc {
+    margin-top: var(--wk-gap);
+    padding-top: var(--wk-pad);
+    border-top: 1px solid var(--ink);
+  }
+
+  .cb__proc :global(.nr) {
+    margin-top: var(--wk-pad);
+    border-top-color: var(--rule);
+  }
+
+  /* 共通の進め方へのリンク。番号付きの行と同じ列に置く（題は見出しの列、丸い矢印は行の右端） */
+  .cb__more {
+    display: grid;
+    grid-template-columns:
+      40px minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: var(--g);
+    align-items: center;
+    min-height: 44px;
+    padding: clamp(16px, 1.8vw, 24px) 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+  }
+
+  .cb__more-t {
+    grid-column: 2;
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .cb__more-k {
+    grid-column: 3;
+    grid-row: 1;
+    color: var(--ink-2);
+  }
+
+  .cb__more-go {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    overflow: hidden;
+  }
+
+  .cb__more-go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .cb__more-go :global(.arw) {
+    width: 14px;
+    height: 10px;
+    transition: transform 0.45s var(--ease);
+  }
+
+  /* 押している間も、線の丸に塗りが満ちる */
+  .cb__more:focus-visible .cb__more-go::before,
+  .cb__more:active .cb__more-go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .cb__more:active .cb__more-go::before {
+    transition-duration: 0.18s;
+  }
+
+  .cb__more:focus-visible .cb__more-go :global(.arw),
+  .cb__more:active .cb__more-go :global(.arw) {
+    transform: translateX(3px);
+  }
+
+  @media (hover: hover) {
+    .cb__more:hover .cb__more-go::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .cb__more:hover .cb__more-go :global(.arw) {
+      transform: translateX(3px);
+    }
+  }
+
+  /* 技術のタグ。本文と同じ 2 列（左に見出し、右に中身）で組む。右の列は 12 列の 8 列目から */
+  .cb__tech {
+    margin-top: var(--wk-gap);
+    padding-top: var(--wk-pad);
+    border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: var(--wk-left) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .cb__tech .tags {
+    padding-top: 5px;
+  }
+
+  @media (max-width: 1199px) {
+    .cb__tech {
+      display: block;
+    }
+
+    .cb__tech .tags {
+      padding-top: 0;
+      margin-top: 14px;
+    }
+
+    /* 2 列を等分にする */
+    .cb__chk {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--g);
+    }
+
+    .cb__chk-col:first-child {
+      padding-right: 0;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    /* Figures の 2 列組みで、左の列の字下げを消す */
+    .cb__main :global(.fg .fg__item:nth-child(2n + 1)) {
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .cb__main {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cb__chk {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 28px;
+    }
+
+    .cb__chk .dots {
+      margin-top: 12px;
+    }
+
+    /* 題と丸い矢印を 1 行に。欧文のラベルは省く */
+    .cb__more {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 12px;
+    }
+
+    .cb__more-t {
+      grid-column: 1;
+    }
+
+    .cb__more-k {
+      display: none;
+    }
+
+    .cb__more-go {
+      grid-column: 2;
+    }
+  }
+</style>
+
+<script>
+  // 目次: いま読んでいる章の行に印を付け、読んだ章までの点を塗る
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-toc] a")
+  );
+  const chapters = links.map(link =>
+    document.getElementById(decodeURIComponent(link.hash.slice(1)))
+  );
+
+  const mark = (): void => {
+    const line = innerHeight * 0.4;
+    let current = -1;
+    chapters.forEach((chapter, index) => {
+      if (chapter && chapter.getBoundingClientRect().top <= line) {
+        current = index;
+      }
+    });
+    links.forEach((link, index) => {
+      link.classList.toggle("is-read", index <= current);
+      if (index === current) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
+  if (links.length > 0) {
+    let waiting = false;
+    addEventListener(
+      "scroll",
+      () => {
+        if (waiting) return;
+        waiting = true;
+        requestAnimationFrame(() => {
+          waiting = false;
+          mark();
+        });
+      },
+      { passive: true }
+    );
+    mark();
+  }
+</script>
+
+<style is:global>
+  /*
+   * 本文（Markdown）。左の列に見出し、右の列に文章を置く 2 列の表として組む。
+   * 置き場所は 12 列の 4〜12 列目（9 列ぶん）。右の列は 8 列目から始める。
+   * 見出しの大きさは、どの節も同じ（--fs-h3）。
+   * 「これまで」は細い字に線の丸、「これから」は太い字に塗りの丸を付けて、長い文章の中でも線と塗りの言語を続ける。
+   */
+  .wk-prose {
+    display: grid;
+    grid-template-columns:
+      calc((100% - 8 * var(--g)) / 9 * 4 + 4 * var(--g))
+      minmax(0, 1fr);
+    align-items: start;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .wk-prose > * {
+    grid-column: 2;
+    margin-top: 1.1em;
+  }
+
+  .wk-prose a {
+    color: var(--teal-deep);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+
+  /* ── 章の見出し ── */
+  .wk-prose > h2 {
+    grid-column: 1;
+    margin-top: var(--wk-gap);
+    padding: var(--wk-pad) var(--g) 0 0;
+    border-top: 1px solid var(--ink);
+    font-feature-settings: "palt";
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    scroll-margin-top: calc(var(--hd) + 24px);
+  }
+
+  .wk-prose > h2[id="これまで"],
+  .wk-prose > h2[id="これから"] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wk-prose > h2[id="これまで"]::before,
+  .wk-prose > h2[id="これから"]::before {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  /* 役目を終えるもの。細い字と補足の色で、控えめに置く（線の文字は 48px 以上にだけ使う） */
+  .wk-prose > h2[id="これまで"] {
+    font-weight: var(--fw-regular);
+    color: var(--ink-2);
+  }
+
+  .wk-prose > h2[id="これから"] {
+    color: var(--teal-deep);
+  }
+
+  .wk-prose > h2[id="これから"]::before {
+    background: var(--teal);
+  }
+
+  /* 見出しの右の文章。見出しと同じ高さに罫を引き、1 行目の並びをそろえる */
+  .wk-prose > h2 + * {
+    margin-top: var(--wk-gap);
+    padding-top: calc(
+      var(--wk-pad) +
+        (var(--fs-h3) * var(--lh-heading) - var(--fs-body) * var(--lh-body)) / 2
+    );
+    border-top: 1px solid var(--ink);
+  }
+
+  .wk-prose > h2:first-child,
+  .wk-prose > h2:first-child + * {
+    margin-top: 0;
+  }
+
+  @media (max-width: 1199px) {
+    /* 1 列に戻す。罫は幅いっぱい、文章は読みやすい長さで止める */
+    .wk-prose {
+      display: block;
+    }
+
+    .wk-prose > * {
+      max-width: 40em;
+    }
+
+    .wk-prose > h2 {
+      max-width: none;
+      padding-right: 0;
+    }
+
+    .wk-prose > h2 + *,
+    .wk-prose > h2:first-child + * {
+      margin-top: 1em;
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
+</style>

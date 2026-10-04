@@ -1,0 +1,72 @@
+---
+// 大きい言い切り。句ごとに折り返す。既定は墨の太字。
+// 線と塗りは、言葉がその意味を持つときだけ使う（線 = まだ確かめていない設計、塗り = 確かめた事実）。
+// 否定する言葉、強調したい言葉には使わない（design/SYSTEM.md「線と塗りの意味」）。
+import type { SayPhrase, SayRun } from "@/data/approach";
+import { plainText, splitFxHtml } from "@/lib/fx";
+
+interface Props {
+  phrases: SayPhrase[];
+  /** l（--fs-d2）は 1 ページに 1 回、主役のセクションだけに使う。ほかは m（--fs-d3） */
+  size?: "m" | "l";
+  class?: string;
+}
+
+const { phrases, size = "m", class: className } = Astro.props;
+
+// 大きい言い切り（l）の線は、ロゴの字形と同じ色にする（.fx--display）
+const fxClass = size === "l" ? "fx fx--display" : "fx";
+
+const runHtml = (run: SayRun): string => {
+  const inner = splitFxHtml(run.text);
+  const delay = run.delay ? ` style="--d0:${run.delay}ms"` : "";
+  switch (run.as) {
+    case "hello":
+      return `<span class="${fxClass}" data-pre="hidden" data-post="solid" data-state="solid"${delay}>${inner}</span>`;
+    case "goodbye":
+      return `<span class="${fxClass}" data-pre="solid" data-post="gone" data-state="gone"${delay}>${inner}</span>`;
+    default:
+      return `<span class="say__ink">${inner}</span>`;
+  }
+};
+
+const html = phrases
+  .map(
+    phrase =>
+      `${phrase.br ? "<br>" : "<wbr>"}<span class="say__ph">${phrase.runs.map(runHtml).join("")}</span>`
+  )
+  .join("");
+
+const label = plainText(
+  phrases.flatMap(phrase => phrase.runs.map(run => run.text)).join("")
+);
+---
+
+<p class:list={["say", `say--${size}`, className]} data-reveal>
+  <span class="sr">{label}</span>
+  <span aria-hidden="true" set:html={html} />
+</p>
+
+<style>
+  .say {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.01em;
+  }
+
+  .say--m {
+    font-size: var(--fs-d3);
+    line-height: 1.42;
+  }
+
+  .say--l {
+    font-size: var(--fs-d2);
+    line-height: 1.24;
+    --st: 60ms;
+  }
+
+  .say :global(.say__ph) {
+    display: inline-block;
+    white-space: nowrap;
+  }
+</style>

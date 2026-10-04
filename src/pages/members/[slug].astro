@@ -1,49 +1,71 @@
 ---
+// メンバーのポートフォリオ。冒頭（氏名、写真、目次）、スキル、経歴と資格、担当したプロジェクト、自己PR。
+// 氏名、役割、写真は src/data/members.ts、本文は src/data/portfolios.ts から引く。
+// URL を直接渡して見てもらうページなので、ほかのメンバーへの導線は置かない。
+// 一覧へ戻るリンクは、冒頭のラベルの「メンバー」だけ。
+import Career from "@/components/portfolio/Career.astro";
+import ProfileHead from "@/components/portfolio/ProfileHead.astro";
+import Projects from "@/components/portfolio/Projects.astro";
+import SelfPr from "@/components/portfolio/SelfPr.astro";
+import Skills from "@/components/portfolio/Skills.astro";
+import Cta from "@/components/site/Cta.astro";
+import { MEMBERS } from "@/data/members";
+import { PORTFOLIOS } from "@/data/portfolios";
+import Base from "@/layouts/Base.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+
 export const prerender = true;
-import Layout from "@/layouts/Layout.astro";
-import StandaloneLayout from "@/layouts/StandaloneLayout.astro";
-import Section from "@/components/shared/Section";
-import { memberPortfolios, getPortfolioBySlug, getAllMemberSlugs } from "@/components/pages/portfolio/data";
-import MemberPortfolio from "@/components/pages/portfolio/MemberPortfolio";
 
-// 静的生成用のパス定義
-export function getStaticPaths() {
-  return memberPortfolios.map(member => ({
-    params: { slug: member.slug },
-    props: { member },
-  }));
-}
+export const getStaticPaths = (() =>
+  MEMBERS.flatMap(member => {
+    const portfolio = PORTFOLIOS.find(item => item.slug === member.slug);
+    return portfolio
+      ? [{ params: { slug: member.slug }, props: { member, portfolio } }]
+      : [];
+  })) satisfies GetStaticPaths;
 
-// プロパティからメンバーデータを取得
-const { member } = Astro.props;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-// ページタイトル
-const pageTitle = `${member.name}のポートフォリオ`;
+const { member, portfolio } = Astro.props;
 
-// 環境変数でスタンドアロンモードを制御
-// ビルド時に STANDALONE=true を設定することでヘッダー/フッターなしになります
-const isStandalone = import.meta.env.STANDALONE === "true";
+// 単体で渡すページ。渡した相手にほかのページを見せないよう、ヘッダー、フッター、
+// 一覧へ戻るリンク、末尾の呼びかけを出さない。
+// ビルドのときに STANDALONE=true を付けると、田原のページだけがこの形になる。
+// Astro は環境変数の "true" を、文字列ではなく真偽値の true に置き換える。
+// そのため "true" とそのまま比べると、いつも偽になる。文字列に直してから比べる
+const bare =
+  String(import.meta.env.STANDALONE) === "true" && member.slug === "tahara";
 
-// URLパラメータでスタンドアロンモードを制御（開発用）
-// ?standalone=true でヘッダー/フッターなしになります
-const urlParams = new URL(Astro.request.url).searchParams;
-const standaloneParam = urlParams.get('standalone');
-const isStandaloneFromUrl = standaloneParam === 'true';
-
-// Taharaの場合かつスタンドアロンモードが有効な場合に特殊レイアウトを使用
-const useStandaloneLayout = (member.slug === 'tahara' && (isStandalone || isStandaloneFromUrl));
+// 番号は、各セクションの見出し（SectionHead）の番号と同じ
+const chapters = [
+  { id: "skills", no: "01", label: "スキル" },
+  { id: "career", no: "02", label: "経歴と資格" },
+  { id: "projects", no: "03", label: "担当したプロジェクト" },
+  { id: "profile", no: "04", label: "自己PR" },
+];
 ---
 
-{useStandaloneLayout ? (
-  <StandaloneLayout title={pageTitle}>
-    <Section bg="light">
-      <MemberPortfolio member={member} client:load />
-    </Section>
-  </StandaloneLayout>
-) : (
-  <Layout title={pageTitle}>
-    <Section bg="light">
-      <MemberPortfolio member={member} client:load />
-    </Section>
-  </Layout>
-)}
+<Base
+  bare={bare}
+  title={`${member.name}のポートフォリオ`}
+  description={`${member.name}のスキル、経歴と資格、担当したプロジェクトを紹介します。`}
+>
+  <article>
+    <ProfileHead
+      member={member}
+      lead={portfolio.lead}
+      chapters={chapters}
+      bare={bare}
+    />
+    <Skills groups={portfolio.skills} expanded={bare} />
+    <Career
+      career={portfolio.career}
+      education={portfolio.education}
+      certifications={portfolio.certifications}
+    />
+    <Projects projects={portfolio.projects} expanded={bare} />
+    <SelfPr paragraphs={portfolio.pr} name={member.name} role={member.role} />
+  </article>
+
+  {!bare && <Cta lead={`${member.name}への相談も、フォームから送ってください。`} />}
+</Base>

@@ -1,0 +1,233 @@
+---
+// 「これまで → これから」の 1 組。縦に積む（これまで → 下向きの矢印 → これから）。
+// これまで: 役目を終えるもの。lg の 48px 以上で組める幅だけ、線の文字にする（塗りが上へ抜けて、線が残る）。
+//           md（実績の一覧の 2 件目から）は、どの幅でも細い字と補足の色で控えめに置く（BeforeAfterList と同じ）。
+//           「役員に頼んで手で発行するAWSアカウント」のような漢字の多い句は、線の文字では読みにくいため。
+// これから: 線に、下から塗りが満ちる（来る）。
+// 大きさ: lg は --fs-d2（一覧の 1 件目と、詳細の墨の帯）、md は --fs-d3（一覧の 2 件目から）。
+//   線の文字にするのは、lg の 900px 以上（--fs-d2 が 48px 以上）だけ
+import Fx from "@/components/site/Fx.astro";
+import Phrases from "@/components/site/Phrases.astro";
+import { withBreaks } from "./breaks";
+
+interface Props {
+  before: string;
+  after: string;
+  size?: "lg" | "md";
+  /** ホバー・フォーカスでもう一度動かす */
+  hover?: boolean;
+}
+
+const { before, after, size = "md", hover = false } = Astro.props;
+const beforeText = withBreaks(before);
+---
+
+<div
+  class:list={["sf", `sf--${size}`]}
+  data-reveal
+  data-hover={hover ? "" : undefined}
+>
+  <p class="sf__b">
+    <span class="sf__k mono">
+      <i class="sf__ic" aria-hidden="true"></i>
+      <span aria-hidden="true">Goodbye /</span>
+      これまで
+    </span>
+    {
+      size === "lg" && (
+        <span class="sf__line">
+          <Fx text={beforeText} mode="goodbye" reveal={false} />
+        </span>
+      )
+    }
+    <span class="sf__plain"><Phrases text={beforeText} /></span>
+  </p>
+  <span
+    class="sf__arr"
+    data-pre="hidden"
+    data-post="solid"
+    data-state="solid"
+    aria-hidden="true"
+  >
+    <i></i>
+  </span>
+  <span class="sr">から</span>
+  <p class="sf__a">
+    <span class="sf__k mono">
+      <i class="sf__ic is-on" aria-hidden="true"></i>
+      <span aria-hidden="true">Hello /</span>
+      これから
+    </span>
+    <Fx text={withBreaks(after)} mode="hello" reveal={false} delay={420} />
+  </p>
+</div>
+
+<style>
+  .sf {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-display);
+  }
+
+  .sf :global(.fx) {
+    display: block;
+    text-wrap: balance;
+  }
+
+  /* 句が幅に収まらないときだけ、句の中でも折り返す（横あふれを出さない） */
+  .sf :global(.fx .ph) {
+    white-space: normal;
+  }
+
+  .sf__k {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-2);
+    text-transform: none;
+  }
+
+  .sf__ic {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+  }
+
+  .sf__ic.is-on {
+    background: var(--teal);
+  }
+
+  /* 48px 未満の「これまで」。細い字、補足の色、ひとまわり小さく（BeforeAfterList と同じ） */
+  .sf__plain {
+    display: none;
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--ink-2);
+    text-wrap: balance;
+  }
+
+  .sf__line {
+    display: block;
+  }
+
+  /* 下向きの矢印: 線が伸びて、先に山形が付く。線は山形の先まで届かせる */
+  .sf__arr {
+    position: relative;
+    display: block;
+    width: 14px;
+    margin-left: -2.5px;
+  }
+
+  .sf__arr i {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 2px;
+    width: 1.5px;
+    margin-left: -0.75px;
+    background: currentColor;
+    transform-origin: 50% 0;
+    transition: transform 0.7s var(--ease) 120ms;
+  }
+
+  .sf__arr::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 1px;
+    width: 9px;
+    height: 9px;
+    border-top: 1.5px solid currentColor;
+    border-right: 1.5px solid currentColor;
+    transform: translate(-50%, 0) rotate(135deg) scale(1);
+    transition: transform 0.35s var(--ease) 0.7s;
+  }
+
+  :global(html.js:not(.rm)) .sf__arr:not(.is-live) i,
+  .sf__arr[data-state="hidden"] i {
+    transform: scaleY(0);
+  }
+
+  :global(html.js:not(.rm)) .sf__arr:not(.is-live)::after,
+  .sf__arr[data-state="hidden"]::after {
+    transform: translate(-50%, 0) rotate(135deg) scale(0);
+  }
+
+  /* ── lg ── */
+  .sf--lg {
+    font-size: var(--fs-d2);
+    line-height: 1.24;
+    --st: 34ms;
+  }
+
+  .sf--lg .sf__k {
+    margin-bottom: clamp(6px, 0.9vw, 14px);
+  }
+
+  .sf--lg .sf__plain {
+    font-size: var(--fs-h3);
+  }
+
+  .sf--lg .sf__arr {
+    height: clamp(34px, 4.4vw, 64px);
+    margin-block: clamp(14px, 1.7vw, 24px) clamp(10px, 1.2vw, 16px);
+  }
+
+  /* --fs-d2 が 48px を下回る幅。「これまで」は線の文字にしない */
+  @media (max-width: 899px) {
+    .sf--lg .sf__line {
+      display: none;
+    }
+
+    .sf--lg .sf__plain {
+      display: block;
+    }
+  }
+
+  /* ── md ── */
+  .sf--md {
+    font-size: var(--fs-d3);
+    line-height: 1.34;
+    --st: 40ms;
+  }
+
+  .sf--md .sf__k {
+    margin-bottom: 8px;
+  }
+
+  /* 「これまで」は、どの幅でも細い字（線の文字にしない） */
+  .sf--md .sf__plain {
+    display: block;
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+  }
+
+  .sf--md .sf__arr {
+    height: 36px;
+    margin-block: 16px 12px;
+  }
+
+  @media (max-width: 767px) {
+    /* 24px 前後の字。塗りは濃いティール、線は少し太くして、細い画面でも読めるようにする */
+    .sf--md {
+      font-size: var(--fs-h2);
+      line-height: 1.4;
+    }
+
+    .sf--md .sf__plain {
+      font-size: var(--fs-h3);
+    }
+
+    .sf--md .sf__arr {
+      height: 26px;
+      margin-block: 10px 8px;
+    }
+
+    .sf--md :global(.fx) {
+      --fill: var(--teal-deep);
+    }
+  }
+</style>

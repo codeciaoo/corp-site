@@ -1,0 +1,227 @@
+---
+// 報酬の帯。職種の詳細ページの「条件」の節の冒頭に、12 列を使って置く。
+// 金額の数字を画面の主役の大きさ（--fs-num、64〜96px）で出す。値は募集要項の元の 1 項目のまま
+// （lead + value + tail をつなぐと元の文になる。読み上げも元の文の順）。
+// 「〜」で範囲を示す値は、「〜」の後ろで改行して 2 行にする（下限と上限を縦にそろえる）。
+// 列の位置: 見出しは 1 列目から 12 列いっぱい。1 つ目の値は 1 列目、2 つ目の値か添え書きは 8 列目から。
+// 1023px 以下で値が 2 つのときと、767px 以下では、縦に積む。
+import type { Pay } from "@/data/careers";
+
+interface Props {
+  pay: Pay;
+}
+
+const { pay } = Astro.props;
+
+interface Token {
+  text: string;
+  /** 数字（桁区切りを含む） */
+  num: boolean;
+}
+
+/** 値を行（「〜」の後ろで改行）と、数字・単位のかたまりに分ける */
+const linesOf = (value: string): Token[][] =>
+  value.split(/(?<=〜)/).map(line =>
+    line
+      .split(/([0-9][0-9,]*)/)
+      .filter(Boolean)
+      .map(text => ({ text, num: /^[0-9]/.test(text) })),
+  );
+
+const single = pay.figures.length === 1;
+---
+
+<div class:list={["pay", { "pay--single": single }]}>
+  <h3 class="pay__term t-h4">
+    <span class="dot is-on" aria-hidden="true"></span>
+    {pay.term}
+  </h3>
+  {
+    pay.figures.map(figure => (
+      <p class="pay__fig">
+        <span class="pay__lead">{figure.lead}</span>
+        <span class="pay__val">
+          {linesOf(figure.value).map(line => (
+            <span class="pay__line">{line.map(token => <span class={token.num ? "pay__num" : "pay__unit"}>{token.text}</span>)}</span>
+          ))}
+        </span>
+        {figure.tail && <span class="pay__tail">{figure.tail}</span>}
+      </p>
+    ))
+  }
+  <ul class="pay__notes">
+    {pay.notes.map(note => <li>{note}</li>)}
+  </ul>
+</div>
+
+<style>
+  .pay {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+    align-items: start;
+  }
+
+  /* 見出しは、罫線の一覧（RuledList）の見出しと同じ型を 12 列いっぱいに引く */
+  .pay__term {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .pay__fig {
+    grid-column: 1 / span 7;
+    display: grid;
+    justify-items: start;
+    padding: clamp(24px, 2.6vw, 36px) 0 clamp(28px, 3vw, 40px);
+    min-width: 0;
+  }
+
+  .pay__fig + .pay__fig {
+    grid-column: 8 / -1;
+    position: relative;
+  }
+
+  /* 値の間の線は、列の間（溝のまん中）に引く */
+  .pay__fig + .pay__fig::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--g) / -2);
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .pay__lead {
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  /* 和欧の間のアキは、ブラウザの自動のアキ（text-autospace）を使わず、単位の margin で付ける
+     （数字と単位で字の大きさが違い、要素の境目のアキの付き方が Chrome と Safari で違うため） */
+  .pay__val {
+    display: grid;
+    margin-top: clamp(12px, 1.4vw, 18px);
+    font-weight: var(--fw-bold);
+    text-autospace: no-autospace;
+  }
+
+  .pay__line {
+    white-space: nowrap;
+  }
+
+  /* 数字と単位は 1 つずつ折り返さない箱にする（大きさの違う字を同じ行に並べる。改行は「〜」の後ろだけ） */
+  .pay__num,
+  .pay__unit {
+    display: inline-block;
+  }
+
+  .pay__num {
+    font-size: var(--fs-num);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+
+  .pay__unit {
+    margin-left: 0.14em;
+    font-feature-settings: "palt";
+    font-size: var(--fs-h2);
+    line-height: 1;
+  }
+
+  /* 行頭の「（」の前の空きを詰めて、左端を値にそろえる */
+  .pay__tail {
+    font-feature-settings: "palt";
+    margin-top: 10px;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--ink-2);
+  }
+
+  /* 添え書き。罫線の一覧（RuledList）の行と同じ型。値が 2 つのときは、値の下に 12 列いっぱい */
+  .pay__notes {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pay__notes li {
+    padding: 13px 0 14px;
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-body);
+    line-height: var(--lh-list);
+  }
+
+  /* 値が 1 つのときは、添え書きを 8 列目から、値の横に置く */
+  .pay--single .pay__notes {
+    grid-column: 8 / -1;
+    margin-top: clamp(24px, 2.6vw, 36px);
+    border-top: 0;
+  }
+
+  .pay--single .pay__notes li:first-child {
+    padding-top: 0;
+  }
+
+  /* 値と添え書きの間の線も、値が 2 つのときと同じく列の間に引く */
+  .pay--single .pay__notes {
+    position: relative;
+    align-self: stretch;
+  }
+
+  .pay--single .pay__notes::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--g) / -2);
+    top: calc(clamp(24px, 2.6vw, 36px) * -1);
+    bottom: clamp(28px, 3vw, 40px);
+    width: 1px;
+    background: var(--rule);
+  }
+
+  @media (max-width: 1023px) {
+    .pay:not(.pay--single) .pay__fig,
+    .pay:not(.pay--single) .pay__fig + .pay__fig {
+      grid-column: 1 / -1;
+    }
+
+    .pay:not(.pay--single) .pay__fig + .pay__fig {
+      border-top: 1px solid var(--rule);
+    }
+
+    .pay__fig + .pay__fig::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pay__fig,
+    .pay__fig + .pay__fig,
+    .pay--single .pay__notes {
+      grid-column: 1 / -1;
+    }
+
+    .pay__fig {
+      padding: 22px 0 26px;
+    }
+
+    .pay--single .pay__notes {
+      margin-top: 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .pay--single .pay__notes li:first-child {
+      padding-top: 13px;
+    }
+
+    .pay--single .pay__notes::before {
+      display: none;
+    }
+  }
+</style>

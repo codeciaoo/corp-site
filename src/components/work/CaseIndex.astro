@@ -1,0 +1,145 @@
+---
+// 実績の一覧の目次。ヒーローの下端に、ラベル「Contents / 目次」と、罫線で区切った 5 行を置く（つくり方のページの目次と同じ組み方）。
+// 12 列のうち、ラベルは 1 列目、番号と題名は 4 列目、状況のピルと業界は 8 列目から始める。
+// 行を押すと、その案件へ移動する。
+import StatusPill from "@/components/site/StatusPill.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  /** 並び順のとおりに渡す */
+  projects: CollectionEntry<"projects">[];
+}
+
+const { projects } = Astro.props;
+const pad = (value: number): string => String(value).padStart(2, "0");
+/** 題名の `|`（折り返してよい位置の印）を取る。前後の空白も取って、案件の見出しと同じ字の並びにする */
+const titleOf = (title: string): string => title.replace(/\s*\|\s*/g, "");
+---
+
+<nav class="cx" aria-label="このページの目次">
+  <p class="cx__head mono">Contents / 目次</p>
+  <ol class="cx__list">
+    {
+      projects.map((project, index) => (
+        <li>
+          <a class="cx__a" href={`#${project.id}`}>
+            <span class="dot" aria-hidden="true" />
+            <span class="cx__no mono" aria-hidden="true">
+              {pad(index + 1)}
+            </span>
+            <span class="cx__ttl">{titleOf(project.data.title)}</span>
+            <span class="cx__meta mono">
+              <StatusPill status={project.data.status} />
+              <span>{project.data.industry}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .cx {
+    margin-top: clamp(44px, 5.6vw, 80px);
+    border-top: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
+  }
+
+  /* 罫線の下にラベル。1 行目の番号と同じ高さに置く */
+  .cx__head {
+    grid-column: 1 / span 3;
+    padding-top: 17px;
+    color: var(--ink-2);
+  }
+
+  .cx__list {
+    grid-column: 4 / -1;
+    min-width: 0;
+  }
+
+  .cx__list li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 押す対象は高さ 44px 以上。最後の列は 9 列のうち後ろ 5 列で、ページの 8 列目から始まる */
+  .cx__a {
+    display: grid;
+    grid-template-columns:
+      10px 1.8em minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: 12px;
+    align-content: center;
+    align-items: center;
+    min-height: 48px;
+    padding: 10px 0;
+    text-decoration: none;
+    transition: color 0.3s linear;
+  }
+
+  .cx__a .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .cx__no {
+    color: var(--ink-2);
+  }
+
+  .cx__ttl {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    letter-spacing: 0.06em;
+  }
+
+  .cx__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    color: var(--ink-2);
+  }
+
+  /* 押したときの反応。丸に塗りが満ち（共通の .dot）、題名の色が変わる。
+     ホバーのない端末でも、押している間は同じ反応を返す */
+  .cx__a:focus-visible .cx__ttl,
+  .cx__a:active .cx__ttl {
+    color: var(--teal-deep);
+  }
+
+  @media (hover: hover) {
+    .cx__a:hover .cx__ttl {
+      color: var(--teal-deep);
+    }
+  }
+
+  /* 狭い画面: ラベルを上に置く。1 件は、題名の下に状況と業界 */
+  @media (max-width: 899px) {
+    .cx {
+      display: block;
+    }
+
+    .cx__head {
+      padding: 14px 0 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .cx__a {
+      grid-template-columns: 10px 1.8em minmax(0, 1fr);
+      align-items: baseline;
+      row-gap: 6px;
+      padding: 12px 0 13px;
+    }
+
+    .cx__a .dot {
+      transform: translateY(1px);
+    }
+
+    .cx__meta {
+      grid-column: 3;
+    }
+  }
+</style>

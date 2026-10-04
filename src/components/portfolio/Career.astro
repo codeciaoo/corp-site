@@ -1,0 +1,189 @@
+---
+// 02 / 経歴と資格。職歴・学歴・資格を、左に項目名、右（8 列目から）に内容の行で並べる。
+// 項目名は、等幅のラベル「欧文 / 和文」の 1 行（メンバーの一覧のページと同じ書き方）。
+// 所属は業種で書いてある（会社名は出さない）。会社のロゴも置かない。
+import SectionHead from "@/components/site/SectionHead.astro";
+import type {
+  CareerEntry,
+  Certification,
+  EducationEntry,
+} from "@/data/portfolios";
+
+interface Props {
+  career: CareerEntry[];
+  education: EducationEntry[];
+  certifications: Certification[];
+}
+
+interface Entry {
+  /** 期間や取得年（等幅で組む） */
+  meta: string;
+  title: string;
+  sub: string;
+  body?: string;
+}
+
+interface Block {
+  en: string;
+  label: string;
+  entries: Entry[];
+}
+
+const { career, education, certifications } = Astro.props;
+
+const blocks: Block[] = [
+  {
+    en: "Experience",
+    label: "職歴",
+    entries: career.map(entry => ({
+      meta: entry.period,
+      title: entry.position,
+      sub: entry.organization,
+      body: entry.description,
+    })),
+  },
+  {
+    en: "Education",
+    label: "学歴",
+    entries: education.map(entry => ({
+      meta: entry.period,
+      title: entry.school,
+      sub: entry.degree,
+    })),
+  },
+  {
+    en: "Certifications",
+    label: "資格",
+    entries: certifications.map(entry => ({
+      meta: `${entry.year}年`,
+      title: entry.name,
+      sub: entry.issuer,
+    })),
+  },
+].filter(block => block.entries.length > 0);
+---
+
+<section class="sec sec--tint grid" id="career" aria-labelledby="h-career">
+  <SectionHead no="02" en="Career" title="経歴と資格" id="h-career" />
+  <dl class="body">
+    {
+      blocks.map(block => (
+        <div class="cr">
+          <dt class="cr__h mono">
+            {block.en} / {block.label}
+          </dt>
+          <dd class="cr__dd">
+            <ul class="cr__list">
+              {block.entries.map(entry => (
+                <li class="cr__item">
+                  <p class="cr__meta mono">{entry.meta}</p>
+                  <p class="cr__ttl">
+                    <span class="cr__name">{entry.title}</span>{" "}
+                    <span class="cr__sub">{entry.sub}</span>
+                  </p>
+                  {entry.body && <p class="cr__body">{entry.body}</p>}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>
+
+<style>
+  .body {
+    --split: 5;
+    grid-column: 4 / -1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-content: start;
+    border-top: 1px solid var(--ink);
+  }
+
+  .cr {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    padding: 26px 0 30px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* 項目名は 12 列の 4 列目、内容は 8 列目から（一覧のページの行と同じ） */
+  .cr__h {
+    grid-column: 1 / var(--split);
+    color: var(--ink-2);
+  }
+
+  .cr__dd {
+    grid-column: var(--split) / -1;
+    min-width: 0;
+  }
+
+  .cr__list {
+    display: grid;
+    gap: clamp(22px, 2.4vw, 30px);
+  }
+
+  .cr__meta {
+    color: var(--ink-2);
+  }
+
+  .cr__ttl {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 14px;
+  }
+
+  .cr__name {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .cr__sub {
+    font-size: var(--fs-small);
+    line-height: var(--lh-heading);
+    color: var(--ink-2);
+  }
+
+  .cr__body {
+    margin-top: 8px;
+    max-width: 34em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      --split: 4;
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cr {
+      padding: 14px 0 18px;
+    }
+
+    .cr__h,
+    .cr__dd {
+      grid-column: 1 / -1;
+    }
+
+    .cr__dd {
+      margin-top: 10px;
+    }
+
+    .cr__list {
+      gap: 18px;
+    }
+  }
+</style>
