@@ -65,7 +65,7 @@ export const SERVICES: Service[] = [
     verb: "つくる",
     en: "Build",
     title: "業務システム・SaaSの新規開発",
-    body: "要件の整理から設計、実装、運用までを担当します。Web、iPad、LINEミニアプリを1つのチームでつくります。仕様は設計書を基準にし、実装とずれない状態を保ちます。",
+    body: "要件の整理から設計、実装、運用までを担当します。Web、iPadアプリ、LINEミニアプリを1つのチームで開発します。設計書を仕様の基準とし、実装とのズレが生じない状態を保ちます。",
     tags: ["Java / Spring Boot", "TypeScript / React", "Swift", "AWS", "Terraform"],
     related: { href: "/projects/core-saas" },
   },
@@ -73,7 +73,7 @@ export const SERVICES: Service[] = [
     verb: "組み込む",
     en: "Embed",
     title: "生成AIの組み込み",
-    body: "過去の事例を探す検索機能（RAG）や、AIによる記入内容のレビューを業務システムに組み込みます。試行版をつくるときから、本番に移す計画と元に戻す手順を用意します。",
+    body: "過去の事例を探す検索機能（RAG）や、AIによる記入内容のレビューを業務システムに組み込みます。試行版の開発段階から、本番移行の計画と切り戻し（ロールバック）手順を用意します。",
     tags: ["RAG", "Amazon Bedrock", "pgvector", "評価と試験"],
     related: { href: "/projects/safety-ai" },
   },
@@ -86,7 +86,7 @@ export const SERVICES: Service[] = [
     //   tags: ["Java / Jakarta EE", "Struts → JSTL", "EC2 → ECS", "IaC"],
     //   related: { href: "/projects/java-migration-tools" },
     // 書いている事実の出どころ: src/content/projects/ec2-to-ecs.md と aws-account-platform.md
-    body: "サーバーで動くサービスを、止めずにコンテナの基盤へ移します。複数の環境とアカウントは、承認と監視の仕組みと一緒に整えます。",
+    body: "サーバーで動くサービスを、止めずにコンテナの基盤へ移します。複数の環境やアカウントは、適切な承認フローと監視の仕組みをあわせて整えます。",
     tags: ["EC2 → ECS", "AWS", "IaC"],
     related: { href: "/projects/ec2-to-ecs" },
   },
@@ -123,13 +123,13 @@ export const STEPS: Step[] = [
     verb: "書く",
     title: "AIエージェントが実装する",
     summary: "AIエージェントが実装し、テストを通します。",
-    body: "実装はAIエージェントが担当します。書いたAIエージェントが、先に決めたテストを通すところまでを実装とします。AIに任せる範囲と、人に確認を取る条件も先に決めておきます。",
+    body: "実装はAIエージェントが担当します。実装を担当したAIエージェントが、事前に定めたテストを通過させるところまでを実装完了とします。AIに任せる範囲と、人に確認を取る条件も先に決めておきます。",
   },
   {
     verb: "確かめる",
     title: "別のAIが検証する",
     summary: "会話を共有しない別のAIが、変更を判定します。",
-    body: "書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。この手順は人の注意力に頼らず、仕組みで強制しています。",
+    body: "書いたAIとは会話を共有しない別のAIが、変更の内容を判定します。この手順は人の注意力に頼らず、仕組みとして担保しています。",
   },
   {
     verb: "止める",
@@ -169,7 +169,7 @@ export const ENGAGEMENTS: Engagement[] = [
     body: "つくるものが決まっていて、期日までに確実に納めたい場合に選びます。",
     points: [
       "成果物と納期を決めて契約します",
-      "追加の要望は別の見積として扱います",
+      "追加のご要望は別途お見積もりとします",
       "試験の工程を見積に明記します",
     ],
   },
@@ -193,7 +193,7 @@ export const FLOW: { title: string; body: string }[] = [
   },
   {
     title: "ヒアリング",
-    body: "オンラインで現在のやり方と困りごとを聞きます。その場で答えられることは、その場で答えます。",
+    body: "オンラインで現在の業務の流れや困りごとを伺います。その場でお答えできる内容は、可能な限りすぐにお伝えします。",
   },
   {
     title: "提案と見積",
@@ -201,6 +201,6 @@ export const FLOW: { title: string; body: string }[] = [
   },
   {
     title: "開始",
-    body: "契約は電子契約で結びます。急ぐ場合は、相談から1週間で開始できます。",
+    body: "契約は電子契約で締結します。お急ぎの場合は、ご相談から最短1週間で開始できます。",
   },
 ];
