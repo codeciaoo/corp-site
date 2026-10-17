@@ -49,6 +49,7 @@ const ROUTES = [
   "/privacy-policy",
   "/apps/sukusuku-biboroku/privacy",
   "/apps/sukusuku-biboroku/support",
+  "/apps/sukusuku-biboroku/contact",
   "/404.html",
 ];
 const STRICT_TAGS = new Set(["h1", "h2", "h3", "h4", "p", "li", "dd", "dt", "figcaption"]);

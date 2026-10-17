@@ -1,4 +1,4 @@
-// 育児記録アプリ「すくすく備忘録」（iOS）のプライバシーポリシーとサポートの文面。
+// 育児記録アプリ「すくすく備忘録」（iOS）のプライバシーポリシー、サポート、お問い合わせのページの文面。
 // App Store Connect の「プライバシーポリシー URL」「サポート URL」から開くページで、URL を変えない。
 // ポリシーの文面は、アプリの中（せってい → プライバシーポリシー）と同じにする。
 // 変えるときは、アプリのリポジトリの KosodateApp/Views/Settings/AboutCard.swift と docs/privacy-policy.md もそろえる。
@@ -20,6 +20,9 @@ export interface DocSection {
 export const APP_NAME = "すくすく備忘録";
 export const PRIVACY_PATH = "/apps/sukusuku-biboroku/privacy";
 export const SUPPORT_PATH = "/apps/sukusuku-biboroku/support";
+export const CONTACT_PATH = "/apps/sukusuku-biboroku/contact";
+/** /api/contact に送るアプリの名前（APP_OPTIONS の value） */
+export const APP_KEY = "sukusuku-biboroku";
 
 export const PRIVACY_INTRO =
   "すくすく備忘録は、赤ちゃんの記録を大切に扱います。アプリの「せってい」→「プライバシーポリシー」と同じ内容です。";
@@ -82,11 +85,10 @@ export const SUPPORT_SECTIONS: DocSection[] = [
   {
     title: "お問い合わせ",
     paragraphs: [
-      "CodeCiaoのお問い合わせフォームから送ってください。「会社名」は「個人」と入れ、「相談したいこと」は「その他」を選んでください。",
-      "「相談の内容」の最初に「すくすく備忘録」と書いてください。",
+      "すくすく備忘録のお問い合わせフォームから送ってください。お名前とメールアドレスと内容だけで送れます。",
       "返事まで数日かかることがあります。赤ちゃんの名前や写真など、記録の中身は送らないでください。",
     ],
-    link: { label: "お問い合わせフォーム", href: "/contact/" },
+    link: { label: "すくすく備忘録のお問い合わせフォーム", href: `${CONTACT_PATH}/` },
   },
   {
     title: "パートナーと|同じ記録を見たい",
@@ -126,5 +128,24 @@ export const SUPPORT_SECTIONS: DocSection[] = [
       "すくすく備忘録は、あなたや赤ちゃんの情報を集めません。詳しくはプライバシーポリシーを読んでください。",
     ],
     link: { label: "すくすく備忘録のプライバシーポリシー", href: `${PRIVACY_PATH}/` },
+  },
+];
+
+export const CONTACT_LEAD =
+  "使い方で困ったときや、思うように動かないときに送ってください。";
+
+/** お問い合わせのページの横に置く、送ったあとの流れ */
+export const CONTACT_STEPS: { title: string; body: string }[] = [
+  {
+    title: "フォームで送る",
+    body: "困っていることを書いて、送信してください。",
+  },
+  {
+    title: "CodeCiaoが読む",
+    body: "アプリをつくっているCodeCiaoの担当者が、内容を確かめます。",
+  },
+  {
+    title: "メールで返事",
+    body: "入力したメールアドレスへ返事を送ります。数日かかることがあります。",
   },
 ];

@@ -1,0 +1,126 @@
+---
+// アプリの利用者のお問い合わせ。サポートのページからリンクする（ナビには出さない）。
+// 列の位置と大きさは、お問い合わせのページ（src/pages/contact.astro）と同じ。
+import AppContactForm from "@/components/apps/AppContactForm.astro";
+import Flow from "@/components/contact/Flow.astro";
+import Meter from "@/components/forms/Meter.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import {
+  APP_KEY,
+  CONTACT_LEAD,
+  CONTACT_STEPS,
+  SUPPORT_PATH,
+} from "@/data/apps/sukusukuBiboroku";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+const FORM_ID = "app-contact-form";
+---
+
+<Base
+  title="すくすく備忘録 お問い合わせ"
+  description="育児記録アプリ「すくすく備忘録」のお問い合わせフォームです。"
+>
+  <PageHero
+    en="Contact"
+    label="すくすく備忘録"
+    title="すくすく備忘録|お問い合わせ"
+    compact
+    lead={CONTACT_LEAD}
+  />
+
+  <section class="sec ac grid" aria-labelledby="h-form">
+    <header class="ac__head">
+      <p class="ac__en mono">Form</p>
+      <h2 class="ac__ttl t-h3" id="h-form">お問い合わせフォーム</h2>
+      <Meter form={FORM_ID} total={3} />
+    </header>
+
+    <div class="ac__form">
+      <AppContactForm
+        id={FORM_ID}
+        app={APP_KEY}
+        supportHref={`${SUPPORT_PATH}/`}
+      />
+    </div>
+
+    <div class="ac__side">
+      <Flow title="送ったあとの流れ" steps={CONTACT_STEPS} mail={false} />
+      <p class="ac__faq">
+        <a class="link" href={`${SUPPORT_PATH}/`}>
+          <span class="dot" aria-hidden="true"></span>
+          よくある質問を読む
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ac__head {
+    grid-column: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+    --mt-size: clamp(56px, 5vw, 72px);
+  }
+
+  .ac__head :global(.mt) {
+    margin-top: 32px;
+  }
+
+  .ac__en {
+    color: var(--ink-2);
+  }
+
+  .ac__ttl {
+    margin-top: 6px;
+  }
+
+  .ac__form {
+    grid-column: 4 / span 4;
+    min-width: 0;
+  }
+
+  .ac__side {
+    grid-column: 8 / -1;
+    min-width: 0;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--hd) + 36px);
+  }
+
+  .ac__faq {
+    margin-top: 28px;
+  }
+
+  @media (max-width: 1199px) {
+    .ac__form {
+      grid-column: 4 / -1;
+    }
+
+    .ac__side {
+      grid-column: 4 / -1;
+      position: static;
+      margin-top: clamp(56px, 8vw, 80px);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .ac__head {
+      grid-column: 1 / -1;
+      position: static;
+      margin-bottom: 36px;
+    }
+
+    .ac__head :global(.mt) {
+      margin-top: 24px;
+    }
+
+    .ac__form,
+    .ac__side {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
