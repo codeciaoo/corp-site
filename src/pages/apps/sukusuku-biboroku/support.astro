@@ -1,0 +1,16 @@
+---
+import AppDoc from "@/components/apps/AppDoc.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import { SUPPORT_INTRO, SUPPORT_SECTIONS } from "@/data/apps/sukusukuBiboroku";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+---
+
+<Base
+  title="すくすく備忘録 サポート"
+  description="育児記録アプリ「すくすく備忘録」のお問い合わせと、よくある質問です。"
+>
+  <PageHero en="Support" label="すくすく備忘録" title="すくすく備忘録|サポート" />
+  <AppDoc intro={SUPPORT_INTRO} sections={SUPPORT_SECTIONS} />
+</Base>

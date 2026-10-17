@@ -47,6 +47,8 @@ const ROUTES = [
   "/careers/intern",
   "/contact",
   "/privacy-policy",
+  "/apps/sukusuku-biboroku/privacy",
+  "/apps/sukusuku-biboroku/support",
   "/404.html",
 ];
 const STRICT_TAGS = new Set(["h1", "h2", "h3", "h4", "p", "li", "dd", "dt", "figcaption"]);

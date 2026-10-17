@@ -1,0 +1,127 @@
+---
+// アプリのプライバシーポリシーとサポートの本文。前文と、番号・見出し・本文の行を並べる。
+// 列と大きさは、個人情報保護方針の条文（src/pages/privacy-policy.astro）と同じ型。目次は置かない（条文が短いため）
+import Phrases from "@/components/site/Phrases.astro";
+import type { DocSection } from "@/data/apps/sukusukuBiboroku";
+
+interface Props {
+  intro: string;
+  sections: DocSection[];
+}
+
+const { intro, sections } = Astro.props;
+const no = (index: number): string => String(index + 1).padStart(2, "0");
+---
+
+<div class="sec ad grid">
+  <div class="ad__body">
+    <div class="ad__row">
+      <p class="ad__intro t-lead">{intro}</p>
+    </div>
+
+    {
+      sections.map((section, index) => (
+        <section class="ad__row" aria-labelledby={`a-${no(index)}`}>
+          <span class="ad__no mono" aria-hidden="true">
+            {no(index)}
+          </span>
+          <h2 class="ad__ttl" id={`a-${no(index)}`}>
+            <Phrases text={section.title} />
+          </h2>
+          <div class="ad__tx">
+            {section.paragraphs?.map(text => (
+              <p>{text}</p>
+            ))}
+            {section.items && (
+              <ul class="dots">
+                {section.items.map(text => (
+                  <li>{text}</li>
+                ))}
+              </ul>
+            )}
+            {section.link && (
+              <p>
+                <a class="inline ad__link" href={section.link.href}>
+                  {section.link.label}
+                </a>
+              </p>
+            )}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* 本文の箱は 12 列の 4 列目から。行は番号（40px の列）・見出し・本文の順で、本文は 8 列目から */
+  .ad__body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    border-top: 1px solid var(--ink);
+  }
+
+  .ad__row {
+    display: grid;
+    grid-template-columns:
+      40px minmax(0, 1fr)
+      calc((100% - 8 * var(--g)) / 9 * 5 + 4 * var(--g));
+    column-gap: var(--g);
+    align-items: baseline;
+    padding: clamp(24px, 2.6vw, 36px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ad__intro {
+    grid-column: 3;
+    min-width: 0;
+  }
+
+  .ad__no {
+    color: var(--ink-2);
+  }
+
+  .ad__ttl {
+    font-feature-settings: "palt";
+    font-size: var(--fs-h2);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+  }
+
+  .ad__tx {
+    min-width: 0;
+    max-width: 34em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .ad__tx > * + * {
+    margin-top: 14px;
+  }
+
+  /* 押せる高さを 44px にする */
+  .ad__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  @media (max-width: 899px) {
+    .ad__body {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ad__row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 8px;
+    }
+
+    .ad__intro {
+      grid-column: 1;
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+  }
+</style>
