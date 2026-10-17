@@ -42,6 +42,8 @@ const ROUTES = [
   "/careers/intern",
   "/contact",
   "/privacy-policy",
+  "/apps/sukusuku-biboroku/privacy",
+  "/apps/sukusuku-biboroku/support",
   "/404.html",
 ];
 // Lighthouse は時間がかかるので、型の違う主要ページに絞る
