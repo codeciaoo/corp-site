@@ -3,7 +3,7 @@
 // /api/contact へ JSON で type: "app"、app、name、email、message を送る。
 import Field from "@/components/forms/Field.astro";
 import Form from "@/components/forms/Form.astro";
-import { LIMITS } from "@/components/forms/schema";
+import { APP_OPTIONS, LIMITS } from "@/components/forms/schema";
 
 interface Props {
   id: string;
@@ -14,6 +14,11 @@ interface Props {
 }
 
 const { id, app, supportHref } = Astro.props;
+
+// API は APP_OPTIONS に無いアプリを 400 で断る。一覧とずれたら、送信が必ず失敗するので、ビルドで止める
+if (!APP_OPTIONS.some(option => option.value === app)) {
+  throw new Error(`APP_OPTIONS に無いアプリです: ${app}`);
+}
 ---
 
 <Form

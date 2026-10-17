@@ -81,3 +81,7 @@
 - 起きたこと: 図の題（`figcaption class="mono"`）は phrase-wrap の対象外だが、phrase-wrap が `<html data-bx>` に付ける `word-break: keep-all` を受け継ぐ。切れ目の無い長い和文の題は 1 つのかたまりになり、狭い列で「Fig. /」だけが 1 行目に残った
 - ルール: 長い和文を入れる要素に `mono` を付けない。等幅の見た目は CSS（`--f-mono`、`--fs-label`）で付けて、文は phrase-wrap に通す
 - あわせて: 語の途中の割れ（技術／コンサルティング、切り／替え）は、phrase-wrap の長い句の分け方（語の種類の境目で割る）が原因だった。検査（wrap-check）に「複合語」「複合動詞」「接尾語・機能語」の途中を足し、本文も不合格に数える
+
+## 2026-10-17 開発サーバーでお問い合わせを送らない
+- 起きたこと: アプリのお問い合わせのページを足したあと、開発サーバーで送信を試そうとした。手元の `.env` に `SLACK_WEBHOOK_URL` が入っている（本物かどうかは確かめていない）。開発サーバーはこの値を読むので、送ると本物の Slack に届くおそれがあった
+- ルール: 開発サーバー（`astro dev`）でフォームを送信しない。送信は、ビルド結果（`node scripts/qa.mjs --serve`）を Playwright で開き、`page.route("**/api/contact")` で受け止めて、`src/pages/api/contact.ts` の `POST` に通して確かめる（通知先は 127.0.0.1 の一時サーバー。`scripts/test-contact.mjs` と同じ作り）
