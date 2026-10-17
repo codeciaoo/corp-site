@@ -1,0 +1,78 @@
+---
+// アプリの利用者（業務の相談ではない人）のお問い合わせフォーム。会社名と相談したいことは聞かない。
+// /api/contact へ JSON で type: "app"、app、name、email、message を送る。
+import Field from "@/components/forms/Field.astro";
+import Form from "@/components/forms/Form.astro";
+import { APP_OPTIONS, LIMITS } from "@/components/forms/schema";
+
+interface Props {
+  id: string;
+  /** どのアプリか。APP_OPTIONS の value */
+  app: string;
+  /** 送信したあとに戻るサポートのページ */
+  supportHref: string;
+}
+
+const { id, app, supportHref } = Astro.props;
+
+// API は APP_OPTIONS に無いアプリを 400 で断る。一覧とずれたら、送信が必ず失敗するので、ビルドで止める
+if (!APP_OPTIONS.some(option => option.value === app)) {
+  throw new Error(`APP_OPTIONS に無いアプリです: ${app}`);
+}
+---
+
+<Form
+  id={id}
+  label="アプリのお問い合わせフォーム"
+  submit="送信する"
+  doneTitle="送信しました"
+  doneBody="内容を確認して、CodeCiaoからメールで連絡します。返事まで数日かかることがあります。"
+>
+  <input type="hidden" name="type" value="app" />
+  <input type="hidden" name="app" value={app} />
+  <Field
+    form={id}
+    name="name"
+    label="お名前"
+    required
+    autocomplete="name"
+    maxlength={LIMITS.name}
+    missing="お名前を入力してください。"
+  />
+  <Field
+    form={id}
+    name="email"
+    type="email"
+    label="メールアドレス"
+    required
+    autocomplete="email"
+    maxlength={LIMITS.email}
+    missing="メールアドレスを入力してください。"
+    invalid="メールアドレスの形式を確かめてください。入力例はname@example.comです。"
+  />
+  <Field
+    form={id}
+    name="message"
+    type="textarea"
+    label="お問い合わせの内容"
+    hint="困っていることを書いてください。赤ちゃんの名前や写真など、記録の中身は書かないでください。"
+    required
+    maxlength={LIMITS.message}
+    missing="お問い合わせの内容を入力してください。"
+  />
+
+  <Fragment slot="note">
+    送信すると、<a class="inline" href="/privacy-policy">個人情報保護方針</a
+    >に同意したものとして扱います。
+  </Fragment>
+
+  <p class="next" slot="done">
+    <a class="btn" href={supportHref}>サポートのページへ</a>
+  </p>
+</Form>
+
+<style>
+  .next {
+    margin-top: 32px;
+  }
+</style>

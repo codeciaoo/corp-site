@@ -29,6 +29,11 @@ export const EXPERIENCE_OPTIONS: readonly Option[] = [
   { value: "10+", label: "10年以上" },
 ];
 
+/** アプリのお問い合わせ: どのアプリか。value はページの URL（/apps/<value>/）と同じ */
+export const APP_OPTIONS: readonly Option[] = [
+  { value: "sukusuku-biboroku", label: "すくすく備忘録" },
+];
+
 /** 入力できる字数の上限 */
 export const LIMITS = {
   company: 100,
