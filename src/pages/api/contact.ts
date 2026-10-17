@@ -1,10 +1,12 @@
-// お問い合わせと採用応募を受け取り、Slack へ通知する。
-// 受け取る JSON は 2 つの形。
-//   お問い合わせ: { company, name, email, service, message }
-//   採用応募:     { type: "careers", name, email, position, experience, githubUrl, message }
+// お問い合わせ、採用応募、アプリのお問い合わせを受け取り、Slack へ通知する。
+// 受け取る JSON は 3 つの形。
+//   お問い合わせ:         { company, name, email, service, message }
+//   採用応募:             { type: "careers", name, email, position, experience, githubUrl, message }
+//   アプリのお問い合わせ: { type: "app", app, name, email, message }（会社名と相談したいことは聞かない）
 import type { APIRoute } from "astro";
 
 import {
+  APP_OPTIONS,
   EMAIL_PATTERN,
   EXPERIENCE_OPTIONS,
   LIMITS,
@@ -34,7 +36,16 @@ interface CareersInquiry {
   message: string;
 }
 
-type Inquiry = ContactInquiry | CareersInquiry;
+/** アプリの利用者からのお問い合わせ */
+interface AppInquiry {
+  kind: "app";
+  app: string;
+  name: string;
+  email: string;
+  message: string;
+}
+
+type Inquiry = ContactInquiry | CareersInquiry | AppInquiry;
 
 /** 入力欄の名前 → エラーの文 */
 type FieldErrors = Record<string, string>;
@@ -156,6 +167,14 @@ const parseInquiry = (body: Record<string, unknown>): Parsed => {
       githubUrl,
       message: textOf("message", "自己PR", LIMITS.message, false),
     };
+  } else if (body.type === "app") {
+    inquiry = {
+      kind: "app",
+      app: choiceOf("app", "アプリ", APP_OPTIONS),
+      name,
+      email,
+      message: textOf("message", "お問い合わせの内容", LIMITS.message, true),
+    };
   } else {
     inquiry = {
       kind: "contact",
@@ -187,32 +206,46 @@ const quoted = (value: string): string =>
     .map(line => `> ${line}`)
     .join("\n");
 
-const toSlackText = (inquiry: Inquiry): string => {
-  const lines =
-    inquiry.kind === "careers"
-      ? [
-          "採用の応募がありました",
-          "",
-          `お名前: ${oneLine(inquiry.name)}`,
-          `メール: ${oneLine(inquiry.email)}`,
-          `希望職種: ${labelOf(POSITION_OPTIONS, inquiry.position)}`,
-          `経験年数: ${labelOf(EXPERIENCE_OPTIONS, inquiry.experience)}`,
-          `GitHub: ${inquiry.githubUrl ? oneLine(inquiry.githubUrl) : "（未入力）"}`,
-          "",
-          inquiry.message ? quoted(inquiry.message) : "（自己PRは未入力）",
-        ]
-      : [
-          "新規お問い合わせがありました",
-          "",
-          `会社名: ${oneLine(inquiry.company)}`,
-          `お名前: ${oneLine(inquiry.name)}`,
-          `メール: ${oneLine(inquiry.email)}`,
-          `サービス: ${labelOf(SERVICE_OPTIONS, inquiry.service)}`,
-          "",
-          quoted(inquiry.message),
-        ];
-  return lines.join("\n");
+const toSlackLines = (inquiry: Inquiry): string[] => {
+  switch (inquiry.kind) {
+    case "careers":
+      return [
+        "採用の応募がありました",
+        "",
+        `お名前: ${oneLine(inquiry.name)}`,
+        `メール: ${oneLine(inquiry.email)}`,
+        `希望職種: ${labelOf(POSITION_OPTIONS, inquiry.position)}`,
+        `経験年数: ${labelOf(EXPERIENCE_OPTIONS, inquiry.experience)}`,
+        `GitHub: ${inquiry.githubUrl ? oneLine(inquiry.githubUrl) : "（未入力）"}`,
+        "",
+        inquiry.message ? quoted(inquiry.message) : "（自己PRは未入力）",
+      ];
+    case "app":
+      // 1 行目で、業務の相談ではなくアプリの利用者からだと分かるようにする
+      return [
+        `アプリ「${labelOf(APP_OPTIONS, inquiry.app)}」のお問い合わせがありました`,
+        "",
+        `お名前: ${oneLine(inquiry.name)}`,
+        `メール: ${oneLine(inquiry.email)}`,
+        "",
+        quoted(inquiry.message),
+      ];
+    case "contact":
+      return [
+        "新規お問い合わせがありました",
+        "",
+        `会社名: ${oneLine(inquiry.company)}`,
+        `お名前: ${oneLine(inquiry.name)}`,
+        `メール: ${oneLine(inquiry.email)}`,
+        `サービス: ${labelOf(SERVICE_OPTIONS, inquiry.service)}`,
+        "",
+        quoted(inquiry.message),
+      ];
+  }
 };
+
+const toSlackText = (inquiry: Inquiry): string =>
+  toSlackLines(inquiry).join("\n");
 
 /** Cloudflare の実行時は runtime.env、開発時は import.meta.env から読む */
 const readWebhookUrl = (locals: App.Locals): string | undefined => {

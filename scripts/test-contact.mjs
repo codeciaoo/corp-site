@@ -57,6 +57,14 @@ const valid = {
   message: "1 行目",
 };
 
+const validApp = {
+  type: "app",
+  app: "sukusuku-biboroku",
+  name: "確認 花子",
+  email: "check@example.com",
+  message: "声で記録できません",
+};
+
 const tests = {
   "正しい入力は 200 で、通知が 1 件届く": async () => {
     received.length = 0;
@@ -85,6 +93,34 @@ const tests = {
     const result = await call({ company: "", name: "", email: "x", service: "", message: "" });
     assert.equal(result.status, 400);
     assert.deepEqual(Object.keys(result.body.fields).sort(), ["company", "email", "message", "name", "service"]);
+  },
+  "業務のお問い合わせは、会社名が無いと 400": async () => {
+    const result = await call({ ...valid, company: "" });
+    assert.equal(result.status, 400);
+    assert.deepEqual(Object.keys(result.body.fields), ["company"]);
+  },
+  "アプリのお問い合わせは、会社名と相談したいことが無くても 200 で、1 行目でアプリからと分かる": async () => {
+    received.length = 0;
+    const result = await call({ ...validApp });
+    assert.equal(result.status, 200);
+    assert.equal(received.length, 1);
+    const lines = received[0].split("\n");
+    assert.equal(lines[0], "アプリ「すくすく備忘録」のお問い合わせがありました");
+    assert.ok(lines.includes("お名前: 確認 花子"));
+    assert.ok(lines.includes("> 声で記録できません"));
+    assert.ok(!received[0].includes("会社名"));
+  },
+  "アプリのお問い合わせは、お名前・メール・内容が足りないと 400 で、会社名は求めない": async () => {
+    const result = await call({ type: "app", app: "sukusuku-biboroku", name: "", email: "x", message: "" });
+    assert.equal(result.status, 400);
+    assert.deepEqual(Object.keys(result.body.fields).sort(), ["email", "message", "name"]);
+  },
+  "知らないアプリのお問い合わせは 400": async () => {
+    received.length = 0;
+    const result = await call({ ...validApp, app: "unknown" });
+    assert.equal(result.status, 400);
+    assert.ok(result.body.fields.app);
+    assert.equal(received.length, 0);
   },
   "採用の応募は、職種と経験年数を選んでいないと 400": async () => {
     const result = await call({ type: "careers", name: "確認", email: "check@example.com" });
