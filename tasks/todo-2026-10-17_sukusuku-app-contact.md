@@ -10,11 +10,18 @@
 - サポートのページの案内（「個人」「その他」「最初にすくすく備忘録と書く」）を消し、新しいページへリンクする
 
 ## 手順
-- [ ] API と `scripts/test-contact.mjs`
-- [ ] フォームの部品とページ
-- [ ] サポートのページの案内、検査のルート（qa / wrap-check / review-pack）
-- [ ] `pnpm test:api`、`pnpm qa`、画面の確認（1440 Chrome、375 WebKit）
+- [x] API と `scripts/test-contact.mjs`
+- [x] フォームの部品とページ
+- [x] サポートのページの案内、検査のルート（qa / wrap-check / review-pack）
+- [x] `pnpm test:api`、`pnpm qa`、画面の確認（1440 Chrome、375 WebKit）
 - [ ] コミット、PR
 
 ## 確かめてもらうこと
 - Cloudflare Pages の secret `SLACK_WEBHOOK_URL` が設定済みか（試しには送らない）
+
+## 結果
+- `pnpm test:api` 15 件合格、`pnpm qa` すべて合格（2026-10-17）
+- ビルドした画面で送信を受け止め、API の処理に通して、通知の 1 行目が「アプリ「すくすく備忘録」のお問い合わせがありました」になることを確かめた
+- 手元の `.env` に `SLACK_WEBHOOK_URL` が入っているため、開発サーバーからの送信は試していない（本物に届くおそれ）
+- Playwright 1.63 の WebKit（webkit-2359）がキャッシュから消えていて、`pnpm qa` の折り返しの検査が止まった。`pnpm exec playwright install webkit` で入れ直した
+- iOS リポジトリの `docs/support.md` は、もとのセッションが直す
