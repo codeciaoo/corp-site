@@ -1,0 +1,33 @@
+---
+// すくすく備忘録の紹介。App Store のマーケティング URL から開く（ナビには出さない）。
+import AppIntro from "@/components/apps/AppIntro.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import PageIndex from "@/components/site/PageIndex.astro";
+import { INTRO_LEAD } from "@/data/apps/sukusukuBiboroku";
+import Base from "@/layouts/Base.astro";
+
+export const prerender = true;
+
+const SECTIONS = [
+  { no: "01", href: "#records", en: "Records", title: "残す記録" },
+  { no: "02", href: "#voice", en: "Voice", title: "声とお知らせ" },
+  { no: "03", href: "#family", en: "Family", title: "家族と共有" },
+  { no: "04", href: "#ads", en: "Ads", title: "広告" },
+  { no: "05", href: "#guide", en: "Guide", title: "案内" },
+];
+---
+
+<Base
+  title="すくすく備忘録"
+  description="育児記録アプリ「すくすく備忘録」の紹介です。iPhoneに残せる記録、家族共有、プライバシーポリシーとサポートへの案内です。"
+>
+  <PageHero
+    en="App"
+    label="すくすく備忘録"
+    title="赤ちゃんの|記録を|残す"
+    lead={INTRO_LEAD}
+  >
+    <PageIndex items={SECTIONS} />
+  </PageHero>
+  <AppIntro />
+</Base>

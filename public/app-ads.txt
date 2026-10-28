@@ -1,0 +1,5 @@
+# PLACEHOLDER: pub-XXXXXXXXXXXXXXXX は仮の値です。本物の AdMob パブリッシャー ID ではありません。
+# この環境から iOS リポジトリ（sukusuku-biboroku-ios）の project.yml（Release）を読めませんでした。
+# GADApplicationIdentifier の ca-app-pub- の前半（pub- と 16 桁）に置き換えてから公開してください。
+# 置き換えるまで、App Store 審査と AdMob の app-ads.txt 確認には使わないでください。
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

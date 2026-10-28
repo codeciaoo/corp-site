@@ -47,6 +47,7 @@ const ROUTES = [
   "/careers/intern",
   "/contact",
   "/privacy-policy",
+  "/apps/sukusuku-biboroku",
   "/apps/sukusuku-biboroku/privacy",
   "/apps/sukusuku-biboroku/support",
   "/apps/sukusuku-biboroku/contact",
