@@ -59,7 +59,7 @@ export const FAMILY_PARAGRAPHS = [
 ];
 
 export const ADS_PARAGRAPHS = [
-  "広告は、見た人に合わせないGoogle AdMobの広告です。",
+  "広告は、見た人に合わせないGoogle\u00A0AdMobの広告です。",
   "記録を書く画面と、22時から翌朝6時までは出しません。",
 ];
 
@@ -91,7 +91,7 @@ export const PRIVACY_SECTIONS: DocSection[] = [
     paragraphs: [
       "このアプリは、広告の表示と家族での記録の共有に、外部のサービスを使います。",
       "名前とメールアドレスでの登録はありません。",
-      "広告のための行動の追跡（トラッキング）はしません。",
+      "広告のための追跡はしません。",
     ],
   },
   {
@@ -112,7 +112,7 @@ export const PRIVACY_SECTIONS: DocSection[] = [
   {
     title: "広告",
     paragraphs: [
-      "広告はGoogle AdMobです。",
+      "広告はGoogle\u00A0AdMobです。",
       "見た人に合わせない広告（npa=1）だけを出します。",
       "内容は、全年齢向け（maxAdContentRatingはgeneral）に限っています。",
       "アプリの追跡許可（ATT）は求めません。",
