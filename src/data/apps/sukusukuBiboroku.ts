@@ -109,7 +109,7 @@ export const PRIVACY_SECTIONS: DocSection[] = [
       "「Googleのサービスを使うサイトやアプリから収集した情報のGoogleによる使用」もご覧ください。",
       "https://policies.google.com/technologies/partner-sites",
       "パーソナライズした広告はもともと出しません。",
-      "Googleの広告の設定は「マイ アド センター」で変えられます。",
+      "Googleの広告の設定は「マイ\u00A0アド\u00A0センター」で変えられます。",
       "https://myadcenter.google.com/",
       "iPhoneの「設定」→「プライバシーとセキュリティ」→「トラッキング」を開きます。",
       "「Appからのトラッキング要求を許可」をオフにすると、どのアプリからも追いかける許可を求められなくなります。",
