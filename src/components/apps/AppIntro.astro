@@ -1,0 +1,167 @@
+---
+// すくすく備忘録の紹介。残せる記録、声、家族共有、広告、関連ページへの案内。
+import Arrow from "@/components/site/Arrow.astro";
+import SectionHead from "@/components/site/SectionHead.astro";
+import {
+  ADS_PARAGRAPHS,
+  FAMILY_PARAGRAPHS,
+  GUIDE_INTRO,
+  GUIDE_LINKS,
+  RECORD_ITEMS,
+  RECORD_LEAD,
+  RECORD_NOTE,
+  VOICE_PARAGRAPHS,
+} from "@/data/apps/sukusukuBiboroku";
+---
+
+<section class="sec grid" id="records" aria-labelledby="h-records">
+  <SectionHead no="01" en="Records" title="残す記録" id="h-records" />
+  <div class="body">
+    <p>{RECORD_LEAD}</p>
+    <ul class="dots">
+      {RECORD_ITEMS.map(item => <li>{item}</li>)}
+    </ul>
+    <p>{RECORD_NOTE}</p>
+  </div>
+</section>
+
+<section class="sec grid" id="voice" aria-labelledby="h-voice">
+  <SectionHead no="02" en="Voice" title="声とお知らせ" id="h-voice" />
+  <div class="body">
+    {VOICE_PARAGRAPHS.map(text => <p>{text}</p>)}
+  </div>
+</section>
+
+<section class="sec sec--tint grid" id="family" aria-labelledby="h-family">
+  <SectionHead no="03" en="Family" title="家族と共有" id="h-family" />
+  <div class="body">
+    {FAMILY_PARAGRAPHS.map(text => <p>{text}</p>)}
+  </div>
+</section>
+
+<section class="sec grid" id="ads" aria-labelledby="h-ads">
+  <SectionHead no="04" en="Ads" title="広告" id="h-ads" />
+  <div class="body">
+    {ADS_PARAGRAPHS.map(text => <p>{text}</p>)}
+  </div>
+</section>
+
+<section class="sec grid" id="guide" aria-labelledby="h-guide">
+  <SectionHead no="05" en="Guide" title="案内" id="h-guide" />
+  <div class="body">
+    <p>{GUIDE_INTRO}</p>
+    <ul class="paths">
+      {
+        GUIDE_LINKS.map(link => (
+          <li>
+            <a class="path" href={link.href}>
+              <span class="path__tx">
+                <span class="path__ttl">{link.title}</span>
+                <span class="path__body">{link.body}</span>
+              </span>
+              <span class="path__go" aria-hidden="true">
+                <Arrow />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .body {
+    grid-column: 4 / -1;
+    min-width: 0;
+    max-width: 40em;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .body > * + * {
+    margin-top: 14px;
+  }
+
+  .paths {
+    margin-top: clamp(28px, 3vw, 40px);
+    border-top: 1px solid var(--ink);
+  }
+
+  .paths li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .path {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--g);
+    align-items: center;
+    padding: 22px 0 20px;
+    text-decoration: none;
+    transition: padding 0.5s var(--ease);
+  }
+
+  .path__tx {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .path__ttl {
+    font-feature-settings: "palt";
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .path__body {
+    color: var(--ink-2);
+  }
+
+  .path__go {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--teal);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .path__go::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--teal);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    transition: clip-path 0.5s var(--ease);
+  }
+
+  .path:hover .path__go::before,
+  .path:focus-visible .path__go::before,
+  .path:active .path__go::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .path:hover,
+  .path:focus-visible,
+  .path:active {
+    padding-left: 12px;
+  }
+
+  .path__go :global(.arw) {
+    width: 14px;
+    height: 10px;
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

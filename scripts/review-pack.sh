@@ -10,7 +10,7 @@ cd "$(dirname "$0")/.."
 # 別の worktree が 4398 で配信していることがあるので、PORT=4397 scripts/review-pack.sh のように変えられる
 PORT=${PORT:-4398}
 BASE="http://localhost:$PORT"
-ROUTES=(/ /approach /projects /projects/core-saas /projects/safety-ai /projects/ec2-to-ecs /about /members /members/tahara /careers /careers/fullstack /careers/intern /contact /privacy-policy /apps/sukusuku-biboroku/privacy /apps/sukusuku-biboroku/support /apps/sukusuku-biboroku/contact /nope)
+ROUTES=(/ /approach /projects /projects/core-saas /projects/safety-ai /projects/ec2-to-ecs /about /members /members/tahara /careers /careers/fullstack /careers/intern /contact /privacy-policy /apps/sukusuku-biboroku /apps/sukusuku-biboroku/privacy /apps/sukusuku-biboroku/support /apps/sukusuku-biboroku/contact /nope)
 
 # すでに同じポートで配信中なら、それを使う
 if ! curl -s -o /dev/null "$BASE/"; then
