@@ -31,7 +31,7 @@ export const COMPANY = {
   street: "東京都品川区上大崎3丁目14番34号",
   building: "プラスワン402",
   founded: "2024年2月19日",
-  capital: "500万円",
+  capital: "100万円",
   representative: "代表取締役社長 田原 翼",
-  staff: "社員4名、業務委託5名",
+  staff: "社員2名、業務委託5名",
 };
