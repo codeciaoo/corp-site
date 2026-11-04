@@ -1,11 +1,9 @@
 ---
-// ページ末尾の呼びかけ。相談と採用のページへ案内する。
+// ページ末尾の呼びかけ。相談のページへ案内する。
 import Arrow from "./Arrow.astro";
 import Fx from "./Fx.astro";
 
 interface Props {
-  /** 採用への案内を出さない（採用ページなど） */
-  hideCareers?: boolean;
   /** 見出しの大きさ。特大はトップページだけ（下層では、すぐ下のフッターのロゴと重なって重くなる） */
   size?: "mega" | "large";
   /** 見出しの下の文。ページの内容に合わせて変える。空文字なら文を出さない */
@@ -15,11 +13,7 @@ interface Props {
 const DEFAULT_LEAD =
   "内容が決まっていなくても構いません。現在のやり方と困っていることを教えてください。";
 
-const {
-  hideCareers = false,
-  size = "large",
-  lead = DEFAULT_LEAD,
-} = Astro.props;
+const { size = "large", lead = DEFAULT_LEAD } = Astro.props;
 ---
 
 <section class:list={["cta", `cta--${size}`]} aria-labelledby="h-cta">
@@ -34,14 +28,6 @@ const {
         相談する
         <Arrow />
       </a>
-      {
-        !hideCareers && (
-          <a class="link" href="/careers">
-            <span class="dot" aria-hidden="true" />
-            一緒につくる人も探しています
-          </a>
-        )
-      }
     </div>
   </div>
 </section>
