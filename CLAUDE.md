@@ -49,8 +49,7 @@ The dev server can serve stale scoped CSS under load. Verify visuals against the
 - `/about` - 会社
 - `/members` - メンバー
   - `/members/[slug]` - メンバーのポートフォリオ。URL を直接渡すページで、サイト内からはリンクしない（代表が導線を外している）。`STANDALONE=true` でビルドすると、田原のページはヘッダーとフッターなしになる
-- `/careers` - 採用
-  - `/careers/fullstack`, `/careers/intern` - 職種の詳細
+- `/careers` - 採用。募集を停止中で公開していない。ページは `src/pages/_careers.astro` と `src/pages/_careers/`（`_` で始まるのでビルドされない）に残している
 - `/contact` - お問い合わせ
 - `/privacy-policy` - 個人情報保護方針
 - `/blog` - Zenn のパブリケーションへリダイレクト

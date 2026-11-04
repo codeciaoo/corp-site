@@ -37,9 +37,6 @@ const ROUTES = [
   "/members/tahara",
   "/members/ichinose",
   "/members/akiyama",
-  "/careers",
-  "/careers/fullstack",
-  "/careers/intern",
   "/contact",
   "/privacy-policy",
   "/apps/sukusuku-biboroku",
@@ -51,7 +48,7 @@ const ROUTES = [
 // Lighthouse は時間がかかるので、型の違う主要ページに絞る
 const LH_ROUTES = routesArg
   ? routesArg.slice("--routes=".length).split(",")
-  : ["/", "/approach", "/projects", "/projects/core-saas", "/about", "/members", "/careers", "/contact"];
+  : ["/", "/approach", "/projects", "/projects/core-saas", "/about", "/members", "/contact"];
 const VIEWPORTS = [
   { name: "375", width: 375, height: 812 },
   { name: "768", width: 768, height: 1024 },
@@ -446,7 +443,7 @@ async function checkKeyboard(browser) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
   const results = [];
-  for (const route of ["/", "/projects", "/contact", "/careers"]) {
+  for (const route of ["/", "/projects", "/contact"]) {
     await page.goto(BASE + route, { waitUntil: "networkidle" });
     const seen = [];
     let invisible = 0;

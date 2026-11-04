@@ -15,7 +15,6 @@ export const NAV: NavItem[] = [
   { label: "つくり方", href: "/approach", en: "Approach" },
   { label: "実績", href: "/projects", en: "Work" },
   { label: "会社", href: "/about", en: "About" },
-  { label: "採用", href: "/careers", en: "Careers" },
 ];
 
 export const FOOTER_NAV: NavItem[] = [

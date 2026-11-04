@@ -10,10 +10,8 @@ interface Props {
 const { pathname } = Astro.props;
 const isCurrent = (href: string): boolean =>
   pathname === href || pathname.startsWith(`${href}/`);
-// 狭い画面で追従するボタン。採用のページでは「応募する」（応募フォームへ）、ほかのページでは「相談する」
-const quick = isCurrent("/careers")
-  ? { href: "/careers#entry", label: "応募する" }
-  : { href: "/contact", label: "相談する" };
+// 狭い画面で追従するボタン
+const quick = { href: "/contact", label: "相談する" };
 ---
 
 <header class="hd" data-header>
@@ -163,7 +161,7 @@ const quick = isCurrent("/careers")
     display: none;
   }
 
-  /* 狭い画面で、ページを送ったら出す「相談する」（採用のページでは「応募する」）。
+  /* 狭い画面で、ページを送ったら出す「相談する」。
      広い画面ではナビの「お問い合わせ」があるので出さない */
   .hd__quick {
     display: none;
